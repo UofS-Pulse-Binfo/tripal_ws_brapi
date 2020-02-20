@@ -1,0 +1,5 @@
+name = Tripal Web Services BrAPI
+description = Extend Tripal Web Services that implements BrAPI (https://brapi.docs.apiary.io) specifications.
+
+package = Tripal Extensions
+core = 7.x

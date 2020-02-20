@@ -1,0 +1,35 @@
+<?php
+/**
+ * @file
+ * Contains actions performed during install/uninstall.
+ */
+
+/**
+ * Implements hook_enable().
+ * Load default configuration.
+ */
+function tripal_ws_brapi_enable() {
+  // Use the comnination of keyword as variable names that will serve as
+  // configuration options for this call instance.
+  include_once 'includes/config.inc';
+
+  variable_set($config_module_name . '_vocabulary', $config_vocabulary);
+  variable_set($config_module_name . '_supported_version', $config_supported_version);
+  variable_set($config_module_name . '_supported_method', $config_supported_method);
+  variable_set($config_module_name . '_resultset_limit', $config_resultset_limit);
+  variable_set($config_module_name . '_menu_level', $config_menu_level);
+}
+
+/**
+ * Implements hook_disable().
+ * Load configuration.
+ */
+function tripal_ws_brapi_disable() {
+  include_once 'includes/config.inc';
+
+  variable_del($config_module_name . '_vocabulary');
+  variable_del($config_module_name . '_supported_version');
+  variable_del($config_module_name . '_supported_method');
+  variable_del($config_module_name . '_resultset_limit');
+  variable_del($config_module_name . '_menu_level');
+}

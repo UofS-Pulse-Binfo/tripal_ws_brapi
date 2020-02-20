@@ -1,0 +1,69 @@
+<?php
+/**
+ * @file
+ * The main functionality of this module.
+ */
+
+// Include helper functions.
+include_once 'includes/api.inc';
+
+// Include helper classes.
+// Class to identify resource from a url.
+require_once 'class/helper class/TripalWebServiceResourceIdentifier.inc';
+// Class handle response result.
+require_once 'class/helper class/TripalWebServiceResponse.inc';
+
+// Include base classes.
+// Base call/request class.
+require_once 'class/TripalWebServiceCall.inc';
+// Class for custom calls (non database).
+require_once 'class/TripalWebServiceCustomCall.inc';
+
+/**
+ * Implements hook_menu().
+ */
+function tripal_ws_brapi_menu() {
+  $items = [];
+
+  // Register menu item to resolve url under web-services/VOCABULARY pattern.
+  // Module name used to identify configuration variable set from another
+  // instance of call class.
+  $module_name = basename(__FILE__, '.module');
+
+  // To add level to menu location, ie. host/web-services/brapi or
+  // set value to blank to set menu level directly to host/brapi/...
+  $menu_level = variable_get($module_name . '_menu_level');
+  $vocabulary_name = variable_get($module_name . '_vocabulary');
+  $base_menu_location = tripal_ws_resolve_menu_location($vocabulary_name, $menu_level);
+
+  $items[ $base_menu_location ] = array(
+    'title' => 'Tripal Web Services API',
+    'page callback' => 'tripal_ws_vocabulary_handle_request',
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+  );
+
+  return $items;
+}
+
+
+/**
+ * Function callback (page callback), begin processing call request.
+ */
+if (!function_exists('tripal_ws_vocabulary_handle_request')) {
+  function tripal_ws_vocabulary_handle_request() {
+    $module_name = basename(__FILE__, '.module');
+
+    $call_asset = new TripalWebserviceResourceIdentifier($module_name);
+    $call_asset = get_object_vars($call_asset);
+    // Call asset now caontains: The call, version, parameters and http request method.
+
+    // Load call class file.
+    $call = tripal_ws_load_call($call_asset['version'], $call_asset['call']['name'], $call_asset['module']);
+
+    if (class_exists($call)) {
+      $response = new $call($call_asset);
+      $response->prepareResponse();
+    }
+  }
+}
