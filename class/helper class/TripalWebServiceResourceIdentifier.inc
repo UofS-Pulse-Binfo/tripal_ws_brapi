@@ -22,7 +22,7 @@ class TripalWebServiceResourceIdentifier {
     $this->setModuleName($module_name);
 
     // Verify user has configured the module.
-    $configuration = ['module_name', 'vocabulary', 'supported_version', 'supported_method', 'resultset_limit'];
+    $configuration = ['vocabulary', 'supported_version', 'supported_method', 'resultset_limit'];
     $not_set = [];
 
     foreach($configuration as $conf) {
