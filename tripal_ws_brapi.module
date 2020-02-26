@@ -6,6 +6,8 @@
 
 // Include helper functions.
 include_once 'includes/api.inc';
+// Include database queries.
+require_once 'includes/db.inc';
 
 // Include helper classes.
 // Class to identify resource from a url.
@@ -18,6 +20,7 @@ require_once 'class/helper class/TripalWebServiceResponse.inc';
 require_once 'class/TripalWebServiceCall.inc';
 // Class for custom calls (non database).
 require_once 'class/TripalWebServiceCustomCall.inc';
+
 
 /**
  * Implements hook_menu().
@@ -36,12 +39,47 @@ function tripal_ws_brapi_menu() {
   $vocabulary_name = variable_get($module_name . '_vocabulary');
   $base_menu_location = tripal_ws_resolve_menu_location($vocabulary_name, $menu_level);
 
-  $items[ $base_menu_location ] = array(
+  $items[ $base_menu_location ] = [
     'title' => 'Tripal Web Services API',
     'page callback' => 'tripal_ws_vocabulary_handle_request',
-    'access arguments' => array('access content'),
+    'access arguments' => ['access content'],
     'type' => MENU_CALLBACK,
-  );
+  ];
+
+  // Configuration page.
+  $items[ 'admin/tripal/extension/' . $module_name . '/configure' ] = [
+    'title' => strtoupper($module_name) . ': configuration',
+    'description' => t('Interface to configure calls'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => ['tripal_ws_configure'],
+    'access arguments' => ['access administration pages'],
+    'file' => 'includes/forms/configuration.form.inc',
+    'type' => MENU_NORMAL_ITEM,
+  ];
+
+    // General module configuration.
+    $items[ 'admin/tripal/extension/' . $module_name . '/configure/module' ] = [
+      'title' => 'Configure: ' . $module_name,
+      'description' => t('Interface to configure calls'),
+      'page callback' => 'drupal_get_form',
+      'page arguments' => ['tripal_ws_configure_module', 3],
+      'access arguments' => ['access administration pages'],
+      'file' => 'includes/forms/configuration.form.inc',
+      'type' => MENU_LOCAL_TASK,
+      'weight' => 1,
+    ];
+
+    // Configure a call.
+    $items[ 'admin/tripal/extension/' . $module_name . '/configure/call' ] = [
+      'title' => 'Configure: Calls',
+      'description' => t('Interface to configure calls'),
+      'page callback' => 'drupal_get_form',
+      'page arguments' => ['tripal_ws_configure_call', 3],
+      'access arguments' => ['access administration pages'],
+      'file' => 'includes/forms/configuration.form.inc',
+      'type' => MENU_LOCAL_TASK,
+      'weight' => 2,
+    ];
 
   return $items;
 }

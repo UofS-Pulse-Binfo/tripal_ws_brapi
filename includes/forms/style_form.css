@@ -1,0 +1,39 @@
+.tripal_ws_div_item {
+  border-right: 1px solid #CCCCCC;
+  display: inline;
+  float: left;
+  margin: 0 40px 30px 0;
+  padding: 0 40px 0 0;
+}
+
+.tripal_ws_div_item:last-of-type {
+  border: none;
+}
+
+.tripal_ws_div_item h1 {
+  background-color: #000000;
+  color: #FFFFFF;
+  font-family: Courier;
+  display: inline-block;
+  padding: 10px;
+}
+
+.tripal_ws_div_item h4 {
+  margin-bottom: 2px;
+}
+
+.clear-float {
+  clear: left;
+  display: block;
+  float: none;
+}
+
+
+@media(max-width: 1550px) {
+  .tripal_ws_div_item {
+    border: none;
+    float: none;
+    margin: 0 0 40px 0;
+    padding: 0;
+  }
+}

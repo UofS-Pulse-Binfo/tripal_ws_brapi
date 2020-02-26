@@ -94,3 +94,36 @@ if (!function_exists('tripal_ws_resolve_menu_location')) {
     }
   }
 }
+
+/**
+ * Get all calls with property table that can be used configured.
+ */
+if (!function_exists('tripal_ws_get_call_with_property')) {
+  function tripal_ws_get_call_with_property($module) {
+    $result = '';
+
+    // Get the call to table mapping information.
+    $dir_module = drupal_get_path('module', $module);
+    $file_config = $dir_module . '/includes/config.inc';
+
+    if (file_exists($file_config)) {
+      include_once $file_config;
+
+      $mapping_info = $map;
+      $result = [];
+
+      if (is_array($mapping_info)) {
+        foreach($mapping_info as $call => $relation) {
+          $has_typeid  = tripal_ws_db_has_type_id($relation);
+          $has_prop = tripal_ws_db_has_prop_table($relation);
+
+          if ($has_typeid || $has_prop) {
+            $result[] = $call;
+          }
+        }
+      }
+    }
+
+    return $result;
+  }
+}

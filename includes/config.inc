@@ -5,7 +5,7 @@
 // The name of the module. Configurations var names are prefixed
 // with the module name to separate config vars of one instance from
 // another instance within the same host.
-$module_name = 'tripal_ws_brapi';
+$config_module_name = 'tripal_ws_brapi';
 
 // The name of the vocbulary or ontology. ie brapi, hydra
 $config_vocabulary = 'brapi';
@@ -24,3 +24,11 @@ $config_supported_method = 'GET';
 // Separage level with / forward slash. ie: a/b/c/d
 // NOTE: clear cache between updates to see applied.
 $config_menu_level = 'web-services';
+
+// Call to chado table mapping.
+$map = [
+  // Call name - Chado table.
+  'commoncropnames' => 'organism',
+  'phenotypes' => 'phenotype',
+  'germplasm' => 'stock',
+];
