@@ -10,7 +10,7 @@
  * @param $version
  *   Ingeger, the major version component of version number.
  * @param $call
- *   String, call name.
+ *   Array, call name and search call flag.
  * @param $module_name
  *   String, the name of the module the request is made.
  *
@@ -19,28 +19,39 @@
  */
 if (!function_exists('tripal_ws_load_call')) {
   function tripal_ws_load_call($version, $call, $module_name) {
+    $version = $version['version'];
+
+    $is_search = $call['is_search'];
+    $call = $call['name'];
+
     if ($version != '' && $call != '') {
       $dir_module = drupal_get_path('module', $module_name);
       $dir_ver = $dir_module . '/calls/v' . $version . '/';
 
       $call_location = '';
 
-      $in_ver = array_slice(scandir($dir_ver), 2);
+      if ($is_search === 1) {
+        // Call is a search - load appropriate class located in vx/search
+        $call_location = $dir_ver . 'search';
+      }
+      else {
+        $in_ver = array_slice(scandir($dir_ver), 2);
 
-      foreach($in_ver as $folder) {
-        if ($folder == $call) {
-          $call_location = $dir_ver . $folder;
-          break;
-        }
-        else {
-          $dir_subfolder = $dir_ver . $folder;
-          if (is_dir($dir_subfolder)) {
-            $in_subfolder = array_slice(scandir($dir_subfolder), 2);
+        foreach($in_ver as $folder) {
+          if ($folder == $call) {
+            $call_location = $dir_ver . $folder;
+            break;
+          }
+          else {
+            $dir_subfolder = $dir_ver . $folder;
+            if (is_dir($dir_subfolder)) {
+              $in_subfolder = array_slice(scandir($dir_subfolder), 2);
 
-            foreach($in_subfolder as $sub_folder) {
-              if ($sub_folder == $call) {
-                $call_location = $dir_subfolder . '/' . $sub_folder;
-                break 2;
+              foreach($in_subfolder as $sub_folder) {
+                if ($sub_folder == $call) {
+                  $call_location = $dir_subfolder . '/' . $sub_folder;
+                  break 2;
+                }
               }
             }
           }
@@ -118,12 +129,119 @@ if (!function_exists('tripal_ws_get_call_with_property')) {
           $has_prop = tripal_ws_db_has_prop_table($relation);
 
           if ($has_typeid || $has_prop) {
-            $result[] = $call;
+            $result[ $call ] = [
+              'table' => $relation,
+              'property' => ['typeid' => $has_typeid, 'prop' => $has_prop]
+            ];
           }
         }
       }
     }
 
     return $result;
+  }
+}
+
+/**
+ * Format call name or title.
+ *
+ * @param $call
+ *   String or array, call name or title.
+ * @param $format
+ *  String, can be one of the following:
+ *  noformat: remove any case formatting, and set to lowercase
+ *            after replacing all spaces with underscore.
+ *  lowercase: retrurn name in lowercase.
+ *  uppercase: return name in uppercase.
+ *  proper: return name with the only the first letter of every word
+ *          capitalized.
+ *  call-dir: special formatting, where the call is shown (proper case) plust
+ *            the command used to access the call.
+ *
+ * @return string
+ *   String or arrayFormatted call name.
+ */
+if (!function_exists('tripal_ws_format_call')) {
+  function tripal_ws_format_call($call, $format) {
+    $new_format = [];
+    if (!is_array($call)) {
+      $call = (array) $call;
+    }
+
+    foreach($call as $c) {
+      switch ($format) {
+        case 'noformat':
+          $new_format[ $c ] = trim(strtolower(str_replace(' ', '_', $c)));
+          break;
+
+        case 'lowercase':
+          $new_format[ $c ] = strtolower($c);
+          break;
+
+        case 'uppercase':
+          $new_format[ $c ] = strtoupper($c);
+          break;
+
+        case 'proper':
+          $new_format[ $c ] = ucfirst($c);
+          break;
+
+        case 'call-dir':
+          $new_format[ $c ] = ucfirst($c) . ' ( /' . strtolower($c) . ' )';
+          break;
+      }
+    }
+
+    return (count($new_format) == 1) ? reset($new_format) : $new_format;
+  }
+}
+
+/**
+ * Fetch call mapping information.
+ *
+ * @return array
+ *   Table mapping and alias name mapping information.
+ */
+if (!function_exists('tripal_ws_get_call_map')) {
+  function tripal_ws_get_call_map() {
+    include_once 'config.inc';
+
+    return ['table' => $map, 'alias' => $call_alias];
+  }
+}
+
+/**
+ * Construct hash code to reference a cached search request.
+ * ie. 551ae08c-4548-4bde-ad70-f23beb25e2ea
+ *
+ * @param $no_packet
+ *   Integer, number of groups of string.
+ *   Default to 5 sets/groups.
+ * @param $len_packet
+ *   Integer, string length of each packet.
+ *   Default to 5 characters long.
+ *
+ * @return string
+ *   Hash code.
+ */
+if (!function_exists('tripal_ws_create_code')) {
+  function tripal_ws_create_search_id($no_packet = 5, $len_packet = 5) {
+    $chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    $chars_len = strlen($chars) - 1;
+    $packets = [];
+
+    if ($no_packet > 0) {
+      for($i = 0; $i < $no_packet; $i++) {
+        $code = '';
+        for($j = 0; $j < $len_packet; $j++) {
+          $rand_i = rand(0, $chars_len);
+          $code .= $chars[ $rand_i ];
+        }
+
+        $packets[] = $code;
+      }
+    }
+
+    return (count($packets) == $no_packet) ? implode('-', $packets) : 0;
   }
 }

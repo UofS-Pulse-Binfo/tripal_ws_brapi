@@ -14,11 +14,9 @@ class TripalWebServiceBrapiV2Serverinfo extends TripalWebServiceCustomCall {
 
   // Unit of response for this call.
   private $response_field = [
-    'call'     => '',
-    'dataType' => [],
-    'method'   => [],
-    'version'  => []
+    '2.0' => ['call', 'dataType', 'method', 'version']
   ];
+
 
   // Call parameters as provided in the request url.
   public $call_asset;
@@ -36,47 +34,55 @@ class TripalWebServiceBrapiV2Serverinfo extends TripalWebServiceCustomCall {
    * Prepare items/data payload as response.
    */
   public function prepareResponse() {
+    // Call assets.
     $call_asset = $this->call_asset;
+    // What should be the title for the result.
     $call_payload_key = $this->call_payload_key;
 
-    // Metadata.
-    $metadata = [];
-    $metadata['datafiles'] = [];
-    $metadata['status'] = [];
-    $metadata['pagination'] = [
-      'totalCount',
-      'pageSize',
-      'totalPages',
-      'currentPage',
+    $active_version = $call_asset['version']['active'];
+    $response_field = $this->response_field[ $active_version ];
+
+    // Metadata:
+    $metadata = [
+      'datafiles'  => [],
+      'status'    => [],
+      'pagination' => ['totalCount', 'pageSize', 'totalPages', 'currentPage'],
     ];
 
-    // Response payload.
-    // Set static value.
-    $content_type = 'application/' . TripalWebServiceResponse::$response_content_type;
-    $this->response_field['dataType'][] = $content_type;
-    $this->response_field['version'][] = parent::getServiceVersion();
-    $this->response_field['method'] = parent::getRequestMethod();;
+
+    // Payload:
 
     $payload = [];
 
+    // Static values.
+    $static_contenttype = 'application/' . TripalWebServiceResponse::$response_content_type;
+    $static_method      = parent::getRequestMethod();
+
+    $static_version = [];
+    $var_name = $call_asset['module'] . '_v' . $call_asset['version']['version'];
+    $var_value = variable_get($var_name);
+    if (is_array($var_value)) {
+      $static_version = $var_value['all'];
+    }
+
+    // Data.
     $dir_module = drupal_get_path('module', $call_asset['module']);
-    $dir_calls = $dir_module . '/calls/v' . $call_asset['version'] . '/';
+    $dir_calls = $dir_module . '/calls/v' . $call_asset['version']['version'] . '/';
     $calls = array_slice(scandir($dir_calls), 2);
 
-    foreach($calls as $call) {
+    foreach($calls as $i => $call) {
       if (is_dir($dir_calls . $call)) {
         $sub_calls = array_slice(scandir($dir_calls . $call), 2);
 
         foreach($sub_calls as $sub_call) {
-          // Save only when it is a directory.
           if (is_dir($dir_calls . $call . '/' . $sub_call)) {
-            $this->response_field['call'] = trim($sub_call);
-            $payload[ $call_payload_key ][] = $this->response_field;
+            // Save only when it is a directory.
+            $payload[ $call_payload_key ][] = [$sub_call, $static_contenttype, $static_method, $static_version];
           }
         }
       }
     }
 
-    parent::buildResponse($payload, $metadata);
+    parent::buildResponse($payload, $response_field, $metadata);
   }
 }

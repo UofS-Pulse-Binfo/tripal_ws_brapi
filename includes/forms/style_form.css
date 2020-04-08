@@ -1,4 +1,9 @@
-.tripal_ws_div_item {
+/**
+ * @file
+ * Style configuration page.
+ */
+
+.tripal-ws-div-item {
   border-right: 1px solid #CCCCCC;
   display: inline;
   float: left;
@@ -6,11 +11,11 @@
   padding: 0 40px 0 0;
 }
 
-.tripal_ws_div_item:last-of-type {
+.tripal-ws-div-item:last-of-type {
   border: none;
 }
 
-.tripal_ws_div_item h1 {
+.tripal-ws-div-item h1 {
   background-color: #000000;
   color: #FFFFFF;
   font-family: Courier;
@@ -18,7 +23,7 @@
   padding: 10px;
 }
 
-.tripal_ws_div_item h4 {
+.tripal-ws-div-item h4 {
   margin-bottom: 2px;
 }
 
@@ -28,12 +33,26 @@
   float: none;
 }
 
+.tripal-ws-div-item select {
+  width: 200px;
+}
 
 @media(max-width: 1550px) {
-  .tripal_ws_div_item {
+  .tripal-ws-div-item {
     border: none;
     float: none;
     margin: 0 0 40px 0;
     padding: 0;
   }
+}
+
+.tripal-ws-field-select-default {
+  float: left;
+  width: 60px;
+}
+
+span.tripal-ws-td-item {
+  background-color: #EAEAEA;
+  border: 1px solid #333333;
+  padding: 2px;
 }

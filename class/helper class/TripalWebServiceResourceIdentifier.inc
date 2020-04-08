@@ -22,7 +22,7 @@ class TripalWebServiceResourceIdentifier {
     $this->setModuleName($module_name);
 
     // Verify user has configured the module.
-    $configuration = ['vocabulary', 'supported_version', 'supported_method', 'resultset_limit'];
+    $configuration = ['vocabulary', 'supported_method', 'resultset_limit'];
     $not_set = [];
 
     foreach($configuration as $conf) {
@@ -137,11 +137,23 @@ class TripalWebServiceResourceIdentifier {
    *   ie. ?genus=Lens&name=ABC, genus = Lens, name = ABC.
    */
   public function parseParameter() {
-    $query_string = $this->parseResourceIdentifier('parameter');
+    $component = ($this->method == 'POST') ? 'post-json' : 'parameter';
+    $query_string = $this->parseResourceIdentifier($component);
+
     $parameter = '';
 
     if ($query_string) {
-      parse_str($query_string, $parameter);
+      if ($component == 'post-json') {
+        $parameter = $query_string;
+      }
+      else {
+        parse_str($query_string, $parameter);
+      }
+    }
+
+    // Default page #.
+    if (is_array($parameter) && !array_key_exists('page', $parameter)) {
+      $parameter['page'] = 0;
     }
 
     return $parameter;
@@ -173,15 +185,21 @@ class TripalWebServiceResourceIdentifier {
       }
       else {
         // Test if it is supported based on module settings for supported version.
-        $config_supported_version = variable_get($this->module . '_supported_version');
+        $major_version = floor($version);
+        $var_name = $this->module . '_v' . $major_version;
+        $var_value = variable_get($var_name);
 
-        if (floor($version) == floor($config_supported_version)) {
-          // Eliminate minor version component.
-          $this->version = floor($version);
-        }
-        else {
+        $active_version = (is_array($var_value)) ? $var_value['default'] : 0;
+
+        if ($active_version == 0) {
           $response = ['code' => 400, 'message' => 'Resource Identifier: Unsupported version number.'];
           TripalWebServiceResponse::errorResponse($response);
+        }
+        else {
+          $this->version = [
+            'version' => floor($version),
+            'active' => $active_version
+          ];
         }
       }
     }
@@ -243,6 +261,30 @@ class TripalWebServiceResourceIdentifier {
    * @return array, string or empty string.
    */
   public function parseResourceIdentifier($component = null) {
+    // Handling post request.
+    $post_json = '';
+
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+      if ($_SERVER["CONTENT_TYPE"] == 'application/json') {
+        // Only when request is in JSON object.
+        $raw_json = file_get_contents('php://input');
+        // Inspect if it is well-formed JSON.
+        $json = json_decode($raw_json, TRUE);
+
+        if (json_last_error()) {
+          $response = ['code' => 400, 'message' => 'Resource Identifier: Syntax error. Malformed JSON.'];
+          TripalWebServiceResponse::errorResponse($response);
+        }
+        else {
+          $post_json = $json;
+        }
+      }
+      else {
+        $response = ['code' => 400, 'message' => 'Resource Identifier: Unsupported content type.'];
+        TripalWebServiceResponse::errorResponse($response);
+      }
+    }
+
     // Uri resouce/call components.
     $request_uri = [
       // The uri which was given (call) in order to access this page.
@@ -251,6 +293,8 @@ class TripalWebServiceResourceIdentifier {
       'method'    => $_SERVER['REQUEST_METHOD'],
       // The query string, if any, via which the page was accessed.
       'parameter' => $_SERVER['QUERY_STRING'],
+      // POST method - application/json.
+      'post-json' => $post_json,
     ];
     // Used to hold components of the uri which will be returned
     // to calling function to resolve call title.
@@ -258,9 +302,11 @@ class TripalWebServiceResourceIdentifier {
 
     if ($request_uri['path']) {
       if (is_null($component)) {
+        // All resource.
         $resource = $request_uri;
       }
       elseif (array_key_exists($component, $request_uri)) {
+        // Specific resource.
         $resource = $request_uri[ $component ];
       }
       else {

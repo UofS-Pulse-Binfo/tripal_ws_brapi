@@ -2,11 +2,10 @@
 /**
  * Call: Calls, class definition.
  */
-class TripalWebServiceBrapiV1Calls extends TripalWebServiceCustomCall {
+class TripalWebServiceBrapiV1Mystocks extends TripalWebServiceDatabaseCall {
   // This call expects parameters below.
   public $call_parameter = [
-    // Key : Expected value for this key.
-    'page' => 'int'
+    // Key : Expected data type (ie. text, int).
   ];
 
   // Keyword used to identify result items.
@@ -14,8 +13,7 @@ class TripalWebServiceBrapiV1Calls extends TripalWebServiceCustomCall {
 
   // Unit of response for this call.
   private $response_field = [
-    '1.2' => ['call', 'datatypes', 'method', 'version'],
-    '1.3' => ['call', 'dataType', 'method', 'version']
+    '1.3' => ['name', 'stockid'],
   ];
 
   // Call parameters as provided in the request url.
@@ -36,7 +34,7 @@ class TripalWebServiceBrapiV1Calls extends TripalWebServiceCustomCall {
   public function prepareResponse() {
     // Call assets.
     $call_asset = $this->call_asset;
-    // What should be the title for the result.
+    // What should be the title for the result?
     $call_payload_key = $this->call_payload_key;
 
     $active_version = $call_asset['version']['active'];
@@ -49,33 +47,9 @@ class TripalWebServiceBrapiV1Calls extends TripalWebServiceCustomCall {
       'pagination' => ['totalCount', 'pageSize', 'totalPages', 'currentPage'],
     ];
 
-
     // Payload:
-
     $payload = [];
-
-    // Static values.
-    $static_contenttype = 'application/' . TripalWebServiceResponse::$response_content_type;
-    $static_method      = parent::getRequestMethod();
-
-    $static_version = [];
-    $var_name = $call_asset['module'] . '_v' . $call_asset['version']['version'];
-    $var_value = variable_get($var_name);
-    if (is_array($var_value)) {
-      $static_version = $var_value['all'];
-    }
-
-    // Data.
-    $dir_module = drupal_get_path('module', $call_asset['module']);
-    $dir_calls = $dir_module . '/calls/v' . $call_asset['version']['version'] . '/';
-    $calls = array_slice(scandir($dir_calls), 2);
-
-    foreach($calls as $i => $call) {
-      if (is_dir($dir_calls . $call)) {
-        // Save only when it is a directory.
-        $payload[ $call_payload_key ][] = [$call, $static_contenttype, $static_method, $static_version];
-      }
-    }
+    $payload[ $call_payload_key ] = $this->getDBCall($call_asset['call']['name'], $call_asset);
 
     parent::buildResponse($payload, $response_field, $metadata);
   }

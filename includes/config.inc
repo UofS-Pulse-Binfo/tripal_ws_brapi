@@ -13,9 +13,6 @@ $config_vocabulary = 'brapi';
 // Result set limit the items shown per page in response/result.
 $config_resultset_limit = 10;
 
-// Supported version.
-$config_supported_version = '1.3';
-
 // Supported HTTP request method.
 $config_supported_method = 'GET';
 
@@ -25,10 +22,24 @@ $config_supported_method = 'GET';
 // NOTE: clear cache between updates to see applied.
 $config_menu_level = 'web-services';
 
+
 // Call to chado table mapping.
+// Call name or title => chado stock table.
 $map = [
   // Call name - Chado table.
   'commoncropnames' => 'organism',
   'phenotypes' => 'phenotype',
   'germplasm' => 'stock',
+  'project' => 'project',
+  'publication' => 'pub',
+  'genotype' => 'genotype',
+  'environment' => 'phenstatement',
+  'mystocks' => 'stock',
+];
+
+
+// Map call to function that will generate the same response.
+// Call name or title => other name or alias of the same call.
+$call_alias = [
+  'crops' => 'commoncropnames',
 ];

@@ -15,7 +15,11 @@ class TripalWebServiceCall {
    */
   public function getResultsetLimit() {
     $module_name = $this->call_asset['module'];
-    $resultset_limit = variable_get($module_name . '_resultset_limit');
+    $resultset_limit = '';
+
+    if (!empty($module_name)) {
+      $resultset_limit = variable_get($module_name . '_resultset_limit');
+    }
 
     return ($resultset_limit > 0) ? $resultset_limit : 20;
   }
@@ -28,7 +32,11 @@ class TripalWebServiceCall {
    */
   public function getServiceVersion() {
     $module_name = $this->call_asset['module'];
-    $service_version = variable_get($module_name . '_supported_version');
+    $service_version = '';
+
+    if (!empty($module_name)) {
+      $service_version = variable_get($module_name . '_supported_version');
+    }
 
     return $service_version;
   }
@@ -41,7 +49,11 @@ class TripalWebServiceCall {
    */
   public function getRequestMethod() {
     $module_name = $this->call_asset['module'];
-    $request_method = variable_get($module_name . '_supported_method');
+    $request_method = '';
+
+    if (!empty($module_name)) {
+      $request_method = variable_get($module_name . '_supported_method');
+    }
 
     $request_method = explode(',', $request_method);
     return $request_method;
@@ -62,7 +74,7 @@ class TripalWebServiceCall {
           $is_valid = $this->matchDataType($value, $call_parameter[ $key ]);
 
           if (!$is_valid) {
-            $response = ['code' => 400, 'message' => 'Call: Parameter ' . $key . ' expects ' . $call_parameter[ $key ] . 'type.'];
+            $response = ['code' => 400, 'message' => 'Call: Parameter ' . $key . ' expects ' . $call_parameter[ $key ] . ' type.'];
             TripalWebServiceResponse::errorResponse($response);
             // Error will exit, but break here to be clear that loop should halt on error.
             break;
@@ -116,13 +128,62 @@ class TripalWebServiceCall {
           // Paging starts at 0, include 0.
           $match = TRUE;
         }
+
         break;
 
       case 'text':
         if (is_string($value)) {
           $match = TRUE;
+
+          if ($match && !empty($value)) {
+            // See if text is longer than 15 chars.
+            $match = FALSE;
+
+            if (strlen($value) <= 15) {
+              $match = TRUE;
+            }
+          }
         }
+
         break;
+
+      case 'array-text':
+        // Array of string.
+        if (is_array($value)) {
+          $match = TRUE;
+          foreach($value as $i => $item) {
+            if (is_array($item)) {
+              foreach($item as $item_value) {
+                $is_valid = $this->matchDataType($item_value, 'text');
+                if ($is_valid) {
+                  $match = FALSE;
+                  break 2;
+                }
+              }
+            }
+          }
+        }
+
+        break;
+
+      case 'array-int':
+          // Array of string.
+          if (is_array($value)) {
+            $match = TRUE;
+            foreach($value as $i => $item) {
+              if (is_array($item)) {
+                foreach($item as $item_value) {
+                  $is_valid = $this->matchDataType($item_value, 'int');
+                  if ($is_valid) {
+                    $match = FALSE;
+                    break 2;
+                  }
+                }
+              }
+            }
+          }
+
+          break;
     }
 
     return $match;
@@ -176,7 +237,7 @@ class TripalWebServiceCall {
    *
    * @see methods below.
    */
-  public function resolveMetadataItem($payload, $metadata) {
+  public function resolveMetadataItem($payload, $metadata, $call_asset) {
     $revised_metadata = [];
 
     foreach($metadata as $key => $value) {
@@ -196,7 +257,76 @@ class TripalWebServiceCall {
     return $revised_metadata;
   }
 
+  /**
+   * Map data to term.
+   *
+   * @param $data
+   *   Array, data items.
+   * @param $response_field.
+   *   Array, response field set per call.
+   *
+   * @return
+   *   Data items mapped to response field.
+   */
+  public function mapDataToResponseField($data, $response_field) {
+    $map_data = [];
+
+    foreach($data as $i => $item) {
+      $item = (array) $item;
+
+      $j = 0;
+      foreach($item as $key => $value) {
+        if (is_array($response_field) && !empty($response_field)) {
+          if (isset($response_field[ $j ]) && $response_field[ $j ]) {
+            $map_data[ $i ][ $response_field[ $j ] ] = $value;
+          }
+          else {
+            if ($key == 'full_count') {
+              $map_data[ $i ][ '#' . $key ] = $value;
+            }
+          }
+
+          $j++;
+        }
+        else {
+          $map_data[0][] = $value;
+        }
+      }
+    }
+
+    return $map_data;
+  }
+
+  /**
+   * Establish the total count.
+   *
+   * @param $payload
+   *  Query result, a column containing the full count
+   *  by accessing the column title: full_count.
+   *
+   * @return integer
+   *  Full count number.
+   */
+  function getResultFullCount($payload) {
+    $full_count = '';
+
+    foreach($payload as $item) {
+      if (is_array($item)) {
+        foreach($item as $key => $value) {
+          if ($key === '#full_count') {
+            $full_count = $value;
+            break 2;
+          }
+        }
+      }
+    }
+
+    return $full_count;
+  }
+
+
   // RESOLVE METADATA KEY.
+
 
   /**
    * Compute total number of elements in the super set.
@@ -210,7 +340,8 @@ class TripalWebServiceCall {
    */
   public function totalCount($payload) {
     if ($payload) {
-      return count($payload);
+      $full_count = $this->getResultFullCount($payload);
+      return ($full_count == '') ? count($payload) : $full_count;
     }
   }
 
@@ -227,18 +358,26 @@ class TripalWebServiceCall {
    *   Total number or items per page result.
    */
   public function pageSize($payload, $parameter) {
-    $resultset_limit = $this->getResultsetLimit();
-    $current_page = (isset($parameter['page'])) ? $parameter['page'] : 0;
+    $ref_class = get_parent_class($this);
 
-    $start_at = $current_page * $resultset_limit;
-    $stop_at  = $start_at + $resultset_limit - 1;
+    if ($ref_class == 'TripalWebServiceCustomCall') {
+      $resultset_limit = $this->getResultsetLimit();
+      $current_page = (isset($parameter['page'])) ? $parameter['page'] : 0;
 
-    $response_subset_ctr = 0;
+      $start_at = $current_page * $resultset_limit;
+      $stop_at  = $start_at + $resultset_limit - 1;
 
-    for ($i = $start_at; $i <= $stop_at; $i++) {
-      if ($payload[$i]) {
-        $response_subset_ctr++;
+      $response_subset_ctr = 0;
+
+      for ($i = $start_at; $i <= $stop_at; $i++) {
+        if (isset($payload[$i])) {
+          $response_subset_ctr++;
+        }
       }
+    }
+    else {
+      // Database call: the result is the number of item returned.
+      return count($payload);
     }
 
     return $response_subset_ctr;
@@ -255,7 +394,8 @@ class TripalWebServiceCall {
    *   Total number of pages.
    */
   public function totalPages($payload) {
-    $count = count($payload);
+    $full_count = $this->getResultFullCount($payload);
+    $count = ($full_count == '') ? count($payload) : $full_count;
     $resultset_limit = $this->getResultsetLimit();
 
     // The total pages, set to 0.
@@ -273,7 +413,7 @@ class TripalWebServiceCall {
       $total_page = ($count % $resultset_limit) ? floor($p) + 1 : $p;
     }
 
-    return $total_page - 1;
+    return ($total_page == 0) ? 1 : $total_page - 1;
   }
 
   /**

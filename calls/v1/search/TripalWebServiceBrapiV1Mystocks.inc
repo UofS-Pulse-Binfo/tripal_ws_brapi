@@ -2,10 +2,12 @@
 /**
  * Call: Calls, class definition.
  */
-class TripalWebServiceBrapiV1Commoncropnames extends TripalWebServiceDatabaseCall {
+class TripalWebServiceBrapiV1Mystocks extends TripalWebServiceSearchCall {
   // This call expects parameters below.
   public $call_parameter = [
-    // Key : Expected value for this key.
+    // Key : Expected data type (ie. text, int).
+    'stockNames' => 'array-text',
+    'page' => 'int'
   ];
 
   // Keyword used to identify result items.
@@ -13,7 +15,18 @@ class TripalWebServiceBrapiV1Commoncropnames extends TripalWebServiceDatabaseCal
 
   // Unit of response for this call.
   private $response_field = [
-    '1.3' => [],
+    '1.3' => ['stockId', 'name', 'uniqueName'],
+  ];
+
+  // Search request properties
+
+  // Search request key
+  public $search_payload_key = 'searchResultDbId';
+
+  // Search Request Id response.
+  private $search_response_field = [
+    '1.2' => ['searchResultDbId'],
+    '1.3' => ['searchResultDbId'],
   ];
 
   // Call parameters as provided in the request url.
@@ -34,11 +47,8 @@ class TripalWebServiceBrapiV1Commoncropnames extends TripalWebServiceDatabaseCal
   public function prepareResponse() {
     // Call assets.
     $call_asset = $this->call_asset;
-    // What should be the title for the result?
-    $call_payload_key = $this->call_payload_key;
-
+    // Version to implement.
     $active_version = $call_asset['version']['active'];
-    $response_field = $this->response_field[ $active_version ];
 
     // Metadata:
     $metadata = [
@@ -49,7 +59,17 @@ class TripalWebServiceBrapiV1Commoncropnames extends TripalWebServiceDatabaseCal
 
     // Payload:
     $payload = [];
-    $payload[ $call_payload_key ] = $this->getDBCall($call_asset['call']['name'], $call_asset);
+
+    if (isset($call_asset['parameter'][ $this->search_payload_key ])) {
+      // Get search request:
+      $response_field = $this->response_field[ $active_version ];
+      $payload[ $this->call_payload_key ]  = $this->getSearchRequest();
+    }
+    else {
+      // Post request:
+      $response_field = $this->search_response_field[ $active_version ];
+      $payload[ $this->search_payload_key ] = $this->postSearchRequest();
+    }
 
     parent::buildResponse($payload, $response_field, $metadata);
   }

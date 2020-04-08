@@ -15,10 +15,10 @@ class TripalWebServiceCustomCall extends TripalWebServiceCall {
    *   Array, header or metadata information.
    *   Optional, when metadata not required.
    */
-  public function buildResponse($payload, $metadata = null) {
-    // Key used to identify payload.
-    $call_payload_key = $this->call_payload_key;
+  public function buildResponse($payload, $response_field, $metadata = null) {
     $call_asset = $this->call_asset;
+    $call_payload_key = $this->call_payload_key;
+
     // Validate HTTP request method used.
     parent::validateRequestMethod($this->custom_call_method);
 
@@ -26,21 +26,23 @@ class TripalWebServiceCustomCall extends TripalWebServiceCall {
     // keys match defined parameters and values matches expected type.
     parent::validateParameter();
 
-    // Construct response.
-    // Revise metadata: see if elements can be provided with appropriate values.
-    $revised_metadata = [];
+    /// IS OKAY
 
-    if ($payload) {
-      if ($metadata) {
-        // Resolve items in the metadata.
-        $revised_metadata = $this->resolveMetadataItem($payload[ $call_payload_key ], $metadata);
-      }
+    // Prepare response.
+    // 1. Map data (one to one mappint) to response field.
+    $payload_values = $payload[ $call_payload_key ];
+    $payload[ $call_payload_key ] = parent::mapDataToResponseField($payload_values, $response_field);
 
-      // Apply pagination to payload.
-      $revised_payload[ $call_payload_key ] = $this->pagePayload($payload[ $call_payload_key ], $call_asset['parameter']);
-
-      // Return response.
-      TripalWebServiceResponse::sendResponse($revised_payload, $revised_metadata);
+    // 2. Resolve terms used in the metadata.
+    $revise_metadata = [];
+    if ($metadata) {
+      $revise_metadata = $this->resolveMetadataItem($payload[ $call_payload_key ], $metadata, $call_asset);
     }
+
+    // 3. Prepare subset as response base on the current page.
+    $revise_payload[ $call_payload_key ] = $this->pagePayload($payload[ $call_payload_key ], $call_asset['parameter']);
+
+    // 4. Return response.
+    TripalWebServiceResponse::sendResponse($revise_payload, $revise_metadata);
   }
 }

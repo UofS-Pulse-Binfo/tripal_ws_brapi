@@ -14,7 +14,6 @@ function tripal_ws_brapi_enable() {
   include_once 'includes/config.inc';
 
   variable_set($config_module_name . '_vocabulary', $config_vocabulary);
-  variable_set($config_module_name . '_supported_version', $config_supported_version);
   variable_set($config_module_name . '_supported_method', $config_supported_method);
   variable_set($config_module_name . '_resultset_limit', $config_resultset_limit);
   variable_set($config_module_name . '_menu_level', $config_menu_level);
@@ -22,7 +21,7 @@ function tripal_ws_brapi_enable() {
 
 /**
  * Implements hook_disable().
- * Load configuration.
+ * Remove configurations.
  */
 function tripal_ws_brapi_disable() {
   include_once 'includes/config.inc';
@@ -32,4 +31,79 @@ function tripal_ws_brapi_disable() {
   variable_del($config_module_name . '_supported_method');
   variable_del($config_module_name . '_resultset_limit');
   variable_del($config_module_name . '_menu_level');
+
+  // Versions.
+  $minor_ver_option = range(0, 10);
+  foreach($minor_ver_option as $ver) {
+    $var_name = 'tripal_ws_v' . $ver;
+    $var_value = variable_get($var_name);
+
+    if (!empty($var_value)) {
+      variable_del($var_name);
+    }
+  }
+
+  // Calls.
+  foreach($map as $call) {
+    $var_name = 'tripal_ws_' . trim(strtolower(str_replace(' ', '_', $call)));
+    $var_value = variable_get($var_name);
+
+    if (!empty($var_value)) {
+      variable_del($var_name);
+    }
+  }
+
+  // Schema.
+  $del = "DROP TABLE IF EXISTS {tripal_ws_brapi_search_request}";
+  chado_query($del);
+}
+
+/**
+ * Implements hook_schema().
+ * Table definition used by search service.
+ */
+function tripal_ws_brapi_schema() {
+  $schema = [];
+
+  $schema['tripal_ws_brapi_search_request'] = [
+    'description' => 'Storage for search requests',
+    'fields' => [
+      'id' => [
+        'description' => 'The primary identifier',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE
+      ],
+      'search_request_id' => [
+        'description' => 'Hash code used to reference a row',
+        'type' => 'varchar',
+        'length' => 30,
+        'not null' => TRUE
+      ],
+      'search_request_type' => [
+        'description' => 'Call title making the search request',
+        'type' => 'varchar',
+        'length' => 30,
+        'not null' => TRUE
+      ],
+      'search_request_parameter' => [
+        'description' => 'Parameter to the search request',
+        'type' => 'text',
+      ],
+      'request' => [
+        'description' => 'Number of times requested',
+        'type' => 'varchar',
+        'length' => 255
+      ],
+      'search_request_created' => [
+        'description' => 'Timestamp, request created',
+        'type' => 'varchar',
+        'length' => 30,
+        'not null' => TRUE,
+      ]
+    ],
+    'primary key' => ['id']
+  ];
+
+  return $schema;
 }

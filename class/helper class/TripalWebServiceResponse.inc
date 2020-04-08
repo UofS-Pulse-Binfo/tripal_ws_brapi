@@ -65,6 +65,7 @@ final class TripalWebServiceResponse {
    */
   public static function errorResponse($response) {
     $metadata_response = self::$metadata_response;
+    $response['code'] = isset($response['code']) ? 200 : $response['code'];
 
     // Attach response to define metatdata format defined above.
     $metadata_response['metadata']['status'] = $response;
@@ -72,7 +73,7 @@ final class TripalWebServiceResponse {
     $metadata_response['metadata']['status']['messageType'] = $error_code_description;
 
     $response = $metadata_response;
-    $status = $code . ' ' . $error_code_description;
+    $status = $response['code'] . ' ' . $error_code_description;
     self::encodeResponse(self::$response_content_type, $status, $response);
   }
 
@@ -83,7 +84,7 @@ final class TripalWebServiceResponse {
     if (isset($metadata['status'])) {
       $metadata['status']['code'] = 200;
       $metadata['status']['message'] = 'Successful';
-      $metadata['status']['messageType'] = 'Ok';
+      $metadata['status']['messageType'] = 'INFO';
     }
 
     $metadata_response = self::$metadata_response;
@@ -93,6 +94,7 @@ final class TripalWebServiceResponse {
     $metadata_response[ $metadata_response_key ] = $metadata;
 
     $payload_response_key = array_keys($payload_response)[0];
+    $payload = self::removeCommentColumn($payload);
     $payload_response[ $payload_response_key ] = $payload;
 
     $response = $metadata_response + $payload_response;
@@ -124,5 +126,30 @@ final class TripalWebServiceResponse {
      }
 
      exit();
+   }
+
+   /**
+    * Remove comment - entries that begin with # from the response payload.
+    * This comment is used to include total count from a query with
+    * limit/offset clause.
+    *
+    * @param $payload
+    *   Array, response result items.
+    * @return array
+    *   Array, revised response result with all columns that begin with #
+    *   (considered comment) dropped from the original result set.
+    */
+   public static function removeCommentColumn($payload) {
+     $payload_response_key = array_keys($payload)[0];
+
+     foreach($payload[ $payload_response_key ] as $i => $item) {
+       foreach($item as $key => $value) {
+         if (strpos($key, '#') !== FALSE) {
+           unset($payload[ $payload_response_key ][ $i ][ $key ]);
+         }
+       }
+     }
+
+     return $payload;
    }
 }
