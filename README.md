@@ -1,3 +1,103 @@
+**3rd Commit - Search Calls**
+
+This commit enables this module to perform search request using POST and GET methods. A POST requests along with parameters, are cached to allow repeated search request to be carried out without having to re-enter request and its relevant parameters. This commit includes a search functionality setup to germplasm call.
+
+**Search Request/Call Method**
+
+1. When a call supports search, it can be accessed by adding /search level.
+For example: germplasm call becomes germplasm/search
+
+2. Create search request using POST method.
+
+```
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, "host//web-services/brapi/v1/germplasm/search"); // link to the call that supports search.
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+curl_setopt($ch, CURLOPT_HEADER, FALSE);
+curl_setopt($ch, CURLOPT_POST, TRUE);
+
+// Define parameters to the search request.
+// Fill in array values to filter your search with.
+curl_setopt($ch, CURLOPT_POSTFIELDS, "{
+  "accessionNumbers": [],
+  "commonCropNames": [],
+  "germplasmDbIds": [],
+  "germplasmGenus": [],
+  "germplasmNames": [],
+  "germplasmPUIs": [],
+  "germplasmSpecies": [],
+  "page": 0,
+  "pageSize": 0
+}");
+
+curl_setopt($ch, CURLOPT_HTTPHEADER, ["Content-Type: application/json"]);
+$response = curl_exec($ch);
+curl_close($ch);
+var_dump($response);
+```
+3. A hash code titled searchRequestDbId will be returned as the response to the the POST request.
+
+4. Access the link host//web-services/brapi/v1/germplasm/search?searchRequestDbId=HASH CODE in #3
+to view the result. The hash code is cached in the system to ensure quick access of the search result without
+retyping the POST request.
+
+NOTE: The post can be typed in a .php file and be executed in your php-enabled site, alternatively, using your
+Drupal devel/php, paste your code and click execute to achieve the same result.
+
+
+**Test germplasm search.**
+
+1. Using the dataset from Commit #2. Search stock table for stocks with name 'olivia' and 'emma'.
+
+2. Create POST request
+```
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, "host//web-services/brapi/v1/germplasm/search"); 
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+curl_setopt($ch, CURLOPT_HEADER, FALSE);
+curl_setopt($ch, CURLOPT_POST, TRUE);
+curl_setopt($ch, CURLOPT_POSTFIELDS, "{"germplasmNames": ['olivia', 'emma']}");
+curl_setopt($ch, CURLOPT_HTTPHEADER, ["Content-Type: application/json"]);
+$response = curl_exec($ch);
+curl_close($ch);
+var_dump($response);
+```
+3. Copy and paste to devel/php or create a .php file.
+
+4. Locate in response and copy searchResultDbId code/id returned in #2
+
+5. replace or paste searchResultDbId to id in #4 in this link host//web-services/brapi/v1/germplasm/search?searchRequestDbId=HASH CODE/ID to view result.
+
+
+**Create a search call**
+
+1. Using the sample call setup in Commit #2.
+
+2. Copy class file of My stocks into calls/v1/search and rename the class it extends to TripalWbeServiceSearchCall.
+
+3. Define parameters. For this example let's allow search to filter by stock names. in $call_parameter we add
+
+```'stockNames' => 'array-text'```
+
+array-text tells the module that this parameter expects an array of text values.
+
+4. Define response field used when showing result of the search (GET).
+For this example we want to show the stock id, name and uniquename thus we add to 
+```
+$response_field (assuming call is v1.3)
+'1.3' => ['stockId', 'name', 'uniqueName']
+```
+5. Save work.
+
+6. Calls share query function between DB calls and Search call to maximize code reusability, therefore it need to know that
+ call expects parameters defined in the search class that will become part of the where clause of the query.
+
+  in includes/db.inc, update mystocks query function.
+
+6. Follow Test above but use /mystock/search as the search link of the request.
+
+
+
 
 **2nd Commit - Database Calls.**
 
