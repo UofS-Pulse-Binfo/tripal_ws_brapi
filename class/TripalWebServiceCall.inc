@@ -1,10 +1,18 @@
-  <?php
+ <?php
 /**
  * Base class of calls.
  */
 class TripalWebServiceCall {
-  // TODO: make commonly used var as property.
+  // Var to hold module information.
+  private $module;
 
+
+  // Constructor.
+  public function __construct() {
+    // Set the module name.
+    $module = tripal_ws_get_module_info();
+    $this->module = $module['module'];
+  }
 
   /**
    * Get configuration value set for the default number
@@ -14,31 +22,19 @@ class TripalWebServiceCall {
    *   Limit set in the configuration or default to 20 when not set.
    */
   public function getResultsetLimit() {
-    $module_name = $this->call_asset['module'];
-    $resultset_limit = '';
+    $resultset_limit = variable_get($this->module . '_resultset_limit');
 
-    if (!empty($module_name)) {
-      $resultset_limit = variable_get($module_name . '_resultset_limit');
+    // Override:
+    // parameter pageSize provided, use the value, otherwise, use
+    // value set in the configuration.
+
+    if (isset($this->call_asset['parameter']['pageSize'])
+        && $this->call_asset['parameter']['pageSize'] > 0) {
+
+      $resultset_limit = $this->call_asset['parameter']['pageSize'];
     }
 
-    return ($resultset_limit > 0) ? $resultset_limit : 20;
-  }
-
-  /**
-   * Get version number supported by this instance in the configuration.
-   *
-   * @return integer
-   *   Version number set in the configuration.
-   */
-  public function getServiceVersion() {
-    $module_name = $this->call_asset['module'];
-    $service_version = '';
-
-    if (!empty($module_name)) {
-      $service_version = variable_get($module_name . '_supported_version');
-    }
-
-    return $service_version;
+    return $resultset_limit;
   }
 
   /**
@@ -48,41 +44,72 @@ class TripalWebServiceCall {
    *   Http request method. ie GET, POST etc.
    */
   public function getRequestMethod() {
-    $module_name = $this->call_asset['module'];
-    $request_method = '';
+    $request_method = variable_get($this->module . '_supported_method');
 
-    if (!empty($module_name)) {
-      $request_method = variable_get($module_name . '_supported_method');
-    }
-
-    $request_method = explode(',', $request_method);
+    $request_method = preg_split('/,/', $request_method);
     return $request_method;
+  }
+
+  /**
+   * Validate response field of a call for a version number.
+   */
+  public function validateResponseField() {
+    // Active or default version set in configuration for a given
+    // major version. Information is available in the call_asset/configuration.
+    $active_version = (string) $this->call_asset['configuration']['active_version'];
+
+    if (!isset($this->response_field[ $active_version ])) {
+      // With the active version configuration, test against the call
+      // response field versions if a response field for that version
+      // has been defined (data can be mapped to a response field).
+
+      // Call version not implemented.
+      $response = [
+        'code' => 501,  // Not Implemented.
+        'message' => 'Call : Call version not implemented.'
+      ];
+      TripalWebServiceResponse::errorResponse($response);
+    }
   }
 
   /**
    * Validate parameter to a call.
    */
-  public function validateParameter() {
+  public function validateCallParameter() {
     if ($this->call_asset['parameter']) {
       // Validate parameters to a call.
+      // Array, defining each parameter allowed in a call with the expected
+      // data type of the value.
       $call_parameter = $this->call_parameter;
+      // Parameters of the call request as seen in the request call.
       $call_request_parameter = $this->call_asset['parameter'];
 
+      // Validate each parameter.
       foreach($call_request_parameter as $key => $value) {
         if (array_key_exists($key, $call_parameter)) {
           // Key in the request matches predefined parameter of the call.
           $is_valid = $this->matchDataType($value, $call_parameter[ $key ]);
 
           if (!$is_valid) {
-            $response = ['code' => 400, 'message' => 'Call: Parameter ' . $key . ' expects ' . $call_parameter[ $key ] . ' type.'];
+            // Data type mismatch.
+            $response = [
+              'code' => 400, // Bad Request.
+              'message' => 'Call: Parameter ' . $key . ' expects ' . $call_parameter[ $key ] . ' type.'
+            ];
             TripalWebServiceResponse::errorResponse($response);
+
             // Error will exit, but break here to be clear that loop should halt on error.
             break;
           }
         }
         else {
-          $response = ['code' => 400, 'message' => 'Call: Parameter ' . $key . ' not expected for this call.'];
+          // Undefined parameter to this call.
+          $response = [
+            'code' => 400, // Bad Request.
+            'message' => 'Call: Parameter ' . $key . ' not expected for this call.'
+          ];
           TripalWebServiceResponse::errorResponse($response);
+
           // Error will exit, but break here to be clear that loop should halt on error.
           break;
         }
@@ -98,12 +125,19 @@ class TripalWebServiceCall {
    *   ie. Custom call can only accept GET method.
    */
   public function validateRequestMethod($supported_method) {
+    // Http request method of the call.
     $call_request_method = $this->call_asset['method'];
 
+    // Compare to what is set in the configuration page for http request
+    // methods supported by this module.
+
     if (!in_array($call_request_method, $supported_method)) {
-      $response = ['code' => 400, 'message' => 'Call: Unsuppored request method.'];
+      // Method not supported.
+      $response = [
+        'code' => 501, // Not Implemented.
+        'message' => 'Call: Unsuppored request method.'
+      ];
       TripalWebServiceResponse::errorResponse($response);
-      // Error will exit, but break here to be clear that loop should halt on error.
     }
   }
 
@@ -124,6 +158,7 @@ class TripalWebServiceCall {
 
     switch($type) {
       case 'int':
+        // Single value, of type integer. Including 0.
         if (is_numeric($value) && $value >= 0) {
           // Paging starts at 0, include 0.
           $match = TRUE;
@@ -132,6 +167,7 @@ class TripalWebServiceCall {
         break;
 
       case 'text':
+        // Single value, text value.
         if (is_string($value)) {
           $match = TRUE;
 
@@ -147,13 +183,23 @@ class TripalWebServiceCall {
 
         break;
 
+      case 'hash-code':
+        // Single value, alphanumeric value matching a pattern.
+        if (preg_match('/^\w{5}-{1}\w{5}-{1}\w{5}-{1}\w{5}-{1}\w{5}$/', $value)) {
+          // ie: ZovDs-BCDB9-P5QSP-6DSDx-Myisv
+          $match = TRUE;
+        }
+
+        break;
+
       case 'array-text':
-        // Array of string.
+        // Array of string, where each element is of type text.
         if (is_array($value)) {
           $match = TRUE;
           foreach($value as $i => $item) {
             if (is_array($item)) {
               foreach($item as $item_value) {
+                // Use the text condition of this method.
                 $is_valid = $this->matchDataType($item_value, 'text');
                 if ($is_valid) {
                   $match = FALSE;
@@ -167,12 +213,13 @@ class TripalWebServiceCall {
         break;
 
       case 'array-int':
-          // Array of string.
+          // Array of string, where each element is of type integer.
           if (is_array($value)) {
             $match = TRUE;
             foreach($value as $i => $item) {
               if (is_array($item)) {
                 foreach($item as $item_value) {
+                  // Use the int condition of this method.
                   $is_valid = $this->matchDataType($item_value, 'int');
                   if ($is_valid) {
                     $match = FALSE;
@@ -190,41 +237,6 @@ class TripalWebServiceCall {
   }
 
   /**
-   * Prepare subset of overall payload per page.
-   *
-   * @param $payload
-   *   Array of information comprising the response data.
-   * @param $parameter
-   *   Parameters to the call as parsed in the url.
-   *
-   * @return array
-   *   Subset elements taken from payload.
-   */
-  public function pagePayload($payload, $parameter) {
-    $resultset_limit = $this->getResultsetLimit();
-    $current_page = (isset($parameter['page'])) ? $parameter['page'] : 0;
-
-    $start_at = $current_page * $resultset_limit;
-    $stop_at  = $start_at + $resultset_limit - 1;
-
-    $response_subset = [];
-
-    for ($i = $start_at; $i <= $stop_at; $i++) {
-      if ($payload[$i]) {
-        $response_subset[] = $payload[$i];
-      }
-    }
-
-    if ($response_subset) {
-      return $response_subset;
-    }
-    else {
-      $response = ['code' => 400, 'message' => 'Call: Page not found.'];
-      TripalWebServiceResponse::errorResponse($response);
-    }
-  }
-
-  /**
    * Resolve items in the metadata. Items match a function to populate value.
    *
    * @param $payload
@@ -235,7 +247,7 @@ class TripalWebServiceCall {
    * @return array
    *   Metadata keys with relevant value.
    *
-   * @see methods below.
+   * @see methods below RESOLVE METADATA.
    */
   public function resolveMetadataItem($payload, $metadata, $call_asset) {
     $revised_metadata = [];
@@ -271,25 +283,27 @@ class TripalWebServiceCall {
   public function mapDataToResponseField($data, $response_field) {
     $map_data = [];
 
-    foreach($data as $i => $item) {
-      $item = (array) $item;
+    if (is_array($data)) {
+      foreach($data as $i => $item) {
+        $item = (array) $item;
 
-      $j = 0;
-      foreach($item as $key => $value) {
-        if (is_array($response_field) && !empty($response_field)) {
-          if (isset($response_field[ $j ]) && $response_field[ $j ]) {
-            $map_data[ $i ][ $response_field[ $j ] ] = $value;
+        $j = 0;
+        foreach($item as $key => $value) {
+          if (is_array($response_field) && !empty($response_field)) {
+            if (isset($response_field[ $j ]) && $response_field[ $j ]) {
+              $map_data[ $i ][ $response_field[ $j ] ] = $value;
+            }
+            else {
+              if ($key == 'full_count') {
+                $map_data[ $i ][ '#' . $key ] = $value;
+              }
+            }
+
+            $j++;
           }
           else {
-            if ($key == 'full_count') {
-              $map_data[ $i ][ '#' . $key ] = $value;
-            }
+            $map_data[] = $value;
           }
-
-          $j++;
-        }
-        else {
-          $map_data[0][] = $value;
         }
       }
     }
@@ -309,19 +323,105 @@ class TripalWebServiceCall {
    */
   function getResultFullCount($payload) {
     $full_count = '';
-
-    foreach($payload as $item) {
-      if (is_array($item)) {
-        foreach($item as $key => $value) {
-          if ($key === '#full_count') {
-            $full_count = $value;
-            break 2;
+    if (is_array($payload)) {
+      foreach($payload as $item) {
+        if (is_array($item)) {
+          foreach($item as $key => $value) {
+            if ($key === '#full_count') {
+              $full_count = $value;
+              break 2;
+            }
           }
         }
       }
     }
 
     return $full_count;
+  }
+
+  /**
+   * Fetch callback to query response. Based on the call's configuration
+   * settings, there is a callback function for when filter option is
+   * base on chado.table/type_id or chado.property table/value or simply
+   * call the function that will query (unfiltered) the source table.
+   *
+   * @return db object
+   *   Resultset returned by query function.
+   */
+  function getQueryResult() {
+    $config = $this->call_asset['configuration']['filter'];
+    $result = '';
+
+    if ($config['restrict'] == 'typeid') {
+      // By chado.table type_id column.
+      $result = $this->class_name::getResultByTypeid();
+    }
+    elseif ($config['restrict'] == 'prop') {
+      // By chado.prop table value column.
+      $result = $this->class_name::getResultByPropertyTable();
+    }
+    else {
+      // Unfiltered result.
+      $result = $this->class_name::getResult();
+    }
+
+    return $result;
+  }
+
+  /**
+   * Call is an alias or identical to a call.
+   *
+   * @param $call
+   *   String, containing information using the format:
+   *   host module/major version (vX)/call name.
+   */
+  function callAlias($call) {
+    $calls = tripal_ws_get_calls();
+    $call = stripslashes($call);
+
+    $ref_class = get_parent_class($this);
+    if ($ref_class == 'TripalWebServiceSearchCall') {
+      // Search call, drop search reference and use is_search flag.
+      $call = str_replace('search/', '', $call);
+    }
+
+    if ($calls[ $call ]) {
+      // Update call asset by replacing call name.
+      $is_search_flag = $this->call_asset['is_search'];
+      $base_call = $this->call_asset['call'];
+
+      unset($this->call_asset['call']);
+      // Replace the call asset to use the intended call.
+      $this->call_asset['call'] = $calls[ $call ]['call'];
+      // Replace call host module.
+      unset($this->call_asset['host']);
+      $this->call_asset['host'] = $calls[ $call ]['module'];
+      // Reset call filter.
+      unset($this->call_asset['configuration']['filter']);
+      $key = $this->call_asset['host'] . '/v' . $this->call_asset['version'] . '/' . $this->call_asset['call'];
+      $this->call_asset['configuration']['filter'] = variable_get($key);
+      // Update class files.
+      unset($this->call_asset['class']);
+      $this->call_asset['class'] = $calls[ $call ]['class'];
+      unset($calls);
+
+      // Begin call processing.
+
+      $call = tripal_ws_load_call($this->call_asset);
+
+      if (class_exists($call)) {
+        $response = new $call($this->call_asset);
+        $response->prepareResponse();
+      }
+    }
+    else {
+      // Method not supported.
+      $response = [
+        'code' => 501, // Not Implemented.
+        'message' => 'Call: Call ' . $call . ' not implemented.'
+      ];
+      TripalWebServiceResponse::errorResponse($response);
+    }
   }
 
 
@@ -376,7 +476,7 @@ class TripalWebServiceCall {
       }
     }
     else {
-      // Database call: the result is the number of item returned.
+      // Database + Search call: the result is the number of item returned.
       return count($payload);
     }
 
@@ -396,6 +496,7 @@ class TripalWebServiceCall {
   public function totalPages($payload) {
     $full_count = $this->getResultFullCount($payload);
     $count = ($full_count == '') ? count($payload) : $full_count;
+
     $resultset_limit = $this->getResultsetLimit();
 
     // The total pages, set to 0.

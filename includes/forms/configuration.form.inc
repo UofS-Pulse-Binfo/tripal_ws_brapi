@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @file
  * Configuration form of this module.
@@ -7,14 +6,54 @@
 
  /**
   * Main configuration page.
+  * List all calls and calls implemented through hook implementation
+  * from external modules.
   */
 if (!function_exists('tripal_ws_configure')) {
   function tripal_ws_configure($form, $form_state) {
+    // Get module properties.
+    $module = tripal_ws_get_module_info();
+
+    // Allow override configuration.
+    $allow_override = variable_get($module['module'] . '_allow_override_hook');
+    $allow_override = ($allow_override == 'yes') ? 'allow' : 'deny';
     $form = [];
 
     // Landing page of configuration page.
+    // Inform admin about override configuration so they have a clue how
+    // identical calls share call mechanism.
     $form['page_configure'] = [
-      '#markup' => 'Click configuration tab sections to set settings for this module',
+      '#markup' => '
+        <div class="messages warning">
+          This module is set to <strong>' . $allow_override . '</strong>
+          external/hook call to override existing call.
+          Please see configure Tripal Web Service BrAPI tab for more information.
+        </div>
+        <br /><h1>Calls</h1>'
+    ];
+
+    // All calls.
+    $header = [t('Call'), t('Module')];
+    $rows = [];
+
+    // Fetch all calls.
+    $calls = tripal_ws_get_calls();
+
+    // Sort call into rows for the summary table.
+    foreach($calls as $call) {
+      // Does a call implement a search option?
+      // Inspect call class names for implementation of base call and/or search call.
+      foreach($call['class'] as $type => $class) {
+        $is_search = ($type == 'search') ? '/search' : '';
+        $rows[] = ['<span class="tripal-ws-td-item">v' . $call['version'] . '</span>' . $is_search . '/' . $call['call'], $call['module']];
+      }
+    }
+
+    $call_list = theme('table', ['header' => $header, 'rows' => $rows, 'empty' => t('0 calls.')]);
+
+    // Reder table.
+    $form['tripal_ws_calls_table'] = [
+      '#markup' => $call_list
     ];
 
     return $form;
@@ -25,79 +64,114 @@ if (!function_exists('tripal_ws_configure')) {
  * Constuct configure module form.
  * General configurations of this module.
  *
- * vocabulary name - the name of the vocabulary or ontology set.
  * menu levels - arbitrary levels added to call structure.
  * pagination - result limit shown per page.
  * http request method - list of REST http request methods to support.
+ * allow override call - option to instruct module how to manage identical calls.
  */
 if (!function_exists('tripal_ws_configure_module')) {
-  function tripal_ws_configure_module($form, $form_state, $module) {
+  function tripal_ws_configure_module($form, $form_state) {
     $form = [];
-
-    // # FIELD: VOCABULARY.
-    $var_name = $module . '_vocabulary';
-
-    $form[ $var_name ] = [
-      '#prefix'  => '<div class="tripal-ws-div-item"><h1>Abc</h1>
-         <h4>Vocabulary or ontology:</h4>ie. brapi',
-      '#suffix' => '</div>',
-      '#type' => 'textfield',
-      '#size' => 35,
-      '#default_value' => variable_get($var_name),
-    ];
+    // Get module properties.
+    $module = tripal_ws_get_module_info();
 
     // # FIELD: MENU LEVELS.
-    $var_name = $module . '_menu_level';
+    $var_name = $module['module'] . '_menu_level';
 
     $form[ $var_name ] = [
-      '#prefix'  => '<div class="tripal-ws-div-item"><h1>menu/</h1>
-         <h4>Menu levels:</h4>Separate levels with /',
+      '#prefix' => '<div class="tripal-ws-div-item">
+        <h4>Menu levels <span class="tripal-ws-info">&nbsp;</span></h4>
+        Separate levels with /
+
+        <div class="tripal-ws-tooltip">
+          Menu level or prefix - an arbitrary number of levels can be inserted
+          between the domain name and the /brapi level, if needed.
+          Example:<br /> mysite.com/LEVEL 1/LEVEL 2/... /brapi/v1/crops or
+          set an empty value to use /brapi such as mysite.com/brapi/v1/crops.
+          It is important to clear cache for this settings to apply.
+        </div>',
+
       '#suffix' => '</div>',
-      '#type' => 'textfield',
-      '#size' => 35,
+      '#type'   => 'textfield',
+      '#size'   => 35,
       '#default_value' => variable_get($var_name),
     ];
+
 
     // # FIELD: PAGING LIMIT.
-    $var_name = $module . '_resultset_limit';
+    $var_name = $module['module'] . '_resultset_limit';
 
     $form[ $var_name ] = [
-      '#prefix'  => '<div class="tripal-ws-div-item"><h1>Page/</h1>
-         <h4>Page result limit:</h4>Separate levels with /',
+      '#prefix' => '<div class="tripal-ws-div-item">
+        <h4>Page result limit <span class="tripal-ws-info">&nbsp;</span></h4>
+        Number from 10 - 1000
+
+        <div class="tripal-ws-tooltip">
+          Page result limit - limit the number of items returned by a call response.
+        </div>',
+
       '#suffix' => '</div>',
-      '#type' => 'textfield',
-      '#size' => 35,
+      '#type'   => 'textfield',
+      '#size'   => 35,
       '#default_value' => variable_get($var_name),
     ];
 
+
     // # FIELD: SUPPORTED HTTP REQUEST METHOD.
-    $var_name = $module . '_supported_method';
+    $var_name = $module['module'] . '_supported_method';
 
     $form[ $var_name ] = [
-      '#prefix'  => '<div class="tripal-ws-div-item"><h1>http</h1>
-         <h4>Request methods:</h4>ie. GET, POST',
+      '#prefix' => '<div class="tripal-ws-div-item">
+        <h4>Request methods <span class="tripal-ws-info">&nbsp;</span></h4>
+        Separate value with , ie. GET, POST
+
+        <div class="tripal-ws-tooltip">
+          Request method - restrict all call request only to HTTP request methods
+          in the list. Methods: GET, POST, DELETE and UPDATE
+        </div>',
+
       '#suffix' => '</div>',
-      '#type' => 'textfield',
-      '#size' => 35,
+      '#type'   => 'textfield',
+      '#size'   => 35,
+      '#default_value' => variable_get($var_name),
+    ];
+
+    // # FIELD: ALLOW OVERRIDE HOOK.
+    $var_name = $module['module'] . '_allow_override_hook';
+
+    $form[ $var_name ] = [
+      '#prefix' => '<div class="tripal-ws-div-item">
+        <h4>Allow override call <span class="tripal-ws-info">&nbsp;</span></h4>
+        The same call name
+
+        <div class="tripal-ws-tooltip">
+          This option will resolve which call to implement, when call defined using hook
+          matches an existing call name in this module.
+        </div>',
+
+      '#suffix' => '</div>',
+      '#type'   => 'select',
+      '#options'=> ['yes' => 'Use override hook call', 'no' => 'Use local call definition'],
       '#default_value' => variable_get($var_name),
     ];
 
     // Cache module name.
     $form['module_name'] = [
-      '#type' => 'value',
-      '#value' => $module
+      '#type'  => 'value',
+      '#value' => $module['module']
     ];
 
     // Reload settings.
-    $reload = l('Reload', 'admin/tripal/extension/' . $module . '/configure/module');
+    $links = l('Reload', 'admin/tripal/extension/tripalwsbrapi/configure/module') . ' | ' .
+             l('All calls', 'admin/tripal/extension/tripalwsbrapi/configure') ;
 
     // Save button.
     $form['tripal_ws_config_button_save'] = [
-      '#type' => 'submit',
-      '#value' => t('Save configuration'),
-      '#id' => 'tripal_ws_button_submit',
+      '#type'   => 'submit',
+      '#value'  => t('Save configuration'),
+      '#id'     => 'tripal_ws_button_submit',
       '#prefix' => '<span class="clear-float">',
-      '#suffix' => $reload . '</span>'
+      '#suffix' => $links . '</span>'
     ];
 
     return $form;
@@ -118,12 +192,13 @@ if (!function_exists('tripal_ws_configure_module')) {
         form_set_error($config, t('Not a valid vocabulary/ontology name. Field must be set to a value.'));
       }
 
-      // Validate: Page result limit
+      // Validate: Page result limit.
       $config = $module . '_resultset_limit';
       if (isset($form_state['values'][ $config ])
-          && ($form_state['values'][ $config ] == '' || $form_state['values'][ $config ] < 10)) {
+          && ($form_state['values'][ $config ] == '' || $form_state['values'][ $config ] < 10
+          || $form_state['values'][ $config ] > 1000)) {
 
-        form_set_error($config, t('Not a valid page limit value. Limit must not be empty or at least 10 items.'));
+        form_set_error($config, t('Not a valid page limit value. Limit must not be empty or at least 10 or no more than 1000 items.'));
       }
 
       // Validate: Method.
@@ -149,10 +224,13 @@ if (!function_exists('tripal_ws_configure_module')) {
 
 /**
  * Construct configure version form.
- * Create supported verion number.
+ * Create supported version number.
  */
 if (!function_exists('tripal_ws_configure_version')) {
-  function tripal_ws_configure_version($form, &$form_state, $module) {
+  function tripal_ws_configure_version($form, &$form_state) {
+    $form = [];
+    $module = tripal_ws_get_module_info();
+
     // Main form container.
     $ajax_container = 'tripal_ws_ajax_container';
     // Main Ajax callback wrapper element.
@@ -184,19 +262,31 @@ if (!function_exists('tripal_ws_configure_version')) {
 
     $form[ $ajax_container ]['tripal_ws_field_major_version'] = [
       '#title_display' => 'invisible',
-      '#prefix'  => '<div class="tripal-ws-div-item"><h1>Major Ver.</h1><h4>1. Select number:</h4>',
+      '#prefix' => '<div class="tripal-ws-div-item">
+        <h4>Major version <span class="tripal-ws-info">&nbsp;</span></h4>
+
+        <div class="tripal-ws-tooltip">
+          Major version - The leftmost number of the version, also the main version number of
+          BrAPI instance that you want to implement. Example:<br /> To support BrAPI 1.3, 1
+          is the major version whereas 3 is the minor version.
+        </div>',
+
       '#suffix'  => '</div>',
       '#type'    => 'select',
       '#options' => array_combine($major_ver_option, $major_ver_option),
       '#empty_option' => 'Please select',
     ] + $ajax_option;
 
+
     // # FIELD: MINOR VERSION.
+    $minor_ver_option = [];
+
     if (isset($form_state['values']) && $form_state['values']['tripal_ws_field_major_version'] != '') {
+      // Will coincide with install - when removing system vars during uninstall process.
       $minor_ver_option = range(0, 10);
 
       $select_major_ver = $form_state['values']['tripal_ws_field_major_version'];
-      $config_ver = variable_get($module . '_v' . $select_major_ver);
+      $config_ver = variable_get($module['module'] . '_v' . $select_major_ver);
 
       foreach($minor_ver_option as $i => $ver) {
         if (in_array($select_major_ver . '.' . $ver, $config_ver['all'])) {
@@ -204,26 +294,36 @@ if (!function_exists('tripal_ws_configure_version')) {
         }
       }
     }
-    else {
-      $minor_ver_option = [];
-    }
 
     $form[ $ajax_container ]['tripal_ws_field_minor_version'] = [
       '#title_display' => 'invisible',
-      '#prefix'  => '<div class="tripal-ws-div-item"><h1>Minor Ver.</h1><h4>1. Select number:</h4>',
+      '#prefix' => '<div class="tripal-ws-div-item">
+        <h4>Minor version <span class="tripal-ws-info">&nbsp;</span></h4>
+
+        <div class="tripal-ws-tooltip">
+          Minor version - The rightmost number of the version in 1.x format. Multiple
+          minor version can be added, by selecting the same Major version. Each entry
+          will be grouped under a Major version number in the table below. Use set Set
+          default button to set a default minor version to implement. Example:<br />
+          Major version 1 with Minor versions: 1.2 and 1.3 and BrAPI v1 can be set
+          default to either 1.2 or 1.3.
+        </div>
+        ',
+
       '#suffix'  => '</div>',
       '#type'    => 'select',
       '#options' => array_combine($minor_ver_option, $minor_ver_option),
       '#empty_option' => '-',
     ] + $ajax_option;
 
+
     // Save button.
     $form['tripal_ws_config_button_add'] = [
-      '#type' => 'submit',
-      '#value' => t('Add version'),
-      '#id' => 'tripal_ws_button_submit',
-      '#prefix'  => '<div class="tripal-ws-div-item"><h1>Create</h1><h4>&nbsp;</h4>',
-      '#suffix'  => '</div>',
+      '#type'   => 'submit',
+      '#value'  => t('Add version'),
+      '#id'     => 'tripal_ws_button_submit',
+      '#prefix' => '<span class="clear-float">',
+      '#suffix' => '</span>'
     ];
 
     // Create list of versions.
@@ -231,7 +331,7 @@ if (!function_exists('tripal_ws_configure_version')) {
     $rows = [];
 
     foreach($major_ver_option as $ver) {
-      $var_name = $module . '_v' . $ver;
+      $var_name = $module['module'] . '_v' . $ver;
       $var_value = variable_get($var_name);
 
       if (is_array($var_value)) {
@@ -253,7 +353,6 @@ if (!function_exists('tripal_ws_configure_version')) {
         $var_set_default = drupal_render($form[ $var_name . '_default' ])
           . drupal_render($form[ $var_name ]);
 
-
         $form[ $var_name . '_reset' ] = [
           '#type' => 'submit',
           '#value' => t('Reset'),
@@ -261,7 +360,6 @@ if (!function_exists('tripal_ws_configure_version')) {
         ];
 
         $var_reset_link = drupal_render($form[ $var_name . '_reset' ]);
-
 
         $form[ $var_name . '_remove' ] = [
           '#type' => 'submit',
@@ -272,7 +370,7 @@ if (!function_exists('tripal_ws_configure_version')) {
 
         $var_remove_link = drupal_render($form[ $var_name . '_remove' ]);
 
-        $rows[] = ['v' . $var_value['ver'], implode(', ', $var_value['all']), $var_set_default, $var_reset_link, $var_remove_link];
+        $rows[] = ['<span class="tripal-ws-td-item">v' . $var_value['ver'] . '</span>', implode(', ', $var_value['all']), $var_set_default, $var_reset_link, $var_remove_link];
       }
     }
 
@@ -290,7 +388,7 @@ if (!function_exists('tripal_ws_configure_version')) {
     // Cache module name.
     $form['module_name'] = [
       '#type' => 'value',
-      '#value' => $module
+      '#value' => $module['module']
     ];
 
     return $form;
@@ -383,12 +481,19 @@ if (!function_exists('tripal_ws_configure_version')) {
  * Configure how each call limits/filters results returned depending
  * how data is structured or stored in chado. When call is not set to
  * any filter, then it is default to show all without any limit.
- *
- * Variable names and values are structured below:
- *   tripal_ws_call = 'tripal_ws_' . $call . '_' . $restrict . '_' . $vocabulary . '_' . $term;
  */
 if (!function_exists('tripal_ws_configure_call')) {
-  function tripal_ws_configure_call($form, &$form_state, $module) {
+  function tripal_ws_configure_call($form, &$form_state) {
+    $form = [];
+
+    // Information - not to configure a call.
+    $form['tripal_ws_no_configure'] = [
+      '#markup' => '<div class="messages status">
+        All Tripal WS BrAPI calls return all rows by default.
+        Use the form below to setup a call filter when desired call response is based on a condition.</div>
+        <div class="messages warning">Ensure to implement the query of each restriction applied to a call.</div><br />',
+    ];
+
     // Main form container.
     $ajax_container = 'tripal_ws_ajax_container';
     // Main Ajax callback wrapper element.
@@ -421,163 +526,259 @@ if (!function_exists('tripal_ws_configure_call')) {
 
     // # FIELD: CALL.
     $call_option = [];
-    $active_config = [];
+    // Cascade list when required below each element.
+    $calls = tripal_ws_get_calls();
 
-    // Identify only call-table supportes type_id or table property.
-    $call_property = tripal_ws_get_call_with_property($module);
-    // Get all keys/call.
-    $all_call = array_keys($call_property);
-
-    if (is_array($all_call)) {
-      // Apply formatting to include the call command.
-      $call_option = tripal_ws_format_call($all_call, 'call-dir');
-
-      // Drop calls that already have been set.
-      foreach($call_option as $base_call => $call_dir) {
-        $base_call = tripal_ws_format_call($base_call, 'noformat');
-        $is_set = variable_get($module . '_' . $base_call);
-
-        if (!empty($is_set) && isset($call_option[ $base_call ])) {
-          unset($call_option[ $base_call ]);
-          $active_config[] = $base_call;
+    if ($calls) {
+      foreach($calls as $key => $call) {
+        if ($call['call'] != 'calls' && $call['call'] != 'serverinfo') {
+          // Exclude known not database calls (calls and serverinfo).
+          $call_option[ $key ] = $key;
         }
       }
     }
 
     $form[ $ajax_container ]['tripal_ws_field_call'] = [
       '#title_display' => 'invisible',
-      '#prefix'  => '<div class="tripal-ws-div-item"><h1>/Calls</h1><h4>1. Select call:</h4>',
+      '#prefix'  => '<div class="tripal-ws-div-item">
+        <h4>BrAPI call <span class="tripal-ws-info">&nbsp;</span></h4>
+
+        <div class="tripal-ws-tooltip">
+          Select a call from the list below of all active BrAPI calls hosted in this module,
+          and calls implemented by external modules using hook/override. Re-select an existing
+          call to add more term or value as filters.
+        </div>',
+
       '#suffix'  => '</div>',
       '#type'    => 'select',
       '#options' => $call_option,
       '#empty_option' => 'Please select',
     ] + $ajax_option;
 
-      // # FIELD: call/RESTRICT RESULT.
-      $restrict_option = [];
 
-      if (isset($form_state['values']) && $form_state['values']['tripal_ws_field_call'] != '') {
-        $select_call = $form_state['values']['tripal_ws_field_call'];
-        $has_property = $call_property[ $select_call ]['property'];
+    // # FIELD: call/RESTRICT RESULT.
+    $restrict_option = [];
+    // Auto load elements for ease of setup when call is reselected.
+    $autoload = FALSE;
 
-        $restrict_option = ['typeid' => 'By type_id column', 'prop' => 'By property table'];
+    if (isset($form_state['values']) && $form_state['values']['tripal_ws_field_call'] != '') {
+      // Call selected.
+      $select_call = $form_state['values']['tripal_ws_field_call'];
+      $restrict_option = ['typeid' => 'By type_id column', 'prop' => 'By property table'];
 
-        // Revise the option and remove item that call-table does not support.
-        foreach($has_property as $property => $is_supported) {
-          if ($is_supported == 0 && isset($restrict_option[ $property ])) {
-            // Unsupported.
-            unset($restrict_option[ $property ]);
+      $var_value = variable_get($select_call);
+
+      // Call property of selected call.
+      $call_prop = $calls[ $select_call ];
+
+      // Inspect call chado table settings.
+
+      if (file_exists($call_prop['class']['call']['file'])) {
+        // Load class file only when it exists.
+        require_once($call_prop['class']['call']['file']);
+        $classname = $call_prop['class']['call']['class'];
+
+        if (class_exists($classname) && isset($classname::$chado_table)) {
+          $chado_table = $classname::$chado_table;
+
+          if (isset($var_value) && is_array($var_value)) {
+            $restrict_option = [$var_value['restrict'] => $restrict_option[ $var_value['restrict']]];
+
+            // Cascade the values all the way to vocabulary, leaving the user with
+            // only the term or value to select.
+            $autoload = TRUE;
+          }
+          else {
+            // Inspect if table supports either type_id or prop table.
+            $has_typeid = tripal_ws_db_has_type_id($chado_table);
+            if (!$has_typeid) {
+              // Unset option if table does not support typeids.
+              unset($restrict_option['typeid']);
+            }
+
+            $has_prop = tripal_ws_db_has_prop_table($chado_table);
+            if (!$has_prop) {
+              // Unset option if table does not support property table.
+              unset($restrict_option['prop']);
+            }
+          }
+        }
+        else {
+          // A custom call or not set.
+          if (isset($classname::$is_alias_of)) {
+            $m = t('Could not setup call. Call is set to load identical call: <tt>' . $classname::$is_alias_of . '</tt>.');
+          }
+          else {
+            $m = t('Could not setup call. Call is a non-database call (custom call).');
+          }
+
+          drupal_set_message($m, 'warning');
+        }
+      }
+      else {
+        // Class file is missing/not found.
+        $m = t('Could not setup call. Class file is missing.');
+        drupal_set_message($m, 'error');
+      }
+    }
+
+    $form[ $ajax_container ]['tripal_ws_field_restrict'] = [
+      '#title_display' => 'invisible',
+      '#prefix'  => '<div class="tripal-ws-div-item">
+        <h4>Restrict result <span class="tripal-ws-info">&nbsp;</span></h4>
+
+        <div class="tripal-ws-tooltip">Restrict result - apply a filter citeria to a
+          call based on the value or data stored in <tt>type_id</tt> column (a chado table) or value or data
+          stored in the value field of a relevant prop (property ie <tt>stockprop</tt>) table (chado table).
+        </div>',
+
+      '#suffix'  => '</div>',
+      '#type'    => 'select',
+      '#options' => $restrict_option,
+      '#empty_option' => '-',
+    ] + $ajax_option;
+
+    if ($autoload) {
+      // Autoselect the first item in the option.
+      unset($form[ $ajax_container ]['tripal_ws_field_restrict']['#empty_option']);
+    }
+
+      // # FIELD: call/restrict result/VOCABULARY.
+      $vocabulary_option = [];
+
+      if ((isset($form_state['values'])
+          && $form_state['values']['tripal_ws_field_call'] != ''
+          && $form_state['values']['tripal_ws_field_restrict'] != '')
+          || $autoload) {
+
+        $table_property = $chado_table;
+        $select_restrict = ($autoload) ? $var_value['restrict'] : $form_state['values']['tripal_ws_field_restrict'];
+
+        // Prepare option based on which restrict option chosen and class chado table.
+        $vocabulary_option = tripal_ws_db_get_vocabulary($select_restrict, $table_property);
+
+        if (count($vocabulary_option) <= 0) {
+          $vocabulary_option = [];
+        }
+        else {
+          if ($autoload) {
+            foreach($vocabulary_option as $key => $term) {
+              if ($key != $var_value['vocabulary']) {
+                unset($vocabulary_option[ $key ]);
+              }
+            }
           }
         }
       }
 
-      $form[ $ajax_container ]['tripal_ws_field_restrict'] = [
+      $form[ $ajax_container ]['tripal_ws_field_vocabulary'] = [
         '#title_display' => 'invisible',
-        '#prefix'  => '<div class="tripal-ws-div-item"><h1>Restrict Result</h1><h4>2. Select base option:</h4>',
+        '#prefix'  => '<div class="tripal-ws-div-item">
+          <h4>Vocabulary <span class="tripal-ws-info">&nbsp;</span></h4>
+
+          <div class="tripal-ws-tooltip">
+            Depending on the Restrict Result selected, data in either columns (type_id or prop.value) are
+            prepared and summarized according to controlled vocabulary and terms. Select term or term + value
+            to set a filter to return only data that matched.
+          </div>',
+
         '#suffix'  => '</div>',
         '#type'    => 'select',
-        '#options' => $restrict_option,
+        '#options' => $vocabulary_option,
         '#empty_option' => '-',
       ] + $ajax_option;
 
-        // # FIELD: call/restrict result/VOCABULARY.
-        $vocabulary_option = [];
+      if ($autoload) {
+        // Autoselect the first item in the option.
+        unset($form[ $ajax_container ]['tripal_ws_field_vocabulary']['#empty_option']);
+      }
 
-        if (isset($form_state['values'])
+        // # FIELD: call/restrict result/vocabulary/TERM.
+        $term_option = [];
+
+        if ((isset($form_state['values'])
             && $form_state['values']['tripal_ws_field_call'] != ''
-            && $form_state['values']['tripal_ws_field_restrict'] != '') {
+            && $form_state['values']['tripal_ws_field_restrict'] != ''
+            && $form_state['values']['tripal_ws_field_vocabulary'] != '')
+            || $autoload) {
 
-          $table_property = $call_property[ $select_call ]['table'];
-          $select_restrict = $form_state['values']['tripal_ws_field_restrict'];
+          $select_vocabulary = ($autoload) ? $var_value['vocabulary'] : $form_state['values']['tripal_ws_field_vocabulary'];
 
-          // Prepare option based on which restrict option chosen.
-          if ($call_property[ $select_call ]['property'][ $select_restrict ] == 1) {
-            $vocabulary_option = tripal_ws_db_get_vocabulary($select_restrict, $table_property);
-
-            if (count($vocabulary_option) <= 0) {
-              $vocabulary_option = [];
+          // Prepare terms.
+          $term_option = tripal_ws_db_get_term($select_vocabulary, $select_restrict, $table_property);
+          if (count($term_option) <= 0) {
+            $term_option = [];
+          }
+          else {
+            if ($autoload && $select_restrict == 'prop') {
+              foreach($term_option as $key => $term) {
+                if (!in_array($key, $var_value['term'])) {
+                  unset($term_option[ $key ]);
+                }
+              }
             }
           }
         }
 
-        $form[ $ajax_container ]['tripal_ws_field_vocabulary'] = [
+        $form[ $ajax_container ]['tripal_ws_field_term'] = [
           '#title_display' => 'invisible',
-          '#prefix'  => '<div class="tripal-ws-div-item"><h1>Vocabulary</h1><h4>3. Select vocabulary:</h4>',
+          '#prefix'  => '<div class="tripal-ws-div-item"><h4>Term (type_id equals to)</h4>',
           '#suffix'  => '</div>',
           '#type'    => 'select',
-          '#options' => $vocabulary_option,
+          '#options' => $term_option,
           '#empty_option' => '-',
         ] + $ajax_option;
 
-          // # FIELD: call/restrict result/vocabulary/TERM.
-          $term_option = [];
+        if ($autoload && $select_restrict == 'prop') {
+          // Autoselect the first item in the option.
+          unset($form[ $ajax_container ]['tripal_ws_field_term']['#empty_option']);
+        }
 
-          if (isset($form_state['values'])
-              && $form_state['values']['tripal_ws_field_call'] != ''
-              && $form_state['values']['tripal_ws_field_restrict'] != ''
-              && $form_state['values']['tripal_ws_field_vocabulary'] != '') {
+         // # FIELD: call/restrict result/vocabulary/term/VALUE.
+         if ((isset($form_state['values'])
+             && $form_state['values']['tripal_ws_field_call'] != ''
+             && $form_state['values']['tripal_ws_field_restrict'] != ''
+             && $form_state['values']['tripal_ws_field_restrict'] == 'prop')
+             || ($autoload && $select_restrict == 'prop')) {
 
-            $select_vocabulary = $form_state['values']['tripal_ws_field_vocabulary'];
+           // When vocabulary and term selected.
+           $value_option = [];
 
-            // Prepare terms.
-            if ($call_property[ $select_call ]['property'][ $select_restrict ] == 1) {
-              $term_option = tripal_ws_db_get_term($select_vocabulary, $select_restrict, $table_property);
-              if (count($term_option) <= 0) {
-                $term_option = [];
-              }
-            }
-          }
+           if (($form_state['values']['tripal_ws_field_vocabulary'] != ''
+               && $form_state['values']['tripal_ws_field_term'] != '')
+               || $autoload) {
 
-          $form[ $ajax_container ]['tripal_ws_field_term'] = [
-            '#title_display' => 'invisible',
-            '#prefix'  => '<div class="tripal-ws-div-item"><h1>Term</h1><h4>4. Select term:</h4>',
-            '#suffix'  => '</div>',
-            '#type'    => 'select',
-            '#options' => $term_option,
-            '#empty_option' => '-',
-          ] + $ajax_option;
+             $select_term = ($autoload) ? $var_value['term'][0] : $form_state['values']['tripal_ws_field_term'];
+             $value_option = tripal_ws_db_get_value($select_term, $table_property);
+           }
 
-          if (isset($form_state['values'])
-              && $form_state['values']['tripal_ws_field_call'] != ''
-              && $form_state['values']['tripal_ws_field_restrict'] != ''
-              && $form_state['values']['tripal_ws_field_restrict'] == 'prop') {
+           $form[ $ajax_container ]['tripal_ws_field_value'] = [
+             '#title_display' => 'invisible',
+             '#prefix'  => '<div class="tripal-ws-div-item"><h4>Value (prop table value equals to)</h4>',
+             '#suffix'  => '</div>',
+             '#type'    => 'select',
+             '#options' => $value_option,
+             '#empty_option' => '-',
+           ];
+         }
 
-            // When vocabulary and term selected.
-            $value_option = [];
-            if ($form_state['values']['tripal_ws_field_vocabulary'] != ''
-                && $form_state['values']['tripal_ws_field_term'] != '') {
-
-              $select_term = $form_state['values']['tripal_ws_field_term'];
-              $value_option = tripal_ws_db_get_value($select_term, $table_property);
-            }
-
-            $form[ $ajax_container ]['tripal_ws_field_value'] = [
-              '#title_display' => 'invisible',
-              '#prefix'  => '<div class="tripal-ws-div-item"><h1>Value</h1><h4>5. Select value:</h4>',
-              '#suffix'  => '</div>',
-              '#type'    => 'select',
-              '#options' => $value_option,
-              '#empty_option' => '-',
-            ];
-          }
 
     // Save button.
     $form['tripal_ws_config_button_add'] = [
       '#type' => 'submit',
       '#value' => t('Add configuration'),
       '#id' => 'tripal_ws_button_submit',
-      '#prefix'  => '<div class="tripal-ws-div-item"><h1>Create</h1><h4>&nbsp;</h4>',
-      '#suffix'  => '</div>',
+      '#prefix' => '<span class="clear-float">',
+      '#suffix' => '</span>'
     ];
-
 
     // # A LIST OF CONFIGURATION.
     // Create list of active configuration.
-    $header = [t('Call'), t('Restrict Result By'), t('Vocabuary/Term : VALUE'), t('Remove')];
+    $header = [t('Call'), t('Restrict Result By'), t('Vocabuary/Term : <strong>VALUE EQUALS TO</strong>'), t('Remove')];
     $rows = [];
 
-    foreach($active_config as $a_conf) {
-      $var_name = $module . '_' . $a_conf;
+    foreach(array_keys($calls) as $a_conf) {
+      $var_name = $a_conf;
       $var_value = variable_get($var_name);
 
       if (is_array($var_value)) {
@@ -588,15 +789,30 @@ if (!function_exists('tripal_ws_configure_call')) {
         $var_value['vocabulary'] = tripal_get_cv(['cv_id' => $var_value['vocabulary']])
           ->name;
 
-        // Translate cvterm id.
-        $var_value['term'] = tripal_get_cvterm(['cvterm_id' => $var_value['term']])
-          ->name;
+        // Terms.
+        $term = '';
 
-        // Nicely, concatenate both translates.
-        $var_vocabulary_term = $var_value['vocabulary'] . ' / ' . $var_value['term'];
+        if (is_array($var_value['term']) && count($var_value['term']) > 0) {
+          foreach($var_value['term'] as $t) {
+            // Translate cvterm id.
+            $name = tripal_get_cvterm(['cvterm_id' => $t])
+              ->name;
 
-        if (isset($var_value['value']) && $var_value['value'] != '') {
-          $var_vocabulary_term .= ' : ' . $var_value['value'];
+            $term .= (count($var_value['value']) < 1) ? '<span class="tripal-ws-td-item">' . $name . '</span>&nbsp;' : $name;
+          }
+        }
+
+        $var_vocabulary_term = $var_value['vocabulary'] . ' / ' . $term;
+
+        // Values.
+        $value = '';
+
+        if (is_array($var_value['value']) && count($var_value['value']) > 0) {
+          foreach($var_value['value'] as $v) {
+            $value .= '<span class="tripal-ws-td-item">' . $v . '</span>&nbsp;';
+          }
+
+          $var_vocabulary_term .= ' : ' . $value;
         }
 
         // Remove link.
@@ -609,20 +825,17 @@ if (!function_exists('tripal_ws_configure_call')) {
 
         $var_remove_link = drupal_render($form[ $var_name ]);
 
+        // Call name and source.
+        $call_col = 'v' . $calls[ $a_conf ]['version'] . '/' . $calls[ $a_conf ]['call'] . '<br /><span class="tripal-ws-td-item">' . $calls[ $a_conf ]['module'] . '</span>';
+
         // Create table row.
-        $rows[] = [$var_value['call'], $var_value['restrict'], $var_vocabulary_term, $var_remove_link];
+        $rows[] = [$call_col, $var_value['restrict'], $var_vocabulary_term, $var_remove_link];
       }
     }
 
     $config_list = theme('table', ['header' => $header, 'rows' => $rows, 'empty' => t('No configuration set.')]);
     $form['tripal_ws_config_table'] = [
       '#markup' => $config_list
-    ];
-
-    // Cache module name.
-    $form['module_name'] = [
-      '#type' => 'value',
-      '#value' => $module
     ];
 
     return $form;
@@ -681,11 +894,7 @@ if (!function_exists('tripal_ws_configure_call')) {
    */
   if (!function_exists('tripal_ws_configure_call_submit')) {
     function tripal_ws_configure_call_submit($form, &$form_state) {
-      if ($form_state['values'] && !empty($form_state['values']['module_name'])) {
-
-        // Prefix configuration variable name with the module name.
-        $module = $form_state['values']['module_name'];
-
+      if ($form_state['values']) {
         if ($form_state['triggering_element']['#value'] == 'Add configuration') {
           $call       = $form_state['values']['tripal_ws_field_call'];
           $restrict   = $form_state['values']['tripal_ws_field_restrict'];
@@ -698,15 +907,28 @@ if (!function_exists('tripal_ws_configure_call')) {
           }
 
           // Create system variables.
-          $call = tripal_ws_format_call($call, 'noformat');
-          $var_name  = $module . '_' . $call;
-          $var_value = [
-            'call'    => $call,
-            'restrict'  => $restrict,
-            'vocabulary'  => $vocabulary,
-            'term'      => $term,
-            'value'   => $value,
-          ];
+          $var_name  = $call;
+          $var_value = variable_get($var_name);
+
+          if (isset($var_value) && is_array($var_value)) {
+            if ($restrict == 'typeid' && !in_array($term, $var_value['term'])) {
+              $var_value['term'][] = $term;
+            }
+
+            if ($restrict == 'prop' && !in_array($value, $var_value['value'])) {
+              $var_value['value'][] = $value;
+            }
+          }
+          else {
+            $var_value = [
+              'call'    => $call,
+              'restrict'  => $restrict,
+              'vocabulary'  => $vocabulary,
+              'term' => [$term],
+            ];
+
+            $var_value['value'] = ($restrict == 'typeid') ? [] : [$value];
+          }
 
           variable_set($var_name, $var_value);
         }
@@ -732,14 +954,24 @@ if (!function_exists('tripal_ws_manage_search')) {
   function tripal_ws_manage_search($form, &$form_state) {
     $form = [];
 
+    // Reload settings.
+    $reload = l('Refresh log', 'admin/tripal/extension/tripalwsbrapi/configure/search');
+
+    // Refresh page.
+    $form['tripal_ws_config_button_refresh'] = [
+      '#markup' => '<span class="clear-float">' . $reload . '</span><br />'
+    ];
+
     $header = [t('Request ID'), t('Request type'), t('Parameters'), t('Created'), t('Request'), t('Remove')];
     $rows = [];
     $cache = tripal_ws_db_list_search_request();
     foreach($cache as $row) {
-      $param = unserialize($row->search_request_parameter);
+
+      $param = (trim($row->search_request_parameter))
+        ? unserialize($row->search_request_parameter) : '';
 
       $parameter = '';
-      if (count($param) > 0) {
+      if (is_array($param) && count($param) > 0) {
         foreach($param as $param_name => $param_value) {
           $param_value_list = (is_array($param_value)) ? implode(', ', $param_value) : $param_value;
           $parameter .= '<div><span class="tripal-ws-td-item">' . $param_name . '</span>=' . $param_value_list . '</div>';
@@ -792,5 +1024,184 @@ if (!function_exists('tripal_ws_manage_search_submit')) {
         chado_delete_record('tripal_ws_brapi_search_request', ['id' => $id]);
       }
     }
+  }
+}
+
+
+/**
+ * Inspect if a relation supports type_id column.
+ *
+ * @param $table
+ *   String, source or base table that will be checked for type_id column.
+ *
+ * @return integer
+ *   0 base table has no type_id column or if it is an empty column.
+ *   1 base table has type_id column.
+ */
+if (!function_exists('tripal_ws_db_has_type_id')) {
+  function tripal_ws_db_has_type_id($table) {
+    if ($table) {
+      $table = 'chado.' . $table;
+      $column = 'type_id';
+
+      $has_field = (db_field_exists($table, $column)) ? 1 : 0;
+      if ($has_field) {
+        // Field does exists, check that it is being used.
+        $q = sprintf("SELECT type_id FROM {%s} WHERE type_id > 0 LIMIT 1", $table);
+        $result = chado_query($q);
+
+        return ($result->rowCount()) ? 1 : 0;
+      }
+    }
+  }
+}
+
+/**
+ * Inspect if a relation supports prop (property) table.
+ *
+ * @param $table
+ *   String, source or base table that will be checked for type_id column.
+ *
+ * @return integer
+ *   0 base table has no prop table or if it is an empty table.
+ *   1 base table has prop table.
+ */
+if (!function_exists('tripal_ws_db_has_prop_table')) {
+  function tripal_ws_db_has_prop_table($table) {
+    if ($table) {
+      $table = 'chado.' . $table . 'prop';
+
+      $has_prop = (db_table_exists($table)) ? 1 : 0;
+      if ($has_prop) {
+        // Property does exists, check that it is being used.
+        $q = sprintf("SELECT type_id FROM {%s} WHERE type_id > 0 LIMIT 1", $table);
+        $result = chado_query($q);
+
+        return ($result->rowCount()) ? 1 : 0;
+      }
+    }
+  }
+}
+
+/**
+ * Get controlled vocabulary name of all unique terms in a base table.
+ *
+ * @param $restrict
+ *   String, to indicate if type_id or prop table as the source of the search.
+ * @param $table
+ *   String, source or base table that will be checked for values.
+ *
+ * @return array
+ *   Associative array, cv id and cv name as key and value, respectively.
+ */
+if (!function_exists('tripal_ws_db_get_vocabulary')) {
+  function tripal_ws_db_get_vocabulary($restrict, $table) {
+    $result = [];
+    $table = ($restrict == 'prop') ? $table . 'prop' : $table;
+
+    if ($table) {
+      $q = sprintf(
+        "SELECT cv_id, name FROM {cv} WHERE cv_id IN
+           (SELECT cv_id FROM {cvterm} WHERE cvterm_id IN
+             (SELECT type_id FROM {%s} WHERE type_id > 0 GROUP BY type_id))
+         ORDER BY name ASC", $table);
+
+      $query = chado_query($q);
+
+      if ($query->rowCount() > 0) {
+        $result = $query->fetchAllKeyed();
+      }
+    }
+
+    return $result;
+  }
+}
+
+/**
+ * Get all term names in a vocabulary base on or from
+ * a type_id column or property table.
+ *
+ * @param $vocabulary
+ *   Integer, controlled vocabulary id number.
+ * @param $restrict
+ *   String, to indicate if type_id or prop table as the source of the search
+ * @param $table
+ *   String, source or base table that will be checked for values.
+ *
+ * @return array
+ *   Associative array, term id and term name as key and value, respectively.
+ */
+if (!function_exists('tripal_ws_db_get_term')) {
+  function tripal_ws_db_get_term($vocabulary, $restrict, $table) {
+    $result = [];
+    $table = ($restrict == 'prop') ? $table . 'prop' : $table;
+
+    $sql = "SELECT cvterm.cvterm_id, cvterm.name
+      FROM {%s} INNER JOIN {cvterm} ON type_id = cvterm_id
+      WHERE cv_id = :vocabulary GROUP BY cvterm.cvterm_id, cvterm.name";
+
+    $q = sprintf($sql, $table);
+    $query = chado_query($q, [':vocabulary' => $vocabulary]);
+
+    if ($query->rowCount() > 0) {
+      $result = $query->fetchAllKeyed();
+    }
+
+    return $result;
+  }
+}
+
+/**
+ * Get all unique values in a property table of a base table.
+ *
+ * @param $term
+ *   String, cvterm id used to restrict values returned to only those that
+ *   will match this id.
+ * @param $value
+ *   String, source or base table + prop keyword, as the source of the search.
+ *
+ * @return array
+ *   Associative array, value/term name.
+ */
+if (!function_exists('tripal_ws_db_get_value')) {
+  function tripal_ws_db_get_value($term, $table) {
+    $result = [];
+    $table = $table . 'prop';
+
+    $sql = "SELECT value FROM {%s} WHERE type_id = :term
+      GROUP BY value ORDER BY value ASC";
+
+    $q = sprintf($sql, $table);
+    $query = chado_query($q, [':term' => $term]);
+
+    if ($query->rowCount() > 0) {
+      $result = $query->fetchAllKeyed(0, 0);
+    }
+
+    return $result;
+  }
+}
+
+/**
+ * Retrieve all search requests.
+ *
+ * @return
+ *   Array, all search requests rows.
+ *
+ * @see configuration page.
+ */
+if (!function_exists('tripal_ws_db_list_search_request')) {
+  function tripal_ws_db_list_search_request() {
+    $result = [];
+
+    // All search request ordered - latest to oldest.
+    $sql = "SELECT * FROM {tripal_ws_brapi_search_request} ORDER BY id DESC";
+    $query = chado_query($sql);
+
+    if ($query->rowCount() > 0) {
+      $result = $query->fetchAll();
+    }
+
+    return $result;
   }
 }

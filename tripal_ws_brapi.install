@@ -4,19 +4,42 @@
  * Contains actions performed during install/uninstall.
  */
 
+ // API.
+ module_load_include('inc', 'tripal_ws_brapi', 'includes/api');
+
 /**
  * Implements hook_enable().
- * Load default configuration.
+ * Set default configurations.
  */
 function tripal_ws_brapi_enable() {
-  // Use the comnination of keyword as variable names that will serve as
-  // configuration options for this call instance.
+  // Use configuration file to set default settings upon install.
   include_once 'includes/config.inc';
 
-  variable_set($config_module_name . '_vocabulary', $config_vocabulary);
-  variable_set($config_module_name . '_supported_method', $config_supported_method);
+  // Module name.
+  variable_set('tripal_ws_brapi_modulename', $config_module_name);
+
+  // Default values:
+
+  // BrAPI version 1.3
+  // Major version number, default minor version in a major version numbur
+  // and all sub-version numbers belonging to a major version number.
+  $default_ver = ['ver' => 1, 'default' => 1.3, 'all' => [1.3]];
+  variable_set($config_module_name . '_v1', $default_ver);
+
+  // Resultset limit.
   variable_set($config_module_name . '_resultset_limit', $config_resultset_limit);
+
+  // HTTP request method supported.
+  variable_set($config_module_name . '_supported_method', $config_supported_method);
+
+  // Menu levels/prefix.
   variable_set($config_module_name . '_menu_level', $config_menu_level);
+
+  // Hook string, used by implementing module.
+  variable_set($config_module_name . '_hook', $config_hook);
+
+  // Allow override hook.
+  variable_set($config_module_name . '_allow_override_hook', $config_allow_override_hook);
 }
 
 /**
@@ -24,32 +47,53 @@ function tripal_ws_brapi_enable() {
  * Remove configurations.
  */
 function tripal_ws_brapi_disable() {
-  include_once 'includes/config.inc';
+  // Clear system variables
 
-  variable_del($config_module_name . '_vocabulary');
-  variable_del($config_module_name . '_supported_version');
-  variable_del($config_module_name . '_supported_method');
-  variable_del($config_module_name . '_resultset_limit');
-  variable_del($config_module_name . '_menu_level');
+  // Module name
+  $module = tripal_ws_get_module_info();
+  $config_module_name = $module['module'];
+  variable_del($module['var_name']);
 
-  // Versions.
-  $minor_ver_option = range(0, 10);
-  foreach($minor_ver_option as $ver) {
-    $var_name = 'tripal_ws_v' . $ver;
-    $var_value = variable_get($var_name);
+  // Default values:
 
-    if (!empty($var_value)) {
-      variable_del($var_name);
+  // Version. Major versions 1-10 in the configuration.
+  for($i = 1; $i <= 10; $i++) {
+    $conf_ver = $config_module_name . '_v' . $i;
+
+    if (variable_get($conf_ver)) {
+      variable_del($conf_ver);
     }
   }
 
-  // Calls.
-  foreach($map as $call) {
-    $var_name = 'tripal_ws_' . trim(strtolower(str_replace(' ', '_', $call)));
-    $var_value = variable_get($var_name);
+  // Resultset limit.
+  variable_del($config_module_name . '_resultset_limit');
 
-    if (!empty($var_value)) {
-      variable_del($var_name);
+  // HTTP request method supported.
+  variable_del($config_module_name . '_supported_method');
+
+  // Menu levels/prefix.
+  variable_del($config_module_name . '_menu_level');
+
+  // Hook string, used by implementing module.
+  variable_del($config_module_name . '_hook');
+
+  // Allow override hook.
+  variable_del($config_module_name . '_allow_override_hook');
+
+  // Calls.
+  $c = tripal_ws_get_calls();
+
+  if ($c) {
+    $calls = array_keys($c);
+    unset($c);
+
+    foreach($calls as $call) {
+      $var_name  = $config_module_name . '_' . $call;
+      $var_value = variable_get($var_name);
+
+      if ($var_value) {
+        variable_del($var_name);
+      }
     }
   }
 
@@ -61,6 +105,7 @@ function tripal_ws_brapi_disable() {
 /**
  * Implements hook_schema().
  * Table definition used by search service.
+ * Described in https://brapi.docs.apiary.io/#introduction/search-services.
  */
 function tripal_ws_brapi_schema() {
   $schema = [];

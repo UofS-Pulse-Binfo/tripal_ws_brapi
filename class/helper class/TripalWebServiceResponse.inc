@@ -1,6 +1,7 @@
 <?php
 /**
- *
+ *  Transform data into BrAPI JSON response.
+ *  Described in https://brapi.docs.apiary.io/#introduction/structure-of-the-response-object:
  */
 final class TripalWebServiceResponse {
   // Response content type for this instance.
@@ -65,7 +66,7 @@ final class TripalWebServiceResponse {
    */
   public static function errorResponse($response) {
     $metadata_response = self::$metadata_response;
-    $response['code'] = isset($response['code']) ? 200 : $response['code'];
+    $response['code'] = isset($response['code']) ? $response['code'] : 400;
 
     // Attach response to define metatdata format defined above.
     $metadata_response['metadata']['status'] = $response;
@@ -99,7 +100,7 @@ final class TripalWebServiceResponse {
 
     $response = $metadata_response + $payload_response;
 
-    $status = '200 Ok';
+    $status = '200 OK';
     self::encodeResponse(self::$response_content_type, $status, $response);
   }
 
@@ -142,10 +143,15 @@ final class TripalWebServiceResponse {
    public static function removeCommentColumn($payload) {
      $payload_response_key = array_keys($payload)[0];
 
-     foreach($payload[ $payload_response_key ] as $i => $item) {
-       foreach($item as $key => $value) {
-         if (strpos($key, '#') !== FALSE) {
-           unset($payload[ $payload_response_key ][ $i ][ $key ]);
+     if (is_array($payload[ $payload_response_key ])) {
+       foreach($payload[ $payload_response_key ] as $i => $item) {
+
+         if (is_array($item)) {
+           foreach($item as $key => $value) {
+             if (strpos($key, '#') !== FALSE) {
+               unset($payload[ $payload_response_key ][ $i ][ $key ]);
+             }
+           }
          }
        }
      }

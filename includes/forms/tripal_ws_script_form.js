@@ -23,4 +23,13 @@
         if (!r) return false;
       });
       //
+
+      // Tool tip text.
+      $('.tripal-ws-info')
+        .mouseover(function() {
+          $(this).parent().next('.tripal-ws-tooltip').show();
+        })
+        .mouseout(function() {
+          $('.tripal-ws-tooltip').hide();
+        });
 } }; }(jQuery));

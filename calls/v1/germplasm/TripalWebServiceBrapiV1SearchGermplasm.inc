@@ -1,26 +1,21 @@
 <?php
 /**
  * Call: Calls, class definition.
- * Fun Fact: The plural of germplasm is germplasm (no "s").
+ * Search for a set of germplasm based on some criteria.
  */
-class TripalWebServiceBrapiV1Germplasm extends TripalWebServiceDatabaseCall {
+class TripalWebServiceBrapiV1SearchGermplasm extends TripalWebServiceSearchCall {
   // This call expects parameters below.
-  // Available data types:
-  //
-  // int - (single value) numbers, including 0.
-  // text - (single value) text, alphanumeric value.
-  // array-int - (array, multiple values) elements are numbers.
-  // array-text - (array, multiple values) elements are text value.
-  // hash-code - (single value) xxxxx-xxxxx-xxxxx-xxxxx-xxxxx alphanumeric format.
-  //
-  // Example: page => int, searchResultDbId => hash-code.
   public $call_parameter = [
     // Key : Expected value for this key.
-    'page' => 'int',
-    'pageSize' => 'int',
-    'germplasmName' => 'text',
-    'commonCropName' => 'text',
-  ];
+    'accessionNumbers' => 'array-text',
+    'commonCropNames'  => 'array-text',
+    'germplasmDbIds'   => 'array-int',
+    'germplasmGenus'   => 'array-text',
+    'germplasmNames'   => 'array-text',
+    'germplasmPUIs'    => 'array-int',
+    'germplasmSpecies' => 'array-text',
+    'page'             => 'int',
+    'pageSize'         => 'int'];
 
   // Keyword used to identify result items.
   protected $call_payload_key = 'data';
@@ -40,6 +35,7 @@ class TripalWebServiceBrapiV1Germplasm extends TripalWebServiceDatabaseCall {
           'instituteName', 'pedigree', 'subtaxa'],
   ];
 
+
   // Call parameters as provided in the request url.
   public $call_asset;
 
@@ -54,50 +50,63 @@ class TripalWebServiceBrapiV1Germplasm extends TripalWebServiceDatabaseCall {
   // Callback to fetch data from source table.
 
 
-  /**
-   * No configuration (default) set, this method will be used to fetch data.
-   *
-   * Get unfiltered resultset.
-   */
-  public function getResult() {
+  function getResult() {
     $call_asset = $this->call_asset;
-
-    $result = '';
-
     $filter = [];
     $args   = [];
 
-    // Based on parameters defined above.
+    // Each search parameters (parameter property) when provided with a value
+    // will become an entry in the where clause.
+    $param = $call_asset['parameter'];
+
     // page and pageSize
-    $page_size = isset($call_asset['parameter']['pageSize'])
-      ? $call_asset['parameter']['pageSize'] : $call_asset['configuration']['resultset_limit'];
+    $page_size = isset($param['pageSize'])
+      ? $param['pageSize'] : $call_asset['configuration']['resultset_limit'];
 
-    $offset = $call_asset['parameter']['page'] * $page_size;
+    $offset = $param['page'] * $page_size;
 
-    // germplasmName.
-    if (isset($call_asset['parameter']['germplasmName'])
-        && !empty($call_asset['parameter']['germplasmName'])) {
 
-      $filter[] = 'stock.name = :germplasmName';
-      $args[':germplasmName'] = $call_asset['parameter']['germplasmName'];
+    if (isset($param['accessionNumbers']) && !empty($param['accessionNumbers'])) {
+      $filter[] = 'stock.uniquename IN (:accessionNumbers)';
+      $args[':accessionNumbers'] = $param['accessionNumbers'];
     }
 
-    // commonCropName.
-    if (isset($call_asset['parameter']['commonCropName'])
-        && !empty($call_asset['parameter']['commonCropName'])) {
-
-      $filter[] = 'organism.common_name = :commonCropName';
-      $args[':commonCropName'] = $call_asset['parameter']['commonCropName'];
+    if (isset($param['commonCropNames']) && !empty($param['commonCropNames'])) {
+      $filter[] = 'LOWER(organism.common_name) = :commonCropNames';
+      $args[':commonCropNames'] = $param['commonCropNames'];
     }
 
-    // Transform parameters into a string, as where clause in the query.
+    if (isset($param['germplasmDbIds']) && !empty($param['germplasmDbIds'])) {
+      $filter[] = 'stock.stock_id IN (:germplasmDbIds)';
+      $args[':germplasmDbIds'] = $param['germplasmDbIds'];
+    }
+
+    if (isset($param['germplasmGenus']) && !empty($param['germplasmGenus'])) {
+      $filter[] = 'organism.genus IN (:germplasmGenus)';
+      $args[':germplasmGenus'] = $param['germplasmGenus'];
+    }
+
+    if (isset($param['germplasmNames']) && !empty($param['germplasmNames'])) {
+      $filter[] = 'stock.name IN (:germplasmNames)';
+      $args[':germplasmNames'] = $param['germplasmNames'];
+    }
+
+    if (isset($param['germplasmPUIs']) && !empty($param['germplasmPUIs'])) {
+      $filter[] = 'stock.stock_id IN (:germplasmPUIs)';
+      $args[':germplasmPUIs'] = $param['germplasmPUIs'];
+    }
+
+    if (isset($param['germplasmSpecies']) && !empty($param['germplasmSpecies'])) {
+      $filter[] = 'organism.species IN (:germplasmSpecies)';
+      $args[':germplasmSpecies'] = $param['germplasmSpecies'];
+    }
+
+    // Convert to where clause conditions.
     $where = '';
-    if (isset($filter) && count($filter) > 0) {
+    if (count($filter) > 0) {
       $where = 'WHERE ' . implode(' AND ', $filter);
     }
 
-    // The order of field in this select shoud match the order of elements in the
-    // response field property array above.
     $sql = "
       SELECT
         stock.uniquename,
@@ -134,31 +143,9 @@ class TripalWebServiceBrapiV1Germplasm extends TripalWebServiceDatabaseCall {
       ORDER BY stock.name ASC
       LIMIT %d OFFSET %d";
 
-    $query = sprintf($sql, $this->class_name::$chado_table, $where, $page_size, $offset);
-    $result = chado_query($query, $args);
+      $query = sprintf($sql, $this->class_name::$chado_table, $where, $page_size, $offset);
+      $result = chado_query($query, $args);
 
-    return ($result->rowCount() > 0) ? $result->fetchAll() : '';
-  }
-
-  /**
-   * Using configuration page, when this call is set to restrict/filter response
-   * by typeid (chado.table - type_id column) this method will be used to fetch data.
-   *
-   * Fetch data by type_id column.
-   */
-  public function getResultByTypeid() {
-    $result = '';
-    return $result;
-  }
-
-  /**
-   * Using configuration page, when this call is set to restrict/filter response
-   * by type_id (chado.property table - value column) this method will be used to fetch data.
-   *
-   * Fetch data by property table value.
-   */
-  public function getResultByPropertyTable() {
-    $result = '';
-    return $result;
+      return ($result->rowCount() > 0) ? $result->fetchAll() : '';
   }
 }
