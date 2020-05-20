@@ -15,6 +15,14 @@ function tripal_ws_brapi_enable() {
   // Use configuration file to set default settings upon install.
   include_once 'includes/config.inc';
 
+  drupal_set_message('Setting Configuration...');
+  drupal_set_message("Module Name: $config_module_name");
+  drupal_set_message("Version: $config_version");
+  drupal_set_message("Resultset Limit: $config_resultset_limit");
+  drupal_set_message("Supported Method(s): $config_supported_method");
+  drupal_set_message("Webservices Root Path: [your drupal site]/$config_menu_level");
+  drupal_set_message("Override Hook: $config_hook");
+
   // Module name.
   variable_set('tripal_ws_brapi_modulename', $config_module_name);
 
@@ -23,7 +31,7 @@ function tripal_ws_brapi_enable() {
   // BrAPI version 1.3
   // Major version number, default minor version in a major version numbur
   // and all sub-version numbers belonging to a major version number.
-  $default_ver = ['ver' => 1, 'default' => 1.3, 'all' => [1.3]];
+  $default_ver = ['ver' => 1, 'default' => $config_version, 'all' => [$config_version]];
   variable_set($config_module_name . '_v1', $default_ver);
 
   // Resultset limit.
