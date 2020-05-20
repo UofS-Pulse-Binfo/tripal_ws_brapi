@@ -7,8 +7,8 @@
  * active modules and search directory includes/TripalWebService/class
  * for class file which will be implemented.
  */
-class TripalContentServiceBrapi_v0_1 extends TripalWebService {
-  public static $label = 'BRAPI Implementation';
+class TripalContentServiceBrapi_v1_2 extends TripalWebService {
+  public static $label = 'BRAPI v1.2 Implementation';
   public static $type = 'content';
 
   public function getServicePath() {
