@@ -8,7 +8,7 @@ namely, **Custom call**, **Database call** and **Search call**.
 
 .. list-table::
    :widths: 50 50
-   :header-rows: 1
+   :header-rows: 0
 
    * - **Custom Call**
      - Data source can be supplied by user either by typing a list or by defining
@@ -24,12 +24,14 @@ namely, **Custom call**, **Database call** and **Search call**.
        (see Manage Search Request Log).
 
 This modules has built-in calls namely v1/calls, v1/germplasm, v1/crops, v1/commoncropnames
-and search call v1/search/germplasm, alternatively, all of this call can be viewed as
-BrAPI call response by requesting v1/calls call.
+and search call v1/search/germplasm, all of these calls can be viewed by requesting using
+the BrAPI call url structure.
 
-.. note:: Host/web-services/brapi/v1/call or host/web-services/brapi/v2/serverinfo
+**For example: Host/web-services/brapi/v1/call or host/web-services/brapi/v2/serverinfo **
 
 Apart from these predefined calls mentioned, an external module (hosted by the
 same Drupal website) can implement a call or override a call without necessarily
 storing call assets in the same directory as this module, which will enable
 developers to extend functionality.
+
+See Setup Tripal WS BrAPI Call.

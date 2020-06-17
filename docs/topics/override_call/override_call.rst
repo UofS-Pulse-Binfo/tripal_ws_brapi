@@ -31,7 +31,7 @@ call can point to an existing call and function identical to the source call.
 
 1. To override the $call_payload_key of the source call, set the value of the
    property **$call_payload_key**.
-2. Extend the class to whichever the type of call.
+2. Extend the class identical to the type of call of the source call.
 3. Finally, set the source call by specifying the module it is hosted followed
    by the version number then the call title. For example, the call – mygermplasm
    that mimics germplasm call, located in tripal_ws_brapi module:
@@ -59,20 +59,20 @@ For example:
 Summary table of existing Tripal WS BrAPI Calls when implementing a call Alias and/or Override:
 
 .. list-table::
-   :widths: 50 50
+   :widths: 40 60
    :header-rows: 1
 
-   * - tripal_ws_brapi Calls
-     - Call alias property - $is_alias_of:
-   * - v1/calls
+   * - **tripal_ws_brapi Calls**
+     - **Call alias property - $is_alias_of:**
+   * - **v1/calls**
      - tripal_ws_brapi/v1/calls
-   * - v1/commoncropnames
+   * - **v1/commoncropnames**
      - tripal_ws_brapi/v1/commoncropnames
-   * - v1/crops
-     -tripal_ws_brapi/v1/crops
-   * - v1/germplasm
+   * - **v1/crops**
+     - tripal_ws_brapi/v1/crops
+   * - **v1/germplasm**
      - tripal_ws_brapi/v1/germplasm
-   * - v1/search/germplasm
+   * - **v1/search/germplasm**
      - tripal_ws_brapi/v1/search/germplasm
-   * - Other calls
+   * - **Other calls**
      - TO DO.

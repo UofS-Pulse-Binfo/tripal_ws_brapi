@@ -5,8 +5,6 @@ Similar to creating a custom call and database call, a search call uses both
 **GET** and **POST** request methods to view a query result and request a query,
 respectively.
 
-See details below.
-
 **Class definition**
 
 .. code-block:: php
@@ -59,7 +57,7 @@ See details below.
    only appropriate entries are permitted.
 
 .. list-table::
-   :widths: 50 50
+   :widths: 30 70
    :header-rows: 0
 
    * - **int**
@@ -80,18 +78,22 @@ See details below.
    /calls and /serverinfo calls, repectively.
 5. Define the result in the only method of this class getResult().
 
-.. note:: Ensure that the number of items in the data array should match the
-   items in the $response_filed. Include a mechanism to handle each parameters
-   defined in #2. Parameters requested in the url are available in getResult()
-   through the property **$call_asset**
+.. note:: Ensure that the number of items and the order of data returned by getResult()
+   should match the items in the $response_filed. Include a mechanism to handle
+   each parameters defined in #2. Parameters requested in the url are available
+   in getResult() through the property **$call_asset**.
 
-   .. code-block:: php
+  .. code-block:: php
 
-      $this->call_asset[‘parameters’] property and
-      $this->call_asset[‘parameters’][‘yourparameter’] to access the value.
+    $this->call_asset[‘parameters’] property and
+    $this->call_asset[‘parameters’][‘parameter 1’],
+    $this->call_asset[‘parameters’][‘parameter 2’],
+    $this->call_asset[‘parameters’][‘parameter ...’] to access the value.
 
 6. Save the file.
 7. Test your call using host/web-services/brapi/v + version/yourcallname.
+8. Test your call with the parameters set using
+   host/web-services/brapi/v + version/yourcallname?parameter 1=value&parameter 2=value...
 
 .. note:: This class extends to a different class than the one used in defining
    database calls and custom calls and it is important to specify the source
@@ -101,7 +103,7 @@ See details below.
 
 Search call operates differently compared to other calls – custom call and
 database call. Search call needs to POST the call (with parameters) and at this
-stage a hash code is returned. A call can then be requested using the has code
+stage a hash code is returned. A call can then be requested using the code
 to view the result or response.
 
 .. list-table::
@@ -110,23 +112,21 @@ to view the result or response.
 
    * - **POST Search Request**
      - **GET Search Request**
-   * -
+   * - .. code-block:: php
 
- .. code-block:: php
+          $ch = curl_init();
+          curl_setopt($ch, CURLOPT_URL, "host/tripaltest/web-services/brapi/v1/search/searchcall");
+          curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+          curl_setopt($ch, CURLOPT_HEADER, FALSE);
+          curl_setopt($ch, CURLOPT_POST, TRUE);
 
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, "host/tripaltest/web-services/brapi/v1/search/searchcall");
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-    curl_setopt($ch, CURLOPT_HEADER, FALSE);
-    curl_setopt($ch, CURLOPT_POST, TRUE);
+          // Parameter
+          curl_setopt($ch, CURLOPT_POSTFIELDS, "{\"parameter\" : [\"value\"]}");
 
-    // Parameter
-    curl_setopt($ch, CURLOPT_POSTFIELDS, "{\"parameter\" : [\"value\"]}");
-
-    curl_setopt($ch, CURLOPT_HTTPHEADER, ["Content-Type: application/json"]);
-    $response = curl_exec($ch);
-    curl_close($ch);
-    var_dump($response);   public $call
+          curl_setopt($ch, CURLOPT_HTTPHEADER, ["Content-Type: application/json"]);
+          $response = curl_exec($ch);
+          curl_close($ch);
+          var_dump($response);   public $call
 
       - host/tripaltest/web-services/brapi/v1/search/searchcall?searchResultDbId=7FKIa-s29e7-PJJBS-nLL4N-jNoLs
     * - Add parameters in // Parameter line. Parameter in JSON format.

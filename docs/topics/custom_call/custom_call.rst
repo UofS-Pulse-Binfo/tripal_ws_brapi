@@ -55,7 +55,7 @@ relevant data as the response or result from executing a custom call.
    only appropriate entries are permitted.
 
 .. list-table::
-   :widths: 50 50
+   :widths: 30 70
    :header-rows: 0
 
    * - **int**
@@ -76,15 +76,19 @@ relevant data as the response or result from executing a custom call.
    by /calls and /serverinfo calls, repectively.
 5. Define the result in the only method of this class getResult().
 
-.. note:: Ensure that the number of items in the data array should match the
-   items in the $response_filed. Include a mechanism to handle each parameters
-   defined in #2. Parameters requested in the url are available in getResult()
-   through the property **$call_asset**
+.. note:: Ensure that the number of items and the order of data returned by getResult()
+   should match the items in the $response_filed. Include a mechanism to handle
+   each parameters defined in #2. Parameters requested in the url are available
+   in getResult() through the property **$call_asset**.
 
-.. code-block:: php
+  .. code-block:: php
 
-  $this->call_asset[‘parameters’] property and
-  $this->call_asset[‘parameters’][‘yourparameter’] to access the value.
+    $this->call_asset[‘parameters’] property and
+    $this->call_asset[‘parameters’][‘parameter 1’],
+    $this->call_asset[‘parameters’][‘parameter 2’],
+    $this->call_asset[‘parameters’][‘parameter ...’] to access the value.
 
 6. Save the file.
 7. Test your call using host/web-services/brapi/v + version/yourcallname.
+8. Test your call with the parameters set using
+   host/web-services/brapi/v + version/yourcallname?parameter 1=value&parameter 2=value...

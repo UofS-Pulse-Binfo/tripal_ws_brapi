@@ -73,7 +73,7 @@ Alternatively, copy and paste this URL into the browser’s location bar.
 B . host/ admin/tripal/extension/tripalwsbrapi/configure
 ***********************************************************************************
 
-Sections are laid out in page tabs and are labelled to indicate which are of this
+Sections are laid out in page tabs and are labelled to indicate which part of this
 module it covers. Each tab as seen in Figure 1, moving from left to right is
 summarized in the table below.
 
