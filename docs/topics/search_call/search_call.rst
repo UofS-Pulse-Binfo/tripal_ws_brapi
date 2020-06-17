@@ -112,22 +112,18 @@ to view the result or response.
 
    * - **POST Search Request**
      - **GET Search Request**
-   * - .. code-block:: php
-
-          $ch = curl_init();
-          curl_setopt($ch, CURLOPT_URL, "host/tripaltest/web-services/brapi/v1/search/searchcall");
-          curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-          curl_setopt($ch, CURLOPT_HEADER, FALSE);
-          curl_setopt($ch, CURLOPT_POST, TRUE);
-
-          // Parameter
-          curl_setopt($ch, CURLOPT_POSTFIELDS, "{\"parameter\" : [\"value\"]}");
-
-          curl_setopt($ch, CURLOPT_HTTPHEADER, ["Content-Type: application/json"]);
-          $response = curl_exec($ch);
-          curl_close($ch);
-          var_dump($response);   public $call
-
+   * - $ch = curl_init();
+       // Search call
+       **curl_setopt($ch, CURLOPT_URL, "host/web-services/brapi/v1/search/searchcall");**
+       curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+       curl_setopt($ch, CURLOPT_HEADER, FALSE);
+       curl_setopt($ch, CURLOPT_POST, TRUE);
+       // Parameter
+       **curl_setopt($ch, CURLOPT_POSTFIELDS, "{\"parameter\" : [\"value\"]}");**
+       curl_setopt($ch, CURLOPT_HTTPHEADER, ["Content-Type: application/json"]);
+       $response = curl_exec($ch);
+       curl_close($ch);
+       var_dump($response);   public $call
       - host/tripaltest/web-services/brapi/v1/search/searchcall?searchResultDbId=7FKIa-s29e7-PJJBS-nLL4N-jNoLs
     * - Add parameters in // Parameter line. Parameter in JSON format.
       - Using the hash code returned, get the call response.
