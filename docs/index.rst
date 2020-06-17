@@ -26,11 +26,12 @@ Resource
    :maxdepth: 2
    :caption: Step-by-step guides:
 
-   requirements
-   configuration
-   call_types
-   setup_calls
-   custom_call
-   database_call
-   search_call
-   override_call
+   topics/requirements
+   topics/configuration
+   topics/call_types
+   topics/setup_calls
+   topics/custom_call
+   topics/database_call
+   topics/search_call
+   topics/override_call
+   topics/contribute
