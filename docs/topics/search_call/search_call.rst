@@ -112,7 +112,8 @@ to view the result or response.
 
    * - **POST Search Request**
      - **GET Search Request**
-   * - .. code-block:: php
+   * - Sample request.
+       .. code-block:: php
           $ch = curl_init();
 
           // Search call
