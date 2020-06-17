@@ -123,12 +123,12 @@ to view the result or response.
        curl_setopt($ch, CURLOPT_HTTPHEADER, ["Content-Type: application/json"]);
        $response = curl_exec($ch);
        curl_close($ch);
-       var_dump($response);   public $call
-      - host/tripaltest/web-services/brapi/v1/search/searchcall?searchResultDbId=7FKIa-s29e7-PJJBS-nLL4N-jNoLs
-    * - Add parameters in // Parameter line. Parameter in JSON format.
-      - Using the hash code returned, get the call response.
-    * - RESPONSE: hash code 7FKIa-s29e7-PJJBS-nLL4N-jNoLs
-      - Call response JSON.
+       var_dump($response);
+     - host/tripaltest/web-services/brapi/v1/search/searchcall?searchResultDbId=7FKIa-s29e7-PJJBS-nLL4N-jNoLs
+   * - Add parameters in // Parameter line. Parameter in JSON format.
+     - Using the hash code returned, get the call response.
+   * - RESPONSE: hash code 7FKIa-s29e7-PJJBS-nLL4N-jNoLs
+     - Call response JSON.
 
 A copy of the POST request and the hash code can be accessed in the configuration
 page. To perform the same search request, use the same hash code to GET request
