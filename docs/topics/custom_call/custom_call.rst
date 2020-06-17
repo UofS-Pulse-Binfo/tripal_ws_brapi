@@ -48,6 +48,8 @@ relevant data as the response or result from executing a custom call.
    }
 
 
+
+
    1.	Rename the class name using the format defined relating to call class
       filename (titled Yourcallname in the code snippet above).
    2.	List the parameters that user can apply to request specific items from the
@@ -76,7 +78,7 @@ relevant data as the response or result from executing a custom call.
    4.	Set the **$call_payload_key** to a string value. This variable will render
       as the key in the response. ie data (BrAPI 1.3) and call (BrAPI 2.0) used
       by /calls and /serverinfo calls, repectively.
-   5.	Define the result in the only method of this class - getResult().
+   5.	Define the result in the only method of this class getResult().
 
    .. note:: Ensure that the number of items in the data array should match the
       items in the $response_filed. Include a mechanism to handle each parameters

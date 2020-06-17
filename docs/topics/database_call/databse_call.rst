@@ -65,6 +65,9 @@ applied to calls – by type_id or by value of prop table.
      }
    }
 
+
+
+
    .. note:: NOTE: This class extends to a different class than the one used in
       defining custom calls and it is important to specify the source table
       ($chado_table property).
