@@ -65,60 +65,55 @@ applied to calls – by type_id or by value of prop table.
      }
    }
 
+.. note:: NOTE: This class extends to a different class than the one used in
+   defining custom calls and it is important to specify the source table
+    ($chado_table property).
 
+To apply parameters (defined in the class) to a call, include each item with
+the request url.
 
+For example:
+**Host/web-services/brapi/v1/germplasm?commonCropName=Lentil**
 
-   .. note:: NOTE: This class extends to a different class than the one used in
-      defining custom calls and it is important to specify the source table
-      ($chado_table property).
+1. Rename the class name using the format defined relating to call class
+   filename (titled Yourcallname in the code snippet above).
+2. List the parameters that user can apply to request specific items from the
+   result. Each parameter can be set to a data type which will ensure that only appropriate entries are permitted.
 
-   To apply parameters (defined in the class) to a call, include each item with
-   the request url.
+.. list-table::
+   :widths: 50 50
+   :header-rows: 0
 
-   For example:
-   **Host/web-services/brapi/v1/germplasm?commonCropName=Lentil**
+   * - **int**
+     - (single value) numbers, including 0.
+   * - **text**
+     - (single value) text, alphanumeric value.
+   * - **array-int**
+     - (array, multiple values) elements are numbers.
+   * - **array-text**
+     - (array, multiple values) elements are text value.
+   * - **hash-code**
+     - (single value) xxxxx-xxxxx-xxxxx-xxxxx-xxxxx alphanumeric format.
 
-   1.	Rename the class name using the format defined relating to call class
-      filename (titled Yourcallname in the code snippet above).
-   2.	List the parameters that user can apply to request specific items from the
-      result. Each parameter can be set to a data type which will ensure that only appropriate entries are permitted.
+3. Define the unit of data and its elements in $response_field. Set the key
+   to the target BrAPI version number. ie 1.3 or 1.2.
+4. Set the **$call_payload_key** to a string value. This variable will render
+   as the key in the response. ie data (BrAPI 1.3) and call (BrAPI 2.0) used
+   by /calls and /serverinfo calls, repectively.
+5. Construct query that will correspond to each case - **Unfiltered, By type_id
+   and By value in property table**. The last two options only apply when desired.
 
-   .. code-block:: php
+.. note:: Ensure that the number of items in the data array should match the
+   items in the $response_filed.
 
-   .. list-table::
-      :widths: 50 50
-      :header-rows: 0
+Include a mechanism to handle each parameters defined in #2. Parameters
+requested in the url are available in each methods through the property
+**$call_asset**
 
-      * - **int**
-        - (single value) numbers, including 0.
-      * - **text**
-        - (single value) text, alphanumeric value.
-      * - **array-int**
-        - (array, multiple values) elements are numbers.
-      * - **array-text**
-        - (array, multiple values) elements are text value.
-      * - **hash-code**
-        - (single value) xxxxx-xxxxx-xxxxx-xxxxx-xxxxx alphanumeric format.
+.. code-block:: php
 
-   3.	Define the unit of data and its elements in $response_field. Set the key
-      to the target BrAPI version number. ie 1.3 or 1.2.
-   4.	Set the **$call_payload_key** to a string value. This variable will render
-      as the key in the response. ie data (BrAPI 1.3) and call (BrAPI 2.0) used
-      by /calls and /serverinfo calls, repectively.
-   5.	Construct query that will correspond to each case - **Unfiltered, By type_id
-      and By value in property table**. The last two options only apply when desired.
+  $this->call_asset[‘parameters’] property and
+  $this->call_asset[‘parameters’][‘yourparameter’] to access the value.
 
-   .. note:: Ensure that the number of items in the data array should match the
-      items in the $response_filed.
-
-      Include a mechanism to handle each parameters defined in #2. Parameters
-      requested in the url are available in each methods through the property
-      **$call_asset**
-
-   .. code-block:: php
-
-      $this->call_asset[‘parameters’] property and
-      $this->call_asset[‘parameters’][‘yourparameter’] to access the value.
-
-   6.	Save the file.
-   7.	Test your call using host/web-services/brapi/v + version/yourcallname.
+6. Save the file.
+7. Test your call using host/web-services/brapi/v + version/yourcallname.

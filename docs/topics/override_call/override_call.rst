@@ -29,35 +29,32 @@ call can point to an existing call and function identical to the source call.
    }
 
 
+1. To override the $call_payload_key of the source call, set the value of the
+   property **$call_payload_key**.
+2. Extend the class to whichever the type of call.
+3. Finally, set the source call by specifying the module it is hosted followed
+   by the version number then the call title. For example, the call – mygermplasm
+   that mimics germplasm call, located in tripal_ws_brapi module:
 
+**tripal_ws_brapi/v1/germplasm**
 
-  1.	To override the $call_payload_key of the source call, set the value of the
-      property **$call_payload_key**.
-  2.	Extend the class to whichever the type of call.
-  3.	Finally, set the source call by specifying the module it is hosted followed
-      by the version number then the call title. For example, the call – mygermplasm
-      that mimics germplasm call, located in tripal_ws_brapi module:
+In cases when call wants to point to a search call, add search/ level between
+version number and the call title.
 
-      **tripal_ws_brapi/v1/germplasm**
+**tripal_ws_brapi/v1/search/germplasm**
 
-  In cases when call wants to point to a search call, add search/ level between
-  version number and the call title.
+.. note:: Ensure correct override configuration settings when implementing an
+   override, by using the exact same call title but is hosted by module external
+   to tripal_ws_module.
 
-     **tripal_ws_brapi/v1/search/germplasm**
+.. note:: When implementing from an external module, prefix the class and class
+   filename with **External** keyword (see naming class section).
 
-  .. note:: Ensure correct override configuration settings when implementing an
-     override, by using the exact same call title but is hosted by module external
-     to tripal_ws_module.
+For example:
 
-  .. note:: When implementing from an external module, prefix the class and class
-     filename with **External** keyword (see naming class section).
+.. code-block:: php
 
-  For example:
-
-  .. code-block:: php
-
-     class ExternalTripalWebServiceBrapiV2Serverinfo extends TripalWebServiceCustomCall
-
+  class ExternalTripalWebServiceBrapiV2Serverinfo extends TripalWebServiceCustomCall
 
 Summary table of existing Tripal WS BrAPI Calls when implementing a call Alias and/or Override:
 
