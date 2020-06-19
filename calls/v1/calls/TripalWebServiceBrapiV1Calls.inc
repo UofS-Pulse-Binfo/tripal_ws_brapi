@@ -1,82 +1,78 @@
 <?php
 /**
  * Call: Calls, class definition.
+ * The '/calls' call is used to find the available BrAPI calls on a particular server.
  */
 class TripalWebServiceBrapiV1Calls extends TripalWebServiceCustomCall {
   // This call expects parameters below.
+  // Available data types:
+  //
+  // int - (single value) numbers, including 0.
+  // text - (single value) text, alphanumeric value.
+  // array-int - (array, multiple values) elements are numbers.
+  // array-text - (array, multiple values) elements are text value.
+  // hash-code - (single value) xxxxx-xxxxx-xxxxx-xxxxx-xxxxx alphanumeric format.
+  //
+  // Example: page => int, searchResultDbId => hash-code.
   public $call_parameter = [
     // Key : Expected value for this key.
-    'page' => 'int'
   ];
 
   // Keyword used to identify result items.
   protected $call_payload_key = 'data';
 
   // Unit of response for this call.
-  private $response_field = [
-    '1.2' => ['call', 'datatypes', 'method', 'version'],
-    '1.3' => ['call', 'dataType', 'method', 'version']
+  // With corresponding minor version a response is for.
+  public $response_field = [
+    '1.2' => ['call', 'datatypes', 'methods', 'versions'],
+    '1.3' => ['call', 'dataTypes', 'methods', 'versions'],
+    // Version 2 - serverinfo call.
+    '2.0' => ['call', 'dataTypes', 'methods', 'versions']
   ];
 
   // Call parameters as provided in the request url.
   public $call_asset;
 
+  // Class name.
+  public $class_name;
 
-  /**
-   * Construct, initialize call property.
-   */
-  public function __construct($call_asset) {
-    // Make parameters accessible in all class level.
-    $this->call_asset = $call_asset;
-  }
 
-  /**
-   * Prepare items/data payload as response.
-   */
-  public function prepareResponse() {
-    // Call assets.
-    $call_asset = $this->call_asset;
-    // What should be the title for the result.
-    $call_payload_key = $this->call_payload_key;
+  // PREPARE QUERY/RESULT:
+  // Callback to fetch/create data.
 
-    $active_version = $call_asset['version']['active'];
-    $response_field = $this->response_field[ $active_version ];
 
-    // Metadata:
-    $metadata = [
-      'datafiles'  => [],
-      'status'     => [],
-      'pagination' => ['totalCount', 'pageSize', 'totalPages', 'currentPage'],
+  public function getResult() {
+    return [
+      [
+        'commoncropnames',
+        ['application/json'],
+        ['GET'],
+        ['1.2', '1.3']
+      ],
+      [
+        'serverinfo',
+        ['application/json'],
+        ['GET'],
+        ['2.0']
+      ],
+      [
+        'crops',
+        ['application/json'],
+        ['GET'],
+        ['1.2']
+      ],
+      [
+        'germplasm',
+        ['application/json'],
+        ['GET'],
+        ['1.3', '2.0']
+      ],
+      [
+        'search/germplasm',
+        ['application/json'],
+        ['GET', 'POST'],
+        ['1.3', '2.0']
+      ]
     ];
-
-
-    // Payload:
-
-    $payload = [];
-
-    // Static values.
-    $static_contenttype = 'application/' . TripalWebServiceResponse::$response_content_type;
-    $static_method      = parent::getRequestMethod();
-
-    $static_version = [];
-    $var_name = $call_asset['module'] . '_v' . $call_asset['version']['version'];
-    $var_value = variable_get($var_name);
-    if (is_array($var_value)) {
-      $static_version = $var_value['all'];
-    }
-
-    // Data.
-    $dir_module = drupal_get_path('module', $call_asset['module']);
-    $dir_calls = $dir_module . '/calls/v' . $call_asset['version']['version'] . '/';
-    $calls = array_slice(scandir($dir_calls), 2);
-
-    foreach($calls as $i => $call) {
-      if (is_dir($dir_calls . $call)) {
-        // Save only when it is a directory.
-        $payload[ $call_payload_key ][] = [$call, $static_contenttype, $static_method, $static_version];
-      }
-    }
-
-    parent::buildResponse($payload, $response_field, $metadata);
   }
 }

@@ -8,100 +8,78 @@ class TripalWebServiceDatabaseCall extends TripalWebServiceCall {
 
 
   /**
-   * Construct response.
-   *
-   * @param $payload
-   *   Array, data payload.
-   * @param $metadata
-   *   Array, header or metadata information.
-   *   Optional, when metadata not required.
+   * Construct, validate and initialize call property.
    */
-  public function buildResponse($payload, $response_field, $metadata = null) {
-    $call_asset = $this->call_asset;
-    $call_payload_key = $this->call_payload_key;
+  public function __construct($call_asset) {
+    // Make parameters accessible in all class level.
+    $this->call_asset = $call_asset;
 
-    // Validation done when fetching (db query) response.
-    /// IS OKAY
+    // Call-level validation.
 
-    // Prepare response.
-    // 1. Map data (one to one mappint) to response field.
-    $payload_values = $payload[ $call_payload_key ];
-    $payload[ $call_payload_key ] = parent::mapDataToResponseField($payload_values, $response_field);
+    // Emulate a call.
+    if (isset(static::$is_alias_of)) {
+      // Use base call or implemented call payload key.
+      $property = get_object_vars($this);
+      if (isset($property['call_payload_key'])) {
+        $this->call_asset['payload_key'] = $property['call_payload_key'];
+      }
 
-    // 2. Resolve terms used in the metadata.
-    $revise_metadata = [];
-    if ($metadata) {
-      $revise_metadata = $this->resolveMetadataItem($payload[ $call_payload_key ], $metadata, $call_asset);
+      // Call identical or call alias of this call.
+      TripalWebServiceCall::callAlias(static::$is_alias_of);
+    }
+    else {
+      // Call of database type only supports GET request.
+      $this->validateRequestMethod($this->db_call_method);
+
+      // Check response field for active/default version of a major
+      // version in configuration page.
+      $this->validateResponseField();
+      $this->response_field = $this->response_field[ (string) $call_asset['configuration']['active_version'] ];
+
+      // Validate parameters.
+      $this->validateCallParameter();
     }
 
-    // 4. Return response.
-    TripalWebServiceResponse::sendResponse($payload, $revise_metadata);
+    TripalWebServiceCall::__construct();
+    // Compute resultset limit.
+    $this->call_asset['configuration']['resultset_limit'] = $this->getResultsetLimit();
   }
 
   /**
-   * Fetch data from db when call type is database call.
+   * Prepare call response.
    */
-  public function getDBCall() {
-    // Array to hold response/data.
-    $data = [];
-    $call_asset = $this->call_asset;
+  public function prepareResponse() {
+    $this->class_name = get_called_class();
+    $data = $this->getQueryResult();
+    $map_data = $this->mapDataToResponseField($data, $this->response_field);
 
-    // Validate HTTP request method used.
-    parent::validateRequestMethod($this->db_call_method);
-
-    // Validate parameters to the call. Make sure
-    // keys match defined parameters and values matches expected type.
-    parent::validateParameter();
-
-    $map = tripal_ws_get_call_map();
-    $table_map = $map['table'];
-    $alias_map = $map['alias'];
-    unset($map);
-
-    $db_call = $call_asset['call']['name'];
-    $call = tripal_ws_format_call($db_call, 'noformat');
-    // This call might contain identical call definition.
-    $call = isset($alias_map[ $call ]) ? $alias_map[ $call ] : $call;
-
-    $function_name = 'tripal_ws_db_' . $call;
-
-    if (function_exists($function_name)) {
-      // Inspect if user has system configuration setup for this call.
-      $var_name = $call_asset['module'] . '_' . $call;
-      $configuration = variable_get($var_name);
-
-      // Append asset to include the configuration. When no configuration
-      // set, default response to all - return all data in a table.
-      $call_asset['configuration'] = ($configuration) ? $configuration : 'all';
-
-      // Base table, source of data.
-      // Mapping configuration, connecting call to a database table.
-      if (isset($table_map[ $call ])) {
-        $call_asset['base_table'] = $table_map[ $call ];
-      }
-      else {
-        // Not implemented - call has no call-table mapping configuraiton.
-        $response = ['code' => 400, 'message' => 'DB Call: call not implemented.'];
-        TripalWebServiceResponse::errorResponse($response);
-      }
-
-      // Other options required by the query.
-      $call_asset['resultset_limit'] = parent::getResultsetLimit();
-
-      // Fetch data.
-      $data = call_user_func($function_name, $call_asset);
-
-      if (empty($data)) {
-        $response = ['code' => 400, 'message' => 'DB Call: Request returned 0 result.'];
-        TripalWebServiceResponse::errorResponse($response);
-      }
-    }
-    else {
-      // Call is okay but not implemented.
-      $response = ['code' => 400, 'message' => 'DB Call: Call not implemented.'];
+    if(empty($map_data)) {
+      // Request is valid but returned empty response.
+      $response = [
+        'code' => 400, // Bad Request.
+        'message' => 'DB Call: Call returned an empty result.'
+      ];
       TripalWebServiceResponse::errorResponse($response);
     }
 
-    return $data;
+    // Metadata information.
+    $metadata = [
+      'datafiles'  => [],
+      'status'     => [],
+      'pagination' => ['totalCount', 'pageSize', 'totalPages', 'currentPage']
+    ];
+
+    $metadata = $this->resolveMetaDataItem($map_data, $metadata, $this->call_asset);
+
+    // See if call alias wants to override the payload key.
+    $payload_key = ($this->call_asset['payload_key'])
+      ? $this->call_asset['payload_key'] : $this->call_payload_key;
+
+    // Payload information.
+    // Map data to response field item.
+    $payload[ $payload_key ] = $map_data;
+
+    // Return response.
+    TripalWebServiceResponse::sendResponse($payload, $metadata);
   }
 }

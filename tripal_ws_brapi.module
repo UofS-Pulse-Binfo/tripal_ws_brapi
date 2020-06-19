@@ -4,43 +4,40 @@
  * The main functionality of this module.
  */
 
+$dir_class = 'class/';
+$module = 'tripal_ws_brapi';
+
 // Include helper functions.
-include_once 'includes/api.inc';
-// Include database queries.
-require_once 'includes/db.inc';
+module_load_include('inc', 'tripal_ws_brapi', 'includes/api');
 
 // Include helper classes.
 // Class to identify resource from a url.
-require_once 'class/helper class/TripalWebServiceResourceIdentifier.inc';
+module_load_include('inc', $module, $dir_class . 'helper class/TripalWebServiceResourceIdentifier');
 // Class handle response result.
-require_once 'class/helper class/TripalWebServiceResponse.inc';
+module_load_include('inc', $module, $dir_class . 'helper class/TripalWebServiceResponse');
 
 // Include base classes.
 // Base call/request class.
-require_once 'class/TripalWebServiceCall.inc';
+module_load_include('inc', $module, $dir_class . 'TripalWebServiceCall');
 // Class for custom calls (non database).
-require_once 'class/TripalWebServiceCustomCall.inc';
+module_load_include('inc', $module, $dir_class . 'TripalWebServiceCustomCall');
 // Class for db calls (database).
-require_once 'class/TripalWebServiceDatabaseCall.inc';
+module_load_include('inc', $module, $dir_class . 'TripalWebServiceDatabaseCall');
 // Class for search calls (database).
-require_once 'class/TripalWebServiceSearchCall.inc';
+module_load_include('inc', $module, $dir_class . 'TripalWebServiceSearchCall');
 
 /**
  * Implements hook_menu().
  */
 function tripal_ws_brapi_menu() {
   $items = [];
+  $module = tripal_ws_get_module_info();
 
-  // Register menu item to resolve url under web-services/VOCABULARY pattern.
-  // Module name used to identify configuration variable set from another
-  // instance of call class.
-  $module_name = basename(__FILE__, '.module');
-
-  // To add level to menu location, ie. host/web-services/brapi or
-  // set value to blank to set menu level directly to host/brapi/...
-  $menu_level = variable_get($module_name . '_menu_level');
-  $vocabulary_name = variable_get($module_name . '_vocabulary');
-  $base_menu_location = tripal_ws_resolve_menu_location($vocabulary_name, $menu_level);
+  // To add level to menu location, ie. host/[web-services/another-level]/brapi or
+  // set value to blank to set menu level directly to host/brapi/.
+  // @see configuration page.
+  $menu_level = variable_get($module['module'] . '_menu_level');
+  $base_menu_location = ($menu_level == '') ? 'brapi' : trim($menu_level) . '/brapi';
 
   $items[ $base_menu_location ] = [
     'title' => 'Tripal Web Services API',
@@ -51,11 +48,12 @@ function tripal_ws_brapi_menu() {
 
   //////////////////////////////////////////////////////////////////////////
 
-  $path_tripal_extension = 'admin/tripal/extension/' . $module_name;
+  // Configuration pages:
+  $path_tripal_extension = 'admin/tripal/extension/tripalwsbrapi';
 
-  // Configuration page.
+  // Configuration page. List all calls.
   $items[ $path_tripal_extension . '/configure' ] = [
-    'title' => strtoupper($module_name) . ': configuration',
+    'title' => 'Tripal Web Service - BrAPI',
     'description' => t('Interface to configure calls'),
     'page callback' => 'drupal_get_form',
     'page arguments' => ['tripal_ws_configure'],
@@ -66,7 +64,7 @@ function tripal_ws_brapi_menu() {
 
     // General module configuration.
     $items[ $path_tripal_extension . '/configure/module' ] = [
-      'title' => 'Configure: ' . $module_name,
+      'title' => 'Configure Tripal Web Service - BrAPI',
       'description' => t('Interface to configure calls'),
       'page callback' => 'drupal_get_form',
       'page arguments' => ['tripal_ws_configure_module', 3],
@@ -78,10 +76,10 @@ function tripal_ws_brapi_menu() {
 
     // Configure version.
     $items[ $path_tripal_extension . '/configure/version' ] = [
-      'title' => 'Configure: Version',
+      'title' => 'BrAPI Version',
       'description' => t('Interface to configure version'),
       'page callback' => 'drupal_get_form',
-      'page arguments' => ['tripal_ws_configure_version', 3],
+      'page arguments' => ['tripal_ws_configure_version'],
       'access arguments' => ['access administration pages'],
       'file' => 'includes/forms/configuration.form.inc',
       'type' => MENU_LOCAL_TASK,
@@ -90,10 +88,10 @@ function tripal_ws_brapi_menu() {
 
     // Configure a call.
     $items[ $path_tripal_extension . '/configure/call' ] = [
-      'title' => 'Configure: Calls',
+      'title' => 'BrAPI Calls',
       'description' => t('Interface to configure calls'),
       'page callback' => 'drupal_get_form',
-      'page arguments' => ['tripal_ws_configure_call', 3],
+      'page arguments' => ['tripal_ws_configure_call'],
       'access arguments' => ['access administration pages'],
       'file' => 'includes/forms/configuration.form.inc',
       'type' => MENU_LOCAL_TASK,
@@ -102,10 +100,10 @@ function tripal_ws_brapi_menu() {
 
     // Manage search request
     $items[ $path_tripal_extension . '/configure/search' ] = [
-      'title' => 'Manage: Search Request',
+      'title' => 'Search Request Log',
       'description' => t('Interface to manage search request'),
       'page callback' => 'drupal_get_form',
-      'page arguments' => ['tripal_ws_manage_search', 3],
+      'page arguments' => ['tripal_ws_manage_search'],
       'access arguments' => ['access administration pages'],
       'file' => 'includes/forms/configuration.form.inc',
       'type' => MENU_LOCAL_TASK,
@@ -121,16 +119,23 @@ function tripal_ws_brapi_menu() {
  */
 if (!function_exists('tripal_ws_vocabulary_handle_request')) {
   function tripal_ws_vocabulary_handle_request() {
-    $module_name = basename(__FILE__, '.module');
+    // Identify all resources required.
+    $resource = new TripalWebserviceResourceIdentifier();
+    $call_asset = get_object_vars($resource);
+    // Call asset data stucture.
+    // @see class/helper class/TripalWebServiceResourceIdentifier.
 
-    $call_asset = new TripalWebserviceResourceIdentifier($module_name);
-    $call_asset = get_object_vars($call_asset);
-    // Call asset now caontains: The call, version, parameters and http request method.
-    // print_r($call_asset);
+    /*
+    // DEBUG.
+    print '<pre>';
+    print_r($call_asset);
+    print '</pre>';
+    */
 
     // Load call class file.
-    $call = tripal_ws_load_call($call_asset['version'], $call_asset['call'], $call_asset['module']);
+    $call = tripal_ws_load_call($call_asset);
 
+    // Response.
     if (class_exists($call)) {
       $response = new $call($call_asset);
       $response->prepareResponse();

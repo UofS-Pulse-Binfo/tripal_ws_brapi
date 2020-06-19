@@ -1,73 +1,314 @@
 <?php
 /**
+ * Idenftify resources from request url.
  *
+ * @return array.
+ *   Array structure
+ *   call = BrAPi call title or name.
+ *   method = GET, POST, etc.
+ *   version = Major version number as seen in request url (vX).
+ *   class  call = class, file (class name and file path, repectively - base call).
+ *          search = class, file (class name and file path, repectively - search implementation).
+ *   is_search = 0 is a base call and 1 is a search call request.
+ *   parameter = Associative array where the key is the parameter name and value as the value to a parameter
+ *   host = host module name of the call.
+ *   configuration active_version = active minor version in a major version number (ie: 1.3 in vers 1).
+ *                 filter = restrict configuration (all, by type_id, or by prop table) set for a call @see configuration/call.
+ *
+ * @see .module for debug code snippet.
  */
 class TripalWebServiceResourceIdentifier {
-  // Var to hold call name/title.
+  // Var to hold BrAPI call name/title.
   public $call;
-  // Var to hold request method, ie. GET or POST.
+  // Var to hold HTTP request method.
   public $method;
-  // Var to hold api version number.
+  // Var to hold mahor version number.
   public $version;
-  // Var to hold query string or parameters to the call.
+  // Var to hold call class files.
+  public $class;
+  // Var to indicate if call is a search request.
+  public $is_search;
+  // Var to hold call parameters.
   public $parameter;
-  // Var to hold the name of the module.
-  public $module;
+  // Var to hold module name the call is hosted.
+  public $host;
+
+  // Host module - tripal_ws_brapi.
+  private $module;
 
 
   /**
    * Construct call assets.
    */
-  public function __construct($module_name) {
-    $this->setModuleName($module_name);
+  public function __construct() {
+    // Set module name used when referencing system variables.
+    $this->setModule();
 
     // Verify user has configured the module.
-    $configuration = ['vocabulary', 'supported_method', 'resultset_limit'];
+    $conf_method = $this->module . '_supported_method';
+    $conf_result = $this->module . '_resultset_limit';
+
+    $configuration = [
+      $conf_method => 'Request method',
+      $conf_result => 'Page result limit'
+    ];
+
     $not_set = [];
 
-    foreach($configuration as $conf) {
-      $is_set = '';
-      $conf_var = $module_name . '_' . $conf;
-      $is_set = variable_get($conf_var);
-      if (!$is_set) {
-        $not_set[] = strtoupper(str_replace('_', ' ', $conf));
-      }
+    foreach($configuration as $key => $conf) {
+      // # $var_value cascade value in subsequent code blocks.
+      $var_value[ $key ] = variable_get($key);
+      if (!$var_value) $not_set[] = strtoupper($conf);
     }
 
     if ($not_set) {
       $not_set = implode(', ', $not_set);
-      $response = ['code' => 500, 'message' => 'Resource Identifier: Configuration not set for: ' . $not_set];
+
+      // Configuration not set.
+      $response = [
+        'code' => 500, // Internal Server Error.
+        'message' => 'Resource Identifier: Configuration not set for: ' . $not_set
+      ];
       TripalWebServiceResponse::errorResponse($response);
     }
 
-    // The vX value representing the API version.
+    // # REQUEST METHOD:
+    // Method used is limited to what is set. For security purposes, do not set
+    // a method that you do not intend to implement.
+    // The request method:
+    $method = $this->parseMethod();
+    // Value from above array (#).
+    $m = explode(',', $var_value[ $conf_method ]);
+
+    if (!empty($method) && in_array($method, $m)) {
+      // Method is in the list of method, thus it is supported.
+      $this->setMethod($method);
+    }
+    else {
+      // Not implemented.
+      $response = [
+        'code' => 400, // Bad Request.
+        'message' => 'Resource Identifier: Request method ' . $method . ' not implemented.'
+      ];
+      TripalWebServiceResponse::errorResponse($response);
+    }
+
+    // # VERSION:
+    // Version number can be established and is supported.
     $version = $this->parseVersion();
-    $this->setVersion($version);
 
-    // Ensure that version can be identified before doing other steps.
+    if ((int) $version > 0) {
+      $var_name  = $this->module . '_v' . $version;
+      $var_value = variable_get($var_name);
 
-    if ($this->version) {
-      // The call name:
-      $call = $this->parseCall();
-      if ($call != '') {
-        $this->setCall($call);
+      if ($var_value) {
+        // Version (major version number) has configuration thus, a supported version.
+        $this->setVersion($version);
       }
-
-      // The request method:
-      $method = $this->parseMethod();
-      if ($method) {
-        $this->setMethod($method);
-      }
-
-      // The parameters to the call:
-      $parameter = $this->parseParameter();
-      if ($parameter != '' || $this->call['is_search'] == 1) {
-        // If there is query string or call is a search type.
-        if ($parameter) {
-          $this->setParameter($parameter);
-        }
+      else {
+        // Not implemented.
+        $response = [
+          'code' => 501, // Not Implemented.
+          'message' => 'Resource Identifier: Version ' . $version . ' not implemented.'
+        ];
+        TripalWebServiceResponse::errorResponse($response);
       }
     }
+    else {
+      // Version could not be established.
+      $response = [
+        'code' => 400, // Bad Request.
+        'message' => 'Resource Identifier: Version could not be established.'
+      ];
+      TripalWebServiceResponse::errorResponse($response);
+    }
+
+    // # CALL:
+    // Version and call implemented.
+    $temp_call = $this->parseCall();
+    $call = tripal_ws_get_call($this->version, $temp_call);
+
+    if ($call) {
+      // Set the call name.
+      $this->setCall($temp_call);
+      // Set the call class name and files.
+      $this->setCallClass($call['class']);
+      // Flag if call is a search request.
+      $this->setIsSearch();
+      // Set the host module of this call.
+      $this->setHost($call['module']);
+      unset($call);
+    }
+    else {
+      // Call could not be established.
+      $response = [
+        'code' => 400, // Bad Request.
+        'message' => 'Resource Identifier: Call ' . $temp_call . ' not implemented.'
+      ];
+      TripalWebServiceResponse::errorResponse($response);
+    }
+
+    // Prepare call parameter and call configuration.
+
+    if ($this->version && $this->call) {
+      // The parameters to the call:
+      $parameter = $this->parseParameter();
+
+      if ($parameter != '' || $this->is_search == 1) {
+        // If there is query string or call is a search type.
+        $this->setParameter($parameter);
+      }
+
+      // Configuration specific to this call if any.
+      // Filter/Restrict settings and active version per major version.
+      $this->setCallConfiguration();
+    }
+  }
+
+
+  // Setters:
+
+
+  /**
+   * Set the module variable.
+   */
+  public function setModule() {
+    $module = tripal_ws_get_module_info();
+
+    if ($module['module'] != '') {
+      $this->module = $module['module'];
+    }
+  }
+
+  /**
+   * Set the request method variable.
+   *
+   * @param $method
+   *   String, http request method identified.
+   */
+  public function setMethod($method) {
+    if ($method != '') {
+      $this->method = $method;
+    }
+  }
+
+  /**
+   * Set the version number variable.
+   *
+   * @param $version
+   *   Integer, major version number identified.
+   */
+  public function setVersion($version) {
+    if ($version) {
+      $this->version = floor($version);
+    }
+  }
+
+  /**
+   * Set search indicator when call is a search request.
+   */
+  public function setIsSearch() {
+    $component = 'path';
+    $resource  = $this->parseResourceIdentifier($component);
+
+    $levels = explode('/', $resource);
+    $levels_count = count($levels);
+
+    // Not a search.
+    $is_search = 0;
+
+    if (count($levels_count) > 0) {
+      $top_level   = strtolower(trim($levels[ $levels_count - 1 ]));
+      $level_below = strtolower(trim($levels[ $levels_count - 2 ]));
+
+      if ($top_level == 'search' || $level_below == 'search') {
+        $is_search = 1;
+      }
+    }
+
+    $this->is_search = $is_search;
+  }
+
+  /**
+   * Set the call class files.
+   *
+   * @param $call_class
+   *   Array, containing class file name and file path
+   *  for both base call and search call.
+   */
+  public function setCallClass($call_class) {
+    if ($call_class) {
+      $this->class = $call_class;
+    }
+  }
+
+  /**
+   * Set the call name variable.
+   *
+   * @param $call
+   *   String, call name or title identified.
+   */
+  public function setCall($call) {
+    if ($call) {
+      $this->call = $call;
+    }
+  }
+
+  /**
+   * Set the host module of the call.
+   *
+   * @param $module
+   *  String, host module of the call.
+   */
+  public function setHost($module) {
+    if ($module) {
+      $this->host = $module;
+    }
+  }
+
+  /**
+   * Set the parameter variable.
+   *
+   * @param $parameter
+   *   Array, key = paramter name and value = value to a parameter.
+   */
+  public function setParameter($parameter) {
+    if ($parameter != '') {
+      $this->parameter = $parameter;
+    }
+  }
+
+  /**
+   * Set configuration options about the call.
+   */
+  public function setCallConfiguration() {
+    $config = [];
+
+    // Active version number in a major version.
+    $config['active_version'] = variable_get($this->module . '_v' . $this->version)['default'];
+
+    // Call level response restriction.
+    $config['filter'] = variable_get($this->host . '/v' . $this->version . '/' . $this->call);
+
+    $this->configuration = $config;
+  }
+
+
+  // Parser:
+
+
+  /**
+   * Parse request method.
+   *
+   * @return string
+   *   Request method GET, POST etc.
+   */
+  public function parseMethod() {
+    // Get request method.
+    $component = 'method';
+    $resource  = $this->parseResourceIdentifier($component);
+
+    return ($resource)? $resource : '';
   }
 
   /**
@@ -77,11 +318,14 @@ class TripalWebServiceResourceIdentifier {
    *   Version number in the uri formatted in /vX/ less the v character.
    */
   public function parseVersion() {
-    $path = $this->parseResourceIdentifier('path');
+    // Get major version number.
+    $component = 'path';
+    $resource  = $this->parseResourceIdentifier($component);
+
     $version = '';
 
-    if ($path) {
-      if (preg_match('/v(\d+)/', $path, $match)) {
+    if ($resource) {
+      if (preg_match('/v(\d+)/', $resource, $match)) {
         $version = $match[1];
       }
     }
@@ -92,40 +336,29 @@ class TripalWebServiceResourceIdentifier {
   /**
    * Parse call name from the request uri.
    *
-   * @return array
-   *   An array with the following keys;
-   *   a call and is_search which correspond to the call name
-   *   and a flag to indicate if request is search type.
+   * @return string
+   *   BrAPI call name or title.
    */
   public function parseCall() {
-    $path = $this->parseResourceIdentifier('path');
+    // Get BrAPI call name.
+    $component = 'path';
+    $resource  = $this->parseResourceIdentifier($component);
+
+    $levels = explode('/', $resource);
+    $levels_count = count($levels);
+
     $call = '';
 
-    if ($this->version != '' && $path) {
-      $path_levels = explode('/', $path);
-      $level_count = count($path_levels);
+    if (count($levels_count) > 0) {
+      $top_level   = $levels[ $levels_count - 1 ];
+      $level_below = $levels[ $levels_count - 2 ];
 
-      if (count($level_count) > 0) {
-        $top_level   = $path_levels[ $level_count - 1 ];
-        $level_below = $path_levels[ $level_count - 2 ];
-
-        // flag call to indicate search type.
-        $is_search_call = 0;
-
-        if ($top_level == 'search') {
-          // call is 1 level below ie. host/brapi/v1/[germplasm]/search
-          $call = $level_below;
-          $is_search_call = 1;
-        }
-        else {
-          // level below: host/brapi/v1/search/[germplasm]
-          $call = $top_level;
-          $is_search_call = ($level_below == 'search') ? 1 : 0;
-        }
-
-        return ['name' => $call, 'is_search' => $is_search_call];
-      }
+      // call is 1 level below ie. host/brapi/v1/[germplasm]/search or
+      // level below: host/brapi/v1/search/[germplasm]
+      $call = ($top_level == 'search') ? $level_below : $top_level;
     }
+
+    return trim($call);
   }
 
   /**
@@ -138,110 +371,22 @@ class TripalWebServiceResourceIdentifier {
    */
   public function parseParameter() {
     $component = ($this->method == 'POST') ? 'post-json' : 'parameter';
-    $query_string = $this->parseResourceIdentifier($component);
+    $resource = $this->parseResourceIdentifier($component);
 
     $parameter = '';
 
-    if ($query_string) {
+    if ($resource) {
       if ($component == 'post-json') {
-        $parameter = $query_string;
+        // Search request, requires the paramter in JSON notation.
+        $parameter = $resource;
       }
       else {
-        parse_str($query_string, $parameter);
+        // Parameters as seen in the call request url.
+        parse_str($resource, $parameter);
       }
-    }
-
-    // Default page #.
-    if (is_array($parameter) && !array_key_exists('page', $parameter)) {
-      $parameter['page'] = 0;
     }
 
     return $parameter;
-  }
-
-  /**
-   * Parse request method (GET or POST).
-   *
-   * @return string
-   *   Request method either GET or POST.
-   */
-  public function parseMethod() {
-    // Get request method.
-    return $this->parseResourceIdentifier('method');
-  }
-
-  /**
-   * Set the version number variable.
-   */
-  public function setVersion($version) {
-    if ($version == '') {
-      $response = ['code' => 400, 'message' => 'Resource Identifier: Could not establish version number.'];
-      TripalWebServiceResponse::errorResponse($response);
-    }
-    else {
-      if (preg_match('/\A(0)(\d+)/', (string) $version)) {
-        $response = ['code' => 400, 'message' => 'Resource Identifier: Version number has leading 0.'];
-        TripalWebServiceResponse::errorResponse($response);
-      }
-      else {
-        // Test if it is supported based on module settings for supported version.
-        $major_version = floor($version);
-        $var_name = $this->module . '_v' . $major_version;
-        $var_value = variable_get($var_name);
-
-        $active_version = (is_array($var_value)) ? $var_value['default'] : 0;
-
-        if ($active_version == 0) {
-          $response = ['code' => 400, 'message' => 'Resource Identifier: Unsupported version number.'];
-          TripalWebServiceResponse::errorResponse($response);
-        }
-        else {
-          $this->version = [
-            'version' => floor($version),
-            'active' => $active_version
-          ];
-        }
-      }
-    }
-  }
-
-
-  /**
-   * Set the call name variable.
-   */
-  public function setCall($call) {
-    if ($call != '') {
-      $call['call'] = strtolower(trim($call['name']));
-      $this->call = $call;
-    }
-  }
-
-  /**
-   * Set the request method variable.
-   */
-  public function setMethod($method) {
-    // Get request method.
-    if ($method != '') {
-      $this->method = $method;
-    }
-  }
-
-  /**
-   * Set the parameter variable.
-   */
-  public function setParameter($parameter) {
-    if ($parameter != '') {
-      $this->parameter = $parameter;
-    }
-  }
-
-  /**
-   * Set the module variable.
-   */
-  public function setModuleName($module_name) {
-    if ($module_name != '') {
-      $this->module = $module_name;
-    }
   }
 
   /**
@@ -264,6 +409,8 @@ class TripalWebServiceResourceIdentifier {
     // Handling post request.
     $post_json = '';
 
+    // Handling POST request.
+
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       if ($_SERVER["CONTENT_TYPE"] == 'application/json') {
         // Only when request is in JSON object.
@@ -272,7 +419,10 @@ class TripalWebServiceResourceIdentifier {
         $json = json_decode($raw_json, TRUE);
 
         if (json_last_error()) {
-          $response = ['code' => 400, 'message' => 'Resource Identifier: Syntax error. Malformed JSON.'];
+          $response = [
+            'code' => 400, // Bad Request.
+            'message' => 'Resource Identifier: Syntax error. Malformed JSON.'
+          ];
           TripalWebServiceResponse::errorResponse($response);
         }
         else {
@@ -280,10 +430,15 @@ class TripalWebServiceResourceIdentifier {
         }
       }
       else {
-        $response = ['code' => 400, 'message' => 'Resource Identifier: Unsupported content type.'];
+        $response = [
+          'code' => 400, // Bad Request.
+          'message' => 'Resource Identifier: Unsupported content type.'
+        ];
         TripalWebServiceResponse::errorResponse($response);
       }
     }
+
+    // Get request type.
 
     // Uri resouce/call components.
     $request_uri = [
@@ -296,6 +451,7 @@ class TripalWebServiceResourceIdentifier {
       // POST method - application/json.
       'post-json' => $post_json,
     ];
+
     // Used to hold components of the uri which will be returned
     // to calling function to resolve call title.
     $resource = '';
@@ -310,7 +466,11 @@ class TripalWebServiceResourceIdentifier {
         $resource = $request_uri[ $component ];
       }
       else {
-        $response = ['code' => 400, 'message' => 'Resource Identifier: Invalid request.'];
+        // Could not be established.
+        $response = [
+          'code' => 400, // Bad Request.
+          'message' => 'Resource Identifier: Invalid request.'
+        ];
         TripalWebServiceResponse::errorResponse($response);
       }
     }

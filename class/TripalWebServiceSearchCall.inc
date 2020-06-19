@@ -1,175 +1,195 @@
 <?php
 /**
- * Search Calls - call that does involve data stored in a database table and are
- *                requested using search mechanism of this module.
+ * Search Call
+ * Calls that involve database chado.table as the source of information.
+ * Search call supports multiple request methods GET and POST to retrieve
+ * response and log call requests, respectively.
  */
 class TripalWebServiceSearchCall extends TripalWebServiceCall {
+  // Method supported by this call is localized in methods processing the request.
+
+
   /**
-   * Construct response.
-   *
-   * @param $payload
-   *   Array, data payload.
-   * @param $metadata
-   *   Array, header or metadata information.
-   *   Optional, when metadata not required.
+   * Construct, validate and initialize call property.
    */
-  public function buildResponse($payload, $response_field, $metadata = null) {
-    $call_asset = $this->call_asset;
-    $call_payload_key = array_keys($payload)[0];
+  public function __construct($call_asset) {
+    // Make parameters accessible in all class level.
+    $this->call_asset = $call_asset;
 
-    // Validation done when fetching (db query) response.
-    /// IS OKAY
+    // Emulate a call.
+    if (isset(static::$is_alias_of)) {
+      // Use base call or implemented call payload key.
+      $property = get_object_vars($this);
+      if (isset($property['call_payload_key'])) {
+        $this->call_asset['payload_key'] = $property['call_payload_key'];
+      }
 
-    // Prepare response.
-    // 1. Map data (one to one mappint) to response field.
-    $payload_values = $payload[ $call_payload_key ];
-    $new_payload = parent::mapDataToResponseField($payload_values, $response_field);
-
-    if ($call_payload_key == $this->search_payload_key) {
-      // Get search request db id.
-      $payload = reset($new_payload);
-    }
-    else {
-      // Get search request db id response.
-      $payload[ $call_payload_key ] = $new_payload;
+      // Call identical or call alias of this call.
+      TripalWebServiceCall::callAlias(static::$is_alias_of);
     }
 
-    // 2. Resolve terms used in the metadata.
-    $revise_metadata = [];
-    if ($metadata) {
-      $revise_metadata = $this->resolveMetadataItem($payload[ $call_payload_key ], $metadata, $call_asset);
-    }
-
-    // 4. Return response.
-    TripalWebServiceResponse::sendResponse($payload, $revise_metadata);
+    TripalWebServiceCall::__construct();
+    // Compute resultset limit.
+    $this->call_asset['configuration']['resultset_limit'] = $this->getResultsetLimit();
   }
 
   /**
-   * Record a single copy of search request and all parameters.
-   *
-   * @return string
-   *   Hash id number as reference id to the record. I will be used
-   *   to retrive request and request paramters to generate query and
-   *   call response.
+   * Prepare call response.
    */
-  public function postSearchRequest() {
+  public function prepareResponse() {
     $call_asset = $this->call_asset;
-    // Validate HTTP request method used.
-    $method = ['POST'];
-    parent::validateRequestMethod($method);
+    $this->class_name = get_called_class();
 
-    // Validate parameters to the call. Make sure
-    // keys match defined parameters and values matches expected type.
-    parent::validateParameter();
+    if ($call_asset['method'] == 'GET' || $call_asset['method'] == 'POST') {
+      // Search calls support dual http request methods: GET and POST.
+      if ($call_asset['method'] == 'GET' && isset($call_asset['parameter']['searchResultDbId'])) {
+        // Get search result.
+        // Override class properties to search mode.
 
-    // Cache and response.
-    $call = tripal_ws_format_call($call_asset['call']['name'], 'noformat');
-    $parameter = '';
+        // Ensure this is a GET request method.
+        parent::validateRequestMethod(['GET']);
+        // Search request key
+        $this->validateResponseField();
+        $this->call_parameter = [
+          'searchResultDbId' => 'hash-code',
+        ];
+        // Check parameters.
+        parent::validateCallParameter();
+        ///
 
-    if (count($call_asset['parameter'] > 0)) {
-      $parameter = serialize($call_asset['parameter']);
-    }
+        $request_id = $call_asset['parameter']['searchResultDbId'];
+        $search = tripal_ws_db_get_search_request($request_id);
 
-    $match = tripal_ws_db_match_search_request($call, $parameter);
-    $request_id = [];
+        if ($search) {
+          if (!empty($search->search_request_parameter)) {
+            $parameter = unserialize($search->search_request_parameter);
+            $this->call_asset['parameter'] = $parameter;
 
-    if ($match) {
-      // Take the request code and return as a response.
-      $request_id[] = $match;
-    }
-    else {
-      // Save a copy and pass request code as a response.
-      $cache = tripal_ws_db_cache_search_request($call, $parameter);
-      $request_id[] = $cache;
-    }
+            $data = $this->getQueryResult();
+            $response_field = $this->response_field[ (string) $call_asset['configuration']['active_version'] ];
+            $map_data = $this->mapDataToResponseField($data, $response_field);
 
-    return $request_id;
-  }
+            // See if call alias wants to override the payload key.
+            $payload_key = ($this->call_asset['payload_key'])
+              ? $this->call_asset['payload_key'] : $this->call_payload_key;
 
-  /**
-   * Construct call response using search request id.
-   */
-  public function getSearchRequest() {
-    // Array to hold search request response/data.
-    $data = [];
-
-    // Validate HTTP request method used.
-    $method = ['GET'];
-    parent::validateRequestMethod($method);
-
-    $map = tripal_ws_get_call_map();
-    $table_map = $map['table'];
-    $alias_map = $map['alias'];
-    unset($map);
-
-    // Retrieve search request record.
-    $call_asset = $this->call_asset;
-    $module = $call_asset['module'];
-
-    $request_id = $call_asset['parameter'][ $this->search_payload_key ];
-    $cache = tripal_ws_db_get_search_request($request_id);
-    if ($cache) {
-      $db_call = $call_asset['call']['name'];
-      $call = tripal_ws_format_call($db_call, 'noformat');
-      // This call might contain identical call definition.
-      $call = isset($alias_map[ $call ]) ? $alias_map[ $call ] : $call;
-
-      $function_name = 'tripal_ws_db_' . $call;
-      if (function_exists($function_name)) {
-        // Inspect if user has system configuration setup for this call.
-        $var_name = $call_asset['module'] . '_' . $call;
-        $configuration = variable_get($var_name);
-        // Append asset to include the configuration. When no configuration
-        // set, default response to all - return all data in a table.
-        $call_asset['configuration'] = ($configuration) ? $configuration : 'all';
-
-        // Parameters.
-        if (!empty($cache->search_request_parameter)) {
-          $parameter = unserialize($cache->search_request_parameter);
-          $new_param = [];
-
-          // Translate values to list for IN() clause.
-          foreach($parameter as $param_name => $param_value) {
-            $new_param[ $param_name ] = (is_array($param_value)) ? implode(', ', $param_value) : $param_value;
+            $payload[ $payload_key ] = $map_data;
           }
         }
-
-        $call_asset['parameter'] = $new_param;
-
-        // Base table, source of data.
-        // Mapping configuration, connecting call to a database table.
-        if (isset($table_map[ $call ])) {
-          $call_asset['base_table'] = $table_map[ $call ];
-        }
         else {
-          // Not implemented - call has no call-table mapping configuraiton.
-          $response = ['code' => 400, 'message' => 'DB Call: call not implemented.'];
-          TripalWebServiceResponse::errorResponse($response);
-        }
-
-        // Other options required by the query.
-        $call_asset['resultset_limit'] = parent::getResultsetLimit();
-
-        // Fetch data.
-        $data = call_user_func($function_name, $call_asset);
-
-        if (empty($data)) {
-          $response = ['code' => 400, 'message' => 'Search Call: Request returned 0 result.'];
+          // Request id not found.
+          $response = [
+            'code' => 400, // Bad Request.
+            'message' => 'Search Call: Request id does not exist.'
+          ];
           TripalWebServiceResponse::errorResponse($response);
         }
       }
       else {
-        // Call is okay but not implemented.
-        $response = ['code' => 400, 'message' => 'Search Call: Call not implemented.'];
-        TripalWebServiceResponse::errorResponse($response);
+        // Post search request.
+        // Ensure this is a POST request method.
+        parent::validateRequestMethod(['POST']);
+        // Response field set for a version number.
+        // Override call response field to searchResultDbId. Use active version
+        // to ensure this call has response field regardless of version.
+        $this->response_field = [$call_asset['configuration']['active_version'] => ['searchResultDbId']];
+        $this->validateResponseField();
+        // Check parameters.
+        parent::validateCallParameter();
+        ///
+
+        // Prepare result - hash code request id #.
+        $match_id = $this->matchSearchRequest();
+        $response_field = $this->response_field[ $call_asset['configuration']['active_version'] ];
+
+        $data[] = ($match_id) ? $match_id : $this->saveSearchRequest();
+        $map_data = $this->mapDataToResponseField($data, $response_field);
+        $payload = reset($map_data);
       }
     }
+
+    if(count($map_data) > 0) {
+      // Metadata:
+      $metadata = [
+        'datafiles'  => [],
+        'status'     => [],
+        'pagination' => ['totalCount', 'pageSize', 'totalPages', 'currentPage'],
+      ];
+
+      $metadata = $this->resolveMetaDataItem($map_data, $metadata, $this->call_asset);
+
+      // Return response.
+      TripalWebServiceResponse::sendResponse($payload, $metadata);
+    }
     else {
-      // Request id not found.
-      $response = ['code' => 400, 'message' => 'Search Call: Request id does not exist.'];
+      // Returned empty result.
+      $response = [
+        'code' => 400, // Bad Request.
+        'message' => 'Search Call: Request returned 0 result.'
+      ];
       TripalWebServiceResponse::errorResponse($response);
     }
+  }
 
-    return $data;
+  /**
+   * Match search request using call and parameter in the search log.
+   */
+  public function matchSearchRequest() {
+    $call_asset = $this->call_asset;
+    $parameter = ' ';
+
+    if (count($call_asset['parameter']) > 0) {
+      $parameter = serialize($call_asset['parameter']);
+    }
+
+    // Match a record given the call name and parameter string.
+    $sql = "SELECT * FROM {tripal_ws_brapi_search_request}
+      WHERE search_request_type = :call AND search_request_parameter = :parameter LIMIT 1";
+
+    $query = chado_query($sql, [':call' => $call_asset['call'], ':parameter' => $parameter]);
+
+    if ($query->rowCount() > 0) {
+      $result = $query->fetchObject();
+
+      // Increment # of times match has been requested.
+      // This will indicate number of times a search has been requested/used.
+      $new_count = $result->request + 1;
+      chado_query("UPDATE {tripal_ws_brapi_search_request}
+        SET request = $new_count WHERE id = :id", [':id' => $result->id]);
+
+      // Return id/ hash code.
+      $result = $result->search_request_id;
+    }
+
+    return ($result) ? $result : '';
+  }
+
+  /**
+   * Cache or log search request.
+   */
+  public function saveSearchRequest() {
+    $call_asset = $this->call_asset;
+    $parameter = ' ';
+
+    if (count($call_asset['parameter']) > 0) {
+      $parameter = serialize($call_asset['parameter']);
+    }
+    // Allocated field length.
+    // Note: function creates 5 packets, each of 5 chars long string.
+    //       29 chars in all including separator char -.
+    // @see install defining search_request_id set to 30 chars.
+    $request_id = tripal_ws_create_search_id();
+
+    db_insert('tripal_ws_brapi_search_request')
+      ->fields([
+        'search_request_id' => $request_id,
+        'search_request_type' => $call_asset['call'],
+        'search_request_parameter' => $parameter,
+        'request' => 1,
+        'search_request_created' => date("D M d, Y h:i:s a", time())
+      ])
+      ->execute();
+
+    return $request_id;
   }
 }

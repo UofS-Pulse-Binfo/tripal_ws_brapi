@@ -1,9 +1,19 @@
 <?php
 /**
  * Call: Calls, class definition.
+ * List the common crop names for the crops available in a database server.
  */
 class TripalWebServiceBrapiV1Commoncropnames extends TripalWebServiceDatabaseCall {
   // This call expects parameters below.
+  // Available data types:
+  //
+  // int - (single value) numbers, including 0.
+  // text - (single value) text, alphanumeric value.
+  // array-int - (array, multiple values) elements are numbers.
+  // array-text - (array, multiple values) elements are text value.
+  // hash-code - (single value) xxxxx-xxxxx-xxxxx-xxxxx-xxxxx alphanumeric format.
+  //
+  // Example: page => int, searchResultDbId => hash-code.
   public $call_parameter = [
     // Key : Expected value for this key.
   ];
@@ -12,45 +22,74 @@ class TripalWebServiceBrapiV1Commoncropnames extends TripalWebServiceDatabaseCal
   protected $call_payload_key = 'data';
 
   // Unit of response for this call.
-  private $response_field = [
+  public $response_field = [
+    '1.2' => [],
     '1.3' => [],
+    '2.0' => [],
   ];
 
   // Call parameters as provided in the request url.
   public $call_asset;
 
+  // Chado table, source data.
+  public static $chado_table = 'organism';
+
+  // Class name.
+  public $class_name;
+
+
+  // PREPARE QUERY:
+  // Callback to fetch data from source table.
+
 
   /**
-   * Construct, initialize call property.
+   * No configuration (default) set, this method will be used to fetch data.
+   *
+   * Get unfiltered resultset.
    */
-  public function __construct($call_asset) {
-    // Make parameters accessible in all class level.
-    $this->call_asset = $call_asset;
+  public function getResult() {
+    $result = '';
+
+    $result = chado_select_record($this->class_name::$chado_table, ['common_name'], []);
+    return ($result) ? $result : '';
   }
 
   /**
-   * Prepare items/data payload as response.
+   * Using configuration page, when this call is set to restrict/filter response
+   * by typeid (chado.table - type_id column) this method will be used to fetch data.
+   *
+   * Fetch data by type_id column.
    */
-  public function prepareResponse() {
-    // Call assets.
-    $call_asset = $this->call_asset;
-    // What should be the title for the result?
-    $call_payload_key = $this->call_payload_key;
+  public function getResultByTypeid() {
+    $result = '';
 
-    $active_version = $call_asset['version']['active'];
-    $response_field = $this->response_field[ $active_version ];
+    $sql = "SELECT common_name FROM {%s}
+      WHERE type_id IN (:type_id) ORDER BY common_name ASC";
 
-    // Metadata:
-    $metadata = [
-      'datafiles'  => [],
-      'status'     => [],
-      'pagination' => ['totalCount', 'pageSize', 'totalPages', 'currentPage'],
-    ];
+    $query = sprintf($sql, $this->class_name::$chado_table);
+    $args = [':type_id' => $this->call_asset['configuration']['filter']['term']];
 
-    // Payload:
-    $payload = [];
-    $payload[ $call_payload_key ] = $this->getDBCall($call_asset['call']['name'], $call_asset);
+    $result = chado_query($query, $args);
+    return ($result->rowCount() > 0) ? $result->fetchAll() : '';
+  }
 
-    parent::buildResponse($payload, $response_field, $metadata);
+  /**
+   * Using configuration page, when this call is set to restrict/filter response
+   * by type_id (chado.property table - value column) this method will be used to fetch data.
+   *
+   * Fetch data by property table value.
+   */
+  public function getResultByPropertyTable() {
+    $result = '';
+
+    $sql = "SELECT common_name FROM {%s} AS org INNER JOIN {%s} AS prop USING(organism_id)
+      WHERE prop.value IN (:value) AND prop.type_id = :type_id ORDER BY org.common_name ASC";
+
+    $query = sprintf($sql, $this->class_name::$chado_table, $this->class_name::$chado_table . 'prop');
+    $args = [':value' => $this->call_asset['configuration']['filter']['value'],
+             ':type_id' => $this->call_asset['configuration']['filter']['term']];
+
+    $result = chado_query($query, $args);
+    return ($result->rowCount() > 0) ? $result->fetchAll() : '';
   }
 }

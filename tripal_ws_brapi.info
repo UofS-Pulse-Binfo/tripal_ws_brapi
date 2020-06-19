@@ -4,6 +4,7 @@ description = Extend Tripal Web Services that implements BrAPI (https://brapi.do
 package = Tripal Extensions
 core = 7.x
 dependencies[] = tripal
+dependencies[] = tripal_ws
 
 scripts[] = includes/forms/tripal_ws_script_form.js
 stylesheets[all][] = includes/forms/style_form.css

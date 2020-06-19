@@ -6,43 +6,78 @@ class TripalWebServiceCustomCall extends TripalWebServiceCall {
   // This type of call (custom call) only supports GET request method.
   private $custom_call_method = ['GET'];
 
+
   /**
-   * Construct response.
-   *
-   * @param $payload
-   *   Array, data payload.
-   * @param $metadata
-   *   Array, header or metadata information.
-   *   Optional, when metadata not required.
+   * Construct, validate and initialize call property.
    */
-  public function buildResponse($payload, $response_field, $metadata = null) {
-    $call_asset = $this->call_asset;
-    $call_payload_key = $this->call_payload_key;
+  public function __construct($call_asset) {
+    // Make parameters accessible in all class level.
+    $this->call_asset = $call_asset;
 
-    // Validate HTTP request method used.
-    parent::validateRequestMethod($this->custom_call_method);
+    // Call-level validation.
 
-    // Validate parameters to the call. Make sure
-    // keys match defined parameters and values matches expected type.
-    parent::validateParameter();
+    // Emulate a call.
+    if (isset(static::$is_alias_of)) {
+      // Use base call or implemented call payload key.
+      $property = get_object_vars($this);
+      if (isset($property['call_payload_key'])) {
+        $this->call_asset['payload_key'] = $property['call_payload_key'];
+      }
 
-    /// IS OKAY
+      // Call identical or call alias of this call.
+      TripalWebServiceCall::callAlias(static::$is_alias_of);
+    }
+    else {
+      // Call of database type only supports GET request.
+      $this->validateRequestMethod($this->custom_call_method);
 
-    // Prepare response.
-    // 1. Map data (one to one mappint) to response field.
-    $payload_values = $payload[ $call_payload_key ];
-    $payload[ $call_payload_key ] = parent::mapDataToResponseField($payload_values, $response_field);
+      // Check response field for active/default version of a major
+      // version in configuration page.
+      $this->validateResponseField();
+      $this->response_field = $this->response_field[ $call_asset['configuration']['active_version'] ];
 
-    // 2. Resolve terms used in the metadata.
-    $revise_metadata = [];
-    if ($metadata) {
-      $revise_metadata = $this->resolveMetadataItem($payload[ $call_payload_key ], $metadata, $call_asset);
+      // Validate parameters.
+      $this->validateCallParameter();
     }
 
-    // 3. Prepare subset as response base on the current page.
-    $revise_payload[ $call_payload_key ] = $this->pagePayload($payload[ $call_payload_key ], $call_asset['parameter']);
+    TripalWebServiceCall::__construct();
+  }
 
-    // 4. Return response.
-    TripalWebServiceResponse::sendResponse($revise_payload, $revise_metadata);
+  /**
+   * Prepare call response.
+   */
+  public function prepareResponse() {
+    $this->class_name = get_called_class();
+    $data = $this->getQueryResult();
+    $map_data = $this->mapDataToResponseField($data, $this->response_field);
+
+    if(empty($map_data)) {
+      // Request is valid but returned empty response.
+      $response = [
+        'code' => 400, // Bad Request.
+        'message' => 'Custom Call: Call returned an empty result.'
+      ];
+      TripalWebServiceResponse::errorResponse($response);
+    }
+
+    // Metadata information.
+    $metadata = [
+      'datafiles'  => [],
+      'status'     => [],
+      'pagination' => ['totalCount', 'pageSize', 'totalPages', 'currentPage']
+    ];
+
+    $metadata = $this->resolveMetaDataItem($map_data, $metadata, $this->call_asset);
+
+    // See if call alias wants to override the payload key.
+    $payload_key = ($this->call_asset['payload_key'])
+      ? $this->call_asset['payload_key'] : $this->call_payload_key;
+
+    // Payload information.
+    // Map data to response field item.
+    $payload[ $payload_key ] = $map_data;
+
+    // Return response.
+    TripalWebServiceResponse::sendResponse($payload, $metadata);
   }
 }
