@@ -23,7 +23,7 @@ You can access the web-serivces provided by this module by going to `https://[yo
 
 ## Documentation
 
-There is an extensive user guide in DOCX format in the docs directory of this module. We are in the process of converting this to online documentation.
+There is an extensive user guide available here: https://tripal-ws-brapi.readthedocs.io/en/latest/
 
 ## Funding
 
