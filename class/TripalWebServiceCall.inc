@@ -135,7 +135,7 @@ class TripalWebServiceCall {
       // Method not supported.
       $response = [
         'code' => 501, // Not Implemented.
-        'message' => 'Call: Unsuppored request method.'
+        'message' => 'Call: Unsupported request method.'
       ];
       TripalWebServiceResponse::errorResponse($response);
     }
@@ -175,7 +175,7 @@ class TripalWebServiceCall {
             // See if text is longer than 15 chars.
             $match = FALSE;
 
-            if (strlen($value) <= 15) {
+            if (strlen($value) <= 150) {
               $match = TRUE;
             }
           }

@@ -1195,7 +1195,7 @@ if (!function_exists('tripal_ws_db_list_search_request')) {
     $result = [];
 
     // All search request ordered - latest to oldest.
-    $sql = "SELECT * FROM {tripal_ws_brapi_search_request} ORDER BY id DESC";
+    $sql = "SELECT * FROM tripal_ws_brapi_search_request ORDER BY id DESC";
     $query = chado_query($sql);
 
     if ($query->rowCount() > 0) {
