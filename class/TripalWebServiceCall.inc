@@ -302,7 +302,7 @@ class TripalWebServiceCall {
             $j++;
           }
           else {
-            $map_data[] = $value;
+            $map_data[ $response_field ] = $value;
           }
         }
       }

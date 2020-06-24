@@ -92,7 +92,7 @@ class TripalWebServiceSearchCall extends TripalWebServiceCall {
         // Response field set for a version number.
         // Override call response field to searchResultDbId. Use active version
         // to ensure this call has response field regardless of version.
-        $this->response_field = [(string)$call_asset['configuration']['active_version'] => ['searchResultDbId']];
+        $this->response_field = [ (string) $call_asset['configuration']['active_version'] => ['searchResultDbId']];
         $this->validateResponseField();
         // Check parameters.
         parent::validateCallParameter();
@@ -100,7 +100,7 @@ class TripalWebServiceSearchCall extends TripalWebServiceCall {
 
         // Prepare result - hash code request id #.
         $match_id = $this->matchSearchRequest();
-        $response_field = $this->response_field[ $call_asset['configuration']['active_version'] ];
+        $response_field = $this->response_field[ (string) $call_asset['configuration']['active_version'] ];
 
         $data[] = ($match_id) ? $match_id : $this->saveSearchRequest();
         $map_data = $this->mapDataToResponseField($data, $response_field);
