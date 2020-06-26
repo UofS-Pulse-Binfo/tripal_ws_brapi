@@ -1047,7 +1047,7 @@ if (!function_exists('tripal_ws_db_has_type_id')) {
       $has_field = (db_field_exists($table, $column)) ? 1 : 0;
       if ($has_field) {
         // Field does exists, check that it is being used.
-        $q = sprintf("SELECT type_id FROM {%s} WHERE type_id > 0 LIMIT 1", $table);
+        $q = sprintf("SELECT type_id FROM %s WHERE type_id > 0 LIMIT 1", $table);
         $result = chado_query($q);
 
         return ($result->rowCount()) ? 1 : 0;
@@ -1074,7 +1074,7 @@ if (!function_exists('tripal_ws_db_has_prop_table')) {
       $has_prop = (db_table_exists($table)) ? 1 : 0;
       if ($has_prop) {
         // Property does exists, check that it is being used.
-        $q = sprintf("SELECT type_id FROM {%s} WHERE type_id > 0 LIMIT 1", $table);
+        $q = sprintf("SELECT type_id FROM %s WHERE type_id > 0 LIMIT 1", $table);
         $result = chado_query($q);
 
         return ($result->rowCount()) ? 1 : 0;
