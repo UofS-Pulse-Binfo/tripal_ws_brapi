@@ -90,6 +90,11 @@ class TripalWebServiceCall {
           // Key in the request matches predefined parameter of the call.
           $is_valid = $this->matchDataType($value, $call_parameter[ $key ]);
 
+          // Value should only match the enumerated value.
+          if (is_array($call_parameter[ $key ])) {
+            $call_parameter[ $key ] = 'one: ' . implode(',', $call_parameter[ $key ]) . ' - list';
+          }
+
           if (!$is_valid) {
             // Data type mismatch.
             $response = [
@@ -156,6 +161,12 @@ class TripalWebServiceCall {
   public function matchDataType($value, $type) {
     $match = FALSE;
 
+    // Type is an array, then a list of acceptable value must be checked.
+    if (is_array($type)) {
+      $options = $type;
+      $type = 'options';
+    }
+
     switch($type) {
       case 'int':
         // Single value, of type integer. Including 0.
@@ -213,24 +224,40 @@ class TripalWebServiceCall {
         break;
 
       case 'array-int':
-          // Array of string, where each element is of type integer.
-          if (is_array($value)) {
-            $match = TRUE;
-            foreach($value as $i => $item) {
-              if (is_array($item)) {
-                foreach($item as $item_value) {
-                  // Use the int condition of this method.
-                  $is_valid = $this->matchDataType($item_value, 'int');
-                  if ($is_valid) {
-                    $match = FALSE;
-                    break 2;
-                  }
+        // Array of string, where each element is of type integer.
+        if (is_array($value)) {
+          $match = TRUE;
+          foreach($value as $i => $item) {
+            if (is_array($item)) {
+              foreach($item as $item_value) {
+                // Use the int condition of this method.
+                $is_valid = $this->matchDataType($item_value, 'int');
+                if ($is_valid) {
+                  $match = FALSE;
+                  break 2;
                 }
               }
             }
           }
+        }
 
-          break;
+        break;
+
+      case 'asc/desc':
+        // Sort order asc for ascending order and desc for descending order.
+        if ($value == 'asc' || $value == 'desc') {
+          $match = TRUE;
+        }
+
+        break;
+
+      case 'options':
+        // Value must be one of the enumerated values.
+        if (in_array($value, $options)) {
+          $match = TRUE;
+        }
+
+        break;
     }
 
     return $match;
@@ -282,6 +309,7 @@ class TripalWebServiceCall {
    */
   public function mapDataToResponseField($data, $response_field) {
     $map_data = [];
+    $index = array_keys($response_field);
 
     if (is_array($data)) {
       foreach($data as $i => $item) {
@@ -290,8 +318,27 @@ class TripalWebServiceCall {
         $j = 0;
         foreach($item as $key => $value) {
           if (is_array($response_field) && !empty($response_field)) {
-            if (isset($response_field[ $j ]) && $response_field[ $j ]) {
-              $map_data[ $i ][ $response_field[ $j ] ] = $value;
+            if (isset($response_field[ $index[ $j ] ]) && $response_field[ $index[ $j ] ]) {
+              if (is_array($response_field[ $index[ $j ] ])) {
+                // Sub entries required in this resonse.
+                foreach($value as $k => $sub_entry) {
+                  if (is_array($sub_entry)) {
+                    foreach($sub_entry as $e => $entry) {
+                      $f = 0;
+                      foreach($entry as $value) {
+                        $map_data[ $i ][ $index[ $j ] ][ $e ][ $response_field[ $index[ $j ] ][ $f ] ] = $value;
+                        $f++;
+                      }
+                    }
+                  }
+                  else {
+                    $map_data[ $i ][ $index[ $j ] ][ $response_field[ $index[ $j ] ][ $k ] ] = $sub_entry;
+                  }
+                }
+              }
+              else {
+                $map_data[ $i ][ $response_field[ $index[ $j ] ] ] = $value;
+              }
             }
             else {
               if ($key == 'full_count') {
@@ -302,7 +349,7 @@ class TripalWebServiceCall {
             $j++;
           }
           else {
-            $map_data[] = $value;
+            $map_data[ $response_field ] = $value;
           }
         }
       }
