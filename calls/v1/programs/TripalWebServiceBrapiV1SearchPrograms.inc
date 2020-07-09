@@ -59,7 +59,8 @@ class TripalWebServiceBrapiV1SearchPrograms extends TripalWebServiceSearchCall {
     $arr_terms = [];
     $req_terms = [
       'taxonomic_rank' => 'genus',
-      'NCIT' => 'lead'
+      'NCIT' => 'lead',
+      'SIO' => 'category'
     ];
 
     foreach($req_terms as $cv => $term) {
@@ -119,7 +120,7 @@ class TripalWebServiceBrapiV1SearchPrograms extends TripalWebServiceSearchCall {
     // Convert to where clause conditions.
     $where = '';
     if (count($filter) > 0) {
-      $where = ' WHERE ' . implode(' AND ', $filter);
+      $where = ' AND ' . implode(' AND ', $filter);
     }
 
 
@@ -132,14 +133,18 @@ class TripalWebServiceBrapiV1SearchPrograms extends TripalWebServiceSearchCall {
         project.description AS description, project.project_id AS project_id, project.name AS name,
         COUNT(project.project_id) OVER() AS full_count
       FROM {%s}
-        LEFT JOIN {projectprop} AS genus ON project.project_id = genus.project_id AND genus.type_id = %d
-        LEFT JOIN {projectprop} AS lead ON project.project_id = lead.project_id AND lead.type_id = %d
-      %s
+        LEFT JOIN {projectprop} AS genus    ON project.project_id = genus.project_id AND genus.type_id = %d
+        LEFT JOIN {projectprop} AS lead     ON project.project_id = lead.project_id AND lead.type_id = %d
+        LEFT JOIN {projectprop} AS category ON project.project_id = category.project_id AND category.type_id = %d
+      WHERE category.value = 'Research Program' %s
       ORDER BY project.project_id DESC
       LIMIT %d OFFSET %d
     ";
 
-    $query = sprintf($sql, $this->class_name::$chado_table, $arr_terms['genus'], $arr_terms['lead'], $where, $page_size, $offset);
+    $query = sprintf($sql, $this->class_name::$chado_table,
+      $arr_terms['genus'], $arr_terms['lead'], $arr_terms['category'],
+      $where, $page_size, $offset);
+
     $result = chado_query($query, $args);
 
     // Fill project url and strip HTML markup and entities from description.
