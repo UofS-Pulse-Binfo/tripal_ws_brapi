@@ -183,6 +183,24 @@ class TripalWebServiceCall {
 
         break;
 
+      case 'year':
+        // Four digit year YYYY.
+        if (preg_match('/^[0-9]{4}$/', $value)) {
+          // ie: 1979, 2000
+          $match = TRUE;
+        }
+
+        break;
+
+      case 'boolean':
+        // Boolean true or false only.
+        if (id_bool($value)) {
+          // TRUE or FALSE.
+          $match = TRUE;
+        }
+
+        break;
+
       case 'hash-code':
         // Single value, alphanumeric value matching a pattern.
         if (preg_match('/^\w{5}-{1}\w{5}-{1}\w{5}-{1}\w{5}-{1}\w{5}$/', $value)) {
