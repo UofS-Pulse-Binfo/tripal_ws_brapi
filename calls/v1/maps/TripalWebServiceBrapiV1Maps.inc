@@ -172,7 +172,7 @@ class TripalWebServiceBrapiV1Maps extends TripalWebServiceDatabaseCall {
 
     $query = sprintf($sql, $this->class_name::$chado_table,
       $arr_terms['map_type'], $arr_terms['linkage_group'], $arr_terms['marker_locus'],
-      $wher, $page_size, $offset);
+      $where, $page_size, $offset);
     $result = chado_query($query, $args);
 
     $maps = [];
