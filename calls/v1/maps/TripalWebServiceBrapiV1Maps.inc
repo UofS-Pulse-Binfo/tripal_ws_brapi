@@ -155,7 +155,8 @@ class TripalWebServiceBrapiV1Maps extends TripalWebServiceDatabaseCall {
         'n/a' AS scientificname,
         organism.species AS species,
         type.value AS type,
-        'n/a' AS unit
+        'n/a' AS unit,
+        COUNT(map.featuremap_id) OVER() AS full_count
       FROM {%s} AS map
         INNER JOIN {featuremap_organism} org USING (featuremap_id)
           INNER JOIN {organism} ON org.organism_id = organism.organism_id
