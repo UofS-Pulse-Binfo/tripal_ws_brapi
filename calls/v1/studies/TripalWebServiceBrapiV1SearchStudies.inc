@@ -78,7 +78,7 @@ class TripalWebServiceBrapiV1SearchStudies extends TripalWebServiceSearchCall {
   public $call_asset;
 
   // Chado table, source data.
-  public static $chado_table = 'pheno_plant_project';
+  public static $chado_table = 'phenotype';
 
   // Class name.
   public $class_name;
@@ -99,15 +99,16 @@ class TripalWebServiceBrapiV1SearchStudies extends TripalWebServiceSearchCall {
     $filter = [];
     $args   = [];
 
-    // Terms used to query projectprop for crop, category, location, funders
+    // Terms used to query projectprop for crop, category, location, funders, year
     // and collaborator information.
     $arr_terms = [];
     $req_terms = [
-      'taxonomic_rank' => 'genus',
-      'SIO' => 'category',   // The Semanticscience Integrated Ontology (SIO) is an ontology to facilitate biomedical knowledge discovery.
-      'ncit' => 'location',  // Phenotype trial location in chado.phenotypeprop.
-      'efo'  => 'funder',    // Project funder information.
-      'GCP germplasm ontology' => 'collaborator' // Project collaborator/s.
+      'taxonomic_rank' => 'genus',  // Genus.
+      'SIO'  => 'category',    // The Semanticscience Integrated Ontology (SIO) is an ontology to facilitate biomedical knowledge discovery.
+      'ncit' => 'location',    // Phenotype trial location in chado.phenotypeprop.
+      'efo'  => 'funder',      // Project funder information.
+      'tripal_pub' => 'Year',  // Year.
+      'GCP germplasm ontology' => 'collaborator', // Project collaborator/s.
     ];
 
     foreach($req_terms as $cv => $term) {
@@ -147,20 +148,20 @@ class TripalWebServiceBrapiV1SearchStudies extends TripalWebServiceSearchCall {
 
     // LocationDbId.
     if (isset($param['locationDbIds']) && !empty($param['locationDbIds'])) {
-      $filter[] = 'view.plant_id IN (:locationDbIds)';
+      $filter[] = 'loc.phenotype_id IN (:locationDbIds)';
       $args[':locationDbIds'] = $param['locationDbIds'];
     }
 
     // TrialDbId.
     if (isset($param['trialDbIds']) && !empty($param['trialDbIds'])) {
-      $filter[] = 'project.project_id IN (:trialDbIds)';
+      $filter[] = 'prj.project_id IN (:trialDbIds)';
       $args[':trialDbIds'] = $param['trialDbIds'];
     }
 
     // Transform parameters into a string, as where clause in the query.
     $where = '';
     if (isset($filter) && count($filter) > 0) {
-      $where = ' AND ' . implode(' AND ', $filter);
+      $where = ' WHERE ' . implode(' AND ', $filter);
     }
 
     // Transform sort order.
@@ -168,83 +169,93 @@ class TripalWebServiceBrapiV1SearchStudies extends TripalWebServiceSearchCall {
     if ((isset($param['sortBy']) && !empty($param['sortBy']))
         && (isset($param['sortOrder']) && !empty($param['sortOrder']))) {
 
-      $order = 'ORDER BY ' . strtolower($param['sortBy']) . ' ' . $param['sortOrder'];
+       $sort  = strtoupper($param['sortOrder']);
+       $order = 'ORDER BY year.value '. $sort .', loc.value ' . $sort . ',' . strtolower(trim($param['sortBy'])) . ' ' . $sort;
     }
     else {
       // Default sort order.
-      $order = 'ORDER BY view.location DESC';
+      $order = 'ORDER BY loc.value DESC';
     }
 
-    // Reduce the size of location available in raw phenotypes summary table.
-    $distinct_location = chado_query(
-      "SELECT DISTINCT ON (location) plant_id FROM {rawpheno_rawdata_mview} ORDER BY location ASC"
-    )
-    ->fetchCol();
+    // Count studies found (unpaged) - combination of year and location.
+    // This will become the total count found, different from the resultset count defined
+    // which is 100 by default.
+    $sql_count = "
+      SELECT DISTINCT ON (year.value, loc.value) ''
+      FROM {%s} AS pheno
+        INNER JOIN {project} AS prj USING (project_id)
+        LEFT JOIN {projectprop} AS category ON pheno.project_id = category.project_id AND category.type_id = %d
+        LEFT JOIN {projectprop} AS genus ON pheno.project_id = genus.project_id AND genus.type_id = %d
+        LEFT JOIN {phenotypeprop} AS loc ON pheno.phenotype_id = loc.phenotype_id AND loc.type_id = %d
+        LEFT JOIN {phenotypeprop} AS year ON pheno.phenotype_id = year.phenotype_id AND year.type_id = %d
+      %s
+    ";
 
-    $projects = [];
+    $query = sprintf($sql_count, $this->class_name::$chado_table,
+    $arr_terms['category'], $arr_terms['genus'], $arr_terms['location'], $arr_terms['Year'], $where);
+    $result_count = chado_query($query, $args)
+      ->rowCount();
 
-    if ($distinct_location) {
-      $args[':locations'] = $distinct_location;
-
-      // Fetch additional information for each unique locations.
-      // Note on start and end date must be in YYYY-MM-DD format as described.
+    if ($result_count > 0) {
+      // Get studies, paged.
       $sql = "
-        SELECT
+        SELECT DISTINCT ON (year.value, loc.value)
           'n/a' AS active,
-          ARRAY_TO_JSON(ARRAY[category.value, funder.value, people.value, project.description]) AS additionalinfo,
+          ARRAY_TO_JSON(ARRAY[category.value, funder.value, people.value, prj.description]) AS additionalinfo,
           genus.value AS commoncropname,
-          'url' AS url,
+          'ur' AS url,
           'n/a'  AS enddate,
-          view.plant_id as locationdbid,
-          view.location as locationname,
-          CONCAT(SPLIT_PART(view.planting_date, '-', 1), ' - ', view.location) AS name,
+          loc.phenotype_id as locationdbid,
+          loc.value as locationname,
+          CONCAT(year.value, ' - ', loc.value) AS name,
           category.projectprop_id AS programdbid,
           category.value AS programname,
           'n/a' AS seasons,
           'n/a' AS season,
           'n/a' AS seasondbid,
-          SPLIT_PART(view.planting_date, '-', 1) AS year,
+          year.value AS year,
           'n/a' AS startdate,
           'n/a' AS studydbid,
-          CONCAT(SPLIT_PART(view.planting_date, '-', 1), ' - ', view.location) AS studyname,
+          CONCAT(year.value, ' - ', loc.value) AS studyname,
           'n/a' AS studytype,
           'n/a' AS studytypedbid,
           'n/a' AS studytypename,
-          project.project_id AS trialdbid,
-          project.name AS trialname,
-          COUNT(phenotype.plant_id) OVER() AS full_count
-        FROM %s AS phenotype
-          INNER JOIN {rawpheno_rawdata_mview} AS view USING (plant_id)
-          INNER JOIN {project} USING (project_id)
-          LEFT JOIN {projectprop} AS category ON phenotype.project_id = category.project_id AND category.type_id = %d
-          LEFT JOIN {projectprop} AS funder   ON phenotype.project_id = funder.project_id AND funder.type_id = %d
-          LEFT JOIN {projectprop} AS people   ON phenotype.project_id = people.project_id AND people.type_id = %d
-          LEFT JOIN {projectprop} AS genus    ON phenotype.project_id = genus.project_id AND genus.type_id = %d
-        WHERE phenotype.plant_id IN (:locations) %s
+          prj.project_id AS trialdbid,
+          prj.name AS trialname,
+          %d AS full_count
+        FROM {%s} AS pheno
+          INNER JOIN {project} AS prj USING (project_id)
+          LEFT JOIN {projectprop} AS category ON pheno.project_id = category.project_id AND category.type_id = %d
+          LEFT JOIN {projectprop} AS genus ON pheno.project_id = genus.project_id AND genus.type_id = %d
+          LEFT JOIN {projectprop} AS funder ON pheno.project_id = funder.project_id AND funder.type_id = %d
+          LEFT JOIN {projectprop} AS people ON pheno.project_id = people.project_id AND people.type_id = %d
+          LEFT JOIN {phenotypeprop} AS loc ON pheno.phenotype_id = loc.phenotype_id AND loc.type_id = %d
+          LEFT JOIN {phenotypeprop} AS year ON pheno.phenotype_id = year.phenotype_id AND year.type_id = %d
+        %s
         %s
         LIMIT %d OFFSET %d
       ";
 
-      $query = sprintf($sql, $this->class_name::$chado_table,
-        $arr_terms['category'], $arr_terms['funder'], $arr_terms['collaborator'], $arr_terms['genus'],
+      $query = sprintf($sql, $result_count, $this->class_name::$chado_table,
+        $arr_terms['category'], $arr_terms['genus'], $arr_terms['funder'], $arr_terms['people'], $arr_terms['location'], $arr_terms['Year'],
         $where, $order, $page_size, $offset);
-
       $result = chado_query($query, $args);
-      if ($result->rowCount() > 0) {
-        foreach($result as $project) {
-          // Additional information - in JSON need to be in PHP array.
-          $info = json_decode($project->additionalinfo);
-          $project->additionalinfo = [$info[0], $info[1], $info[2], trim(html_entity_decode(strip_tags($info[3])))];
 
-          // URL
-          $entity = chado_get_record_entity_by_table('project', $project->trialdbid);
-          $project->url = ($entity) ? $GLOBALS['base_url'] . '/study/' . $entity : 'n/a';
+      $studies = [];
 
-          array_push($projects, $project);
-        }
+      // Additional information - in JSON need to be in PHP array.
+      foreach($result as $study) {
+        $info = json_decode($study->additionalinfo);
+        $study->additionalinfo = [$info[0], $info[1], $info[2], trim(html_entity_decode(strip_tags($info[3])))];
+
+        // URL
+        $entity = chado_get_record_entity_by_table('project', $study->trialdbid);
+        $study->url = ($entity) ? $GLOBALS['base_url'] . '/study/' . $entity : 'n/a';
+
+        array_push($studies, $study);
       }
     }
 
-    return (count($projects) > 0) ? $projects : '';
+    return (count($studies) > 0) ? $studies : '';
   }
 }
