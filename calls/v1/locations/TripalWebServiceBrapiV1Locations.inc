@@ -53,7 +53,7 @@ class TripalWebServiceBrapiV1Locations extends TripalWebServiceDatabaseCall {
   public $call_asset;
 
   // Chado table, source data.
-  public static $chado_table = 'pheno_plantprop';
+  public static $chado_table = 'phenotype';
 
   // Class name.
   public $class_name;
@@ -78,7 +78,7 @@ class TripalWebServiceBrapiV1Locations extends TripalWebServiceDatabaseCall {
     // Terms used to query - location.
     $arr_terms = [];
     $req_terms = [
-      'phenotype_plant_property_types' => 'Location',  // Location.
+      'ncit' => 'location' // Phenotype trial location in chado.phenotypeprop.
     ];
 
     foreach($req_terms as $cv => $term) {
@@ -107,7 +107,7 @@ class TripalWebServiceBrapiV1Locations extends TripalWebServiceDatabaseCall {
     // Where clause.
 
     $sql = "
-      SELECT DISTINCT ON (value)
+      SELECT DISTINCT ON (loc.value)
         'n/a' AS abbreviation,
         'n/a' AS additionalinfo,
         'n/a' AS altitude,
@@ -119,17 +119,17 @@ class TripalWebServiceBrapiV1Locations extends TripalWebServiceDatabaseCall {
         'n/a' AS latitude,
         'n/a' AS longitude,
         'n/a' AS locationdbid,
-        value AS locationname,
+        loc.value AS locationname,
         'n/a' AS locationtype,
-        COUNT(value) OVER() AS full_count
-      FROM %s
-      WHERE type_id = %d
-      GROUP BY value
-      ORDER BY value ASC
+        COUNT(loc.value) OVER() AS full_count
+      FROM {%s} LEFT JOIN {phenotypeprop} AS loc USING(phenotype_id)
+      WHERE loc.type_id = %d
+      GROUP BY loc.value
+      ORDER BY loc.value ASC
       LIMIT %d OFFSET %d
     ";
 
-    $query = sprintf($sql, $this->class_name::$chado_table, $arr_terms['Location'], $page_size, $offset);
+    $query = sprintf($sql, $this->class_name::$chado_table, $arr_terms['location'], $page_size, $offset);
     $result = chado_query($query, $args);
     $locations = [];
 
