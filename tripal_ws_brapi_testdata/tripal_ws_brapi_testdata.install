@@ -1,0 +1,30 @@
+<?php
+/**
+ * @file
+ * Contains actions performed during install/uninstall.
+ */
+
+/**
+ * Implements hook_enable().
+ */
+function tripal_ws_brapi_testdata_enable() {
+  // Update phenotype table to include project_id, stock_id, unit_id
+  // Extend chado phenotype/phenotypeprop.
+  $arr_fields = array(
+    'project_id' => array('table' => 'phenotype',     'ref' => 'project', 'ref_id' => 'project_id'),
+    'stock_id'   => array('table' => 'phenotype',     'ref' => 'stock',   'ref_id' => 'stock_id'),
+    'cvalue_id'  => array('table' => 'phenotypeprop', 'ref' => 'cvterm',  'ref_id' => 'cvterm_id'),
+    'unit_id'    => array('table' => 'phenotype',     'ref' => 'cvterm',  'ref_id' => 'cvterm_id'),
+  );
+
+  foreach($arr_fields as $field => $items) {
+    $exists = db_field_exists('chado.' . $items['table'], $field);
+
+    if (!$exists) {
+      $sql = sprintf('ALTER TABLE {%s} ADD COLUMN %s integer REFERENCES {%s} (%s)',
+      $items['table'], $field, $items['ref'], $items['ref_id']);
+
+      chado_query($sql);
+    }
+  }
+}

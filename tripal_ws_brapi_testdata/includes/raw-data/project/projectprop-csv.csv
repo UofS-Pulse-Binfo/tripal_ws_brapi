@@ -1,0 +1,56 @@
+translate_value:name, SIO:category, taxonomic_rank:genus, efo:funder, GCP germplasm ontology:collaborator, NCIT:lead, NCI Thesaurus OBO Edition:Year
+"Project A", "Project Breeding & Gentics", Tripalus, "Funder A", "Oliver Milo & Charlotte Amelia", "Dr. William Ava", 2015-2017
+"Project B", "Project Breeding & Gentics", Tripalus, "Funder B", "Liam Declan", "Dr. William Ava", 2015-2017
+"Project C", "Project Breeding & Gentics", Tripalus, "Funder B", "Charlotte Amelia & Liam Declan", "Dr. James William", 2015-2017
+"Project D", "Project Breeding & Gentics", Tripalus, "Funder A", "Abigail Sadie", "Dr. Isabella T.", 2015-2017
+"Project E", "Project Breeding & Gentics", Tripalus, "Funder B", "Charlotte Amelia", "Dr. Isabella T.", 2015-2017
+"Project F", "Project Pathology", Tripalus, "Funder A", "Abigail Sadie", "Dr. Isabella T.", 2015-2017
+"Project G", "Project Pathology", Tripalus, "Funder B", "Liam Declan & Liam Declan", "Dr. Noah S.", 2015-2017
+"Project H", "Project Pathology", Tripalus, "Funder B", "Charlotte Amelia", "Dr. Noah S.", 2015-2017
+"Project I", "Project Pathology", Tripalus, "Funder A", "Abigail Sadie", "Dr. Noah S.", 2015-2017
+"Project J", "Project Pathology", Tripalus, "Funder A", "Abigail Sadie", "Dr. Noah S.", 2015-2017
+"Project K", "Project Pathology", Tripalus, "Funder B", "Charlotte Amelia", "Dr. Noah S.", 2015-2017
+"Project L", "Project Pathology", Tripalus, "Funder A", "Abigail Sadie", "Dr. Noah S.", 2015-2017
+"Project M", "Project Pathology", Tripalus, "Funder A", "Oliver Milo", "Dr. Olivia William", 2015-2017
+"Project N", "Project Physiology", Tripalus, "Funder B", "Liam Declan & Charlotte Amelia", "Dr. Olivia William", 2015-2017
+"Project O", "Project Physiology", Brapus, "Funder B", "Charlotte Amelia", "Dr. Olivia William", 2013-2015
+"Project P", "Project Physiology", Brapus, "Funder A", "Abigail Sadie", "Dr. Olivia William", 2013-2015
+"Project Q", "Project Physiology", Brapus, "Funder B", "Charlotte Amelia", "Dr. Olivia William", 2013-2015
+"Project R", "Project Physiology", Brapus, "Funder A", "Abigail Sadie & Charlotte Amelia", "Dr. Olivia William", 2013-2015
+"Project S", "Project Physiology", Brapus, "Funder A", "Abigail Sadie", "Dr. Olivia William", 2010-2012
+"Project T", "Project Tissue Culture", Brapus, "Funder B", "Charlotte Amelia", "Dr. Bella M.", 2010-2012
+"Project U", "Project Tissue Culture", Brapus, "Funder A", "Abigail Sadie", "Dr. Bella M.", 2010-2012
+"Project V", "Project Tissue Culture", Brapus, "Funder A", "Oliver Milo", "Dr. Bella M.", 2010-2012
+"Project W", "Project Tissue Culture", Brapus, "Funder B", "Liam Declan & Abigail Sadie", "Dr. Bella M.", 2010-2012
+"Project X", "Project Tissue Culture", Brapus, "Funder B", "Charlotte Amelia", "Dr. Bella M.", 2010-2012
+"Project Y", "Project Tissue Culture", Brapus, "Funder A", "Abigail Sadie", "Dr. Bella M.", 2007-2009
+"Project Z", "Project Tissue Culture", Brapus, "Funder B", "Charlotte Amelia & Abigail Sadie", "Dr. Bella M.", 2007-2009
+"Project 1", "Project Pathology", Tripalus, "Funder A", "Abigail Sadie", "Dr. Noah S.", 2007-2009
+"Project 2", "Project Pathology", Tripalus, "Funder A", "Oliver Milo", "Dr. Olivia William", 2015-2018
+"Project 3", "Project Physiology", Tripalus, "Funder B", "Liam Declan & Charlotte Amelia", "Dr. Olivia William", 2015-2018
+"Project 4", "Project Physiology", Brapus, "Funder B", "Charlotte Amelia", "Dr. Olivia William", 2015-2018
+"Project 5", "Project Physiology", Brapus, "Funder A", "Abigail Sadie", "Dr. Olivia William", 2015-2018
+"Project 6", "Project Physiology", Brapus, "Funder B", "Charlotte Amelia", "Dr. Olivia William", 2015-2018
+"Project 7", "Project Physiology", Brapus, "Funder A", "Abigail Sadie & Charlotte Amelia", "Dr. Olivia William", 2015-2018
+"Project 8", "Project Physiology", Brapus, "Funder A", "Abigail Sadie", "Dr. Olivia William", 2015-2018
+"Project 9", "Project Tissue Culture", Brapus, "Funder B", "Charlotte Amelia", "Dr. Bella M.", 2015-2018
+"Project 10", "Project Tissue Culture", Brapus, "Funder A", "Abigail Sadie", "Dr. Bella M.", 2015-2018
+"Project 11", "Project Tissue Culture", Brapus, "Funder A", "Oliver Milo", "Dr. Bella M.", 2015-2018
+"Project 12", "Project Tissue Culture", Brapus, "Funder B", "Liam Declan & Abigail Sadie", "Dr. Bella M.", 2015-2018
+"Project 13", "Project Tissue Culture", Brapus, "Funder B", "Charlotte Amelia", "Dr. Bella M.", 2011-2015
+"Project 14", "Project Tissue Culture", Brapus, "Funder A", "Abigail Sadie", "Dr. Bella M.", 2011-2015
+"Project 15", "Project Tissue Culture", Brapus, "Funder B", "Charlotte Amelia & Abigail Sadie", "Dr. Bella M.", 2011-2015
+"Project 16", "Project Physiology", Brapus, "Funder A", "Abigail Sadie", "Dr. Olivia William", 2011-2015
+"Project 17", "Project Physiology", Brapus, "Funder B", "Charlotte Amelia", "Dr. Olivia William", 2011-2015
+"Project 18", "Project Physiology", Brapus, "Funder A", "Abigail Sadie & Charlotte Amelia", "Dr. Olivia William", 2011-2015
+"Project 19", "Project Physiology", Brapus, "Funder A", "Abigail Sadie", "Dr. Olivia William", 2011-2015
+"Project 20", "Project Physiology", Brapus, "Funder A", "Abigail Sadie", "Dr. Olivia William", 2011-2015
+"Project 21", "Project Tissue Culture", Brapus, "Funder B", "Charlotte Amelia", "Dr. Bella M.", 2011-2015
+"Project 22", "Project Tissue Culture", Brapus, "Funder A", "Abigail Sadie", "Dr. Bella M.", 2011-2015
+"Project 23", "Project Tissue Culture", Brapus, "Funder A", "Oliver Milo", "Dr. Bella M.", 2011-2015
+"Project 24", "Project Tissue Culture", Brapus, "Funder B", "Liam Declan & Abigail Sadie", "Dr. Bella M.", 2011-2015
+"Project 25", "Project Tissue Culture", Brapus, "Funder A", "Oliver Milo", "Dr. Bella M.", 2011-2019
+"Project Pathology",  "Research Program", Tripalus, "Funder B", "Abigail Sadie", "Dr. Olivia William", 2011-2019
+"Project Physiology", "Research Program", Tripalus, "Funder B", "Charlotte Amelia", "Dr. Isabella T.", 2011-2019
+"Project Tissue Culture", "Research Program", Tripalus, "Funder B", "Oliver Milo", "Dr. William Ava", 2011-2019
+"Project Breeding & Gentics", "Research Program", Tripalus, "Funder B", "Charlotte Amelia", "Dr. Bella M.", 2011-2019

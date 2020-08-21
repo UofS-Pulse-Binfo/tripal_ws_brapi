@@ -1,0 +1,51 @@
+translate_value:uniquename, tripal_pub:Year, ncit:location, NCIT:Collected By, NCIT:replicate
+uniquename1, 2015, "Location A, Canada", "Person A, Person B and Person C", 1
+uniquename2, 2015, "Location A, Canada", "Person A, Person B and Person C", 1
+uniquename3, 2015, "Location A, Canada", "Person A, Person B and Person C", 1
+uniquename4, 2015, "Location A, Canada", "Person A, Person B and Person C", 1
+uniquename5, 2015, "Location A, Canada", "Person A, Person B and Person C", 1
+uniquename6, 2015, "Location A, Canada", "Person A, Person B and Person C", 1
+uniquename7, 2015, "Location A, Canada", "Person A, Person B and Person C", 1
+uniquename8, 2015, "Location A, Canada", "Person A, Person B and Person C", 1
+uniquename9, 2015, "Location A, Canada", "Person A, Person B and Person C", 1
+uniquename10, 2015, "Location A, Canada", "Person A, Person B and Person C", 1
+uniquename11, 2016, "Location B, Nepal", "Person B and Person C", 1
+uniquename12, 2016, "Location B, Nepal", "Person B and Person C", 1
+uniquename13, 2016, "Location B, Nepal", "Person B and Person C", 1
+uniquename14, 2016, "Location B, Nepal", "Person B and Person C", 1
+uniquename15, 2016, "Location B, Nepal", "Person B and Person C", 1
+uniquename16, 2016, "Location B, Nepal", "Person B and Person C", 1
+uniquename17, 2016, "Location B, Nepal", "Person B and Person C", 1
+uniquename18, 2016, "Location B, Nepal", "Person B and Person C", 1
+uniquename19, 2016, "Location B, Nepal", "Person B and Person C", 1
+uniquename20, 2016, "Location B, Nepal", "Person B and Person C", 1
+uniquename21, 2017, "Location B, Nepal", "Person B and Person C", 2
+uniquename22, 2017, "Location B, Nepal", "Person B and Person C", 2
+uniquename23, 2017, "Location B, Nepal", "Person B and Person C", 2
+uniquename24, 2017, "Location B, Nepal", "Person B and Person C", 2
+uniquename25, 2017, "Location B, Nepal", "Person B and Person C", 2
+uniquename26, 2017, "Location B, Nepal", "Person B and Person C", 2
+uniquename27, 2017, "Location B, Nepal", "Person B and Person C", 2
+uniquename28, 2017, "Location B, Nepal", "Person B and Person C", 2
+uniquename29, 2017, "Location B, Nepal", "Person B and Person C", 2
+uniquename30, 2017, "Location B, Nepal", "Person B and Person C", 2
+uniquename31, 2015, "Location C, Dublin, Ireland", "Person Y and Person X", 1
+uniquename32, 2015, "Location C, Dublin, Ireland", "Person Y and Person X", 1
+uniquename33, 2015, "Location C, Dublin, Ireland", "Person Y and Person X", 1
+uniquename34, 2016, "Location D, Morocco", "Person Y", 1
+uniquename35, 2016, "Location D, Morocco", "Person Y", 1
+uniquename36, 2016, "Location D, Morocco", "Person Y", 1
+uniquename37, 2015, "Location E, New Zealand", "Person X", 1
+uniquename38, 2015, "Location E, New Zealand", "Person X", 1
+uniquename39, 2015, "Location E, New Zealand", "Person X", 1
+uniquename40, 2015, "Location F, Spain", "Person Z", 1
+uniquename41, 2015, "Location F, Spain", "Person Z", 1
+uniquename42, 2015, "Location F, Spain", "Person Z", 1
+uniquename43, 2017, "Location C", "Person Y and Person X", 2
+uniquename44, 2017, "Location C", "Person Y and Person X", 2
+uniquename45, 2017, "Location C", "Person Y and Person X", 2
+uniquename46, 2015, "Location D, Dublin, Ireland", "Person Y and Person X", 2
+uniquename47, 2015, "Location D, Dublin, Ireland", "Person Y and Person X", 2
+uniquename48, 2015, "Location D, Dublin, Ireland", "Person Y and Person X", 2
+uniquename49, 2015, "Location Z, Turkey", "Person XYZ", 1
+uniquename50, 2015, "Location Z, Turkey", "Person XYZ", 1

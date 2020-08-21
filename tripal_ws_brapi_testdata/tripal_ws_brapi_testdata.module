@@ -1,0 +1,85 @@
+<?php
+/**
+ * @file
+ * The main functionality of this module.
+ */
+
+module_load_include('inc', 'tripal_ws_brapi_testdata', 'class/TripalWebServiceTestData');
+
+
+/**
+ * Implements hook_menu().
+ */
+function tripal_ws_brapi_testdata_menu() {
+  $items = [];
+
+  $items['tripalwsbrapi/testdata'] = [
+    'title'       => 'TRIPAL BrAPI Calls Test Data',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('tripal_ws_brapi_generate_data'),
+    'access arguments' => ['access content'],
+    'type' => MENU_CALLBACK,
+  ];
+
+  return $items;
+}
+
+/**
+ * Function callback (page callback), begin processing call request.
+ */
+if (!function_exists('tripal_ws_brapi_generate_data')) {
+  function tripal_ws_brapi_generate_data($form, &$form_state) {
+    // In this order, project info is required in phenotype, and organism
+    // info is require in stocks.
+    // Reverse order when remove command to prevent triggers from table constraints.
+    $source = [
+      'project'    => ['main' => 'project-csv', 'prop' => 'projectprop-csv'],
+      'organism'   => ['main' => 'organism-csv'],
+      'stock'      => ['main' => 'stock-csv', 'prop' => 'stockprop-csv'],
+      'phenotype'  => ['main' => 'phenotype-csv' , 'prop' => 'phenotypeprop-csv'],
+      'contact'    => ['main' => 'contact-csv', 'prop' => 'contactprop-csv'],
+      'feature'    => ['main' => 'feature-csv'],
+      'featuremap' => ['main' => 'featuremap-csv', 'prop' => 'featuremapprop-csv', 'featuremap_organism' => 'featuremap_organism-csv', 'featurepos' => 'featurepos-csv']
+    ];
+
+    $testdata = new TripalWebServiceTestData($source);
+
+    // Establish request to load or request remove test data.
+    if (isset($form_state['values'])) {
+      $btn_value = $form_state['values']['tripal_ws_btn_command'];
+      if ($btn_value == 'Remove Test Data' || $btn_value == 'Load Test Data') {
+        $request = ($btn_value == 'Remove Test Data') ? 'remove' : 'load';
+        $testdata->doRequest($request);
+      }
+    }
+
+    // Create a summary table in tabs.
+    $sort = $_GET['sort'];
+    if ($sort == 'asc' || $sort == 'desc' || $sort == 'none') {
+      $sort = $sort;
+    }
+
+    $request = 'summary';
+    $property = $testdata->doRequest($request, ['sort' => $sort]);
+
+    // Convert properties returned into Drupal from objects.
+    drupal_set_message($property['message']);
+
+    // Command/request button.
+    $form['tripal_ws_btn_command'] = [
+      '#type'   => 'button',
+      '#value'  => $property['button'],
+      '#prefix' => '<div style="top: 30px; right: 0; position: absolute;">',
+      '#suffix' => '</div>',
+      '#id'     => 'tripal-ws-brapi-request-button'
+    ];
+
+    // Summary table.
+    $form['#attached']['library'][] = array('system', 'ui.tabs');
+    $form['tripal_ws_tabs'] = [
+      '#markup' => $property['summary']
+    ];
+
+    return $form;
+  }
+}
