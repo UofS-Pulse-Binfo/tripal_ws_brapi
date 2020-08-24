@@ -24,8 +24,6 @@ class TripalWebServiceBrapiV1Observationunits extends TripalWebServiceDatabaseCa
   public $call_parameter = [
     // Key : Expected value for this key.
     'germplasmDbId'           => 'int', // The unique ID of a germplasm (accession) to filter on.
-    'observationVariableDbId' => 'int', // The unique ID of an observation variable.
-    'studyDbId'               => 'int', // The unique ID of a studies to filter on.
     'page'                    => 'int', // Which result page is requested.
     'pageSize'                => 'int', // The size of the pages to be returned.
   ];
@@ -45,9 +43,10 @@ class TripalWebServiceBrapiV1Observationunits extends TripalWebServiceDatabaseCa
       'observationLevels',         // Concatenation of the levels of this observationUnit. Used to handle non canonical level structures. Format levelType:levelID,levelType:levelID.
       'observationUnitDbId',       // The ID which uniquely identifies an observation unit.
       'observationUnitName',       // A human readable name for an observation unit.
-      'observationUnitXref',       // A list of external references to this observation unit.
-      'id',                        // The unique ID in the external reference 'source' system.
-      'source',                    // The system identifier (name, URL, etc) which has an external reference to the observation unit.
+      'observationUnitXref' => [   // A list of external references to this observation unit.
+        'id',                      // The unique ID in the external reference 'source' system.
+        'source',                  // The system identifier (name, URL, etc) which has an external reference to the observation unit.
+      ],
       'observations' => [
         'collector',               // The name or identifier of the entity which collected the observation.
         'observationDbId',         // The ID which uniquely identifies an observation
@@ -107,9 +106,10 @@ class TripalWebServiceBrapiV1Observationunits extends TripalWebServiceDatabaseCa
     $req_terms = [
       'tripal_pub' => 'Year',  // Year.
       'ncit' => 'location',    // Location.
+      'SIO'  => 'category',    // Program/category.
+
       1 => 'replicate',        // Replicate.
-      2 => 'Collected By',     // Collected By.
-      'SIO'  => 'category'     // Program/category.
+      2 => 'Collected By'      // Collected By.
     ];
 
     foreach($req_terms as $cv => $term) {
@@ -142,24 +142,8 @@ class TripalWebServiceBrapiV1Observationunits extends TripalWebServiceDatabaseCa
     if (isset($call_asset['parameter']['germplasmDbId'])
         && !empty($call_asset['parameter']['germplasmDbId'])) {
 
-      $filter[] = 'germplasm.stock_id = :germplasmDbId';
+      $filter[] = 'germ.stock_id = :germplasmDbId';
       $args[':germplasmDbId'] = $call_asset['parameter']['germplasmDbId'];
-    }
-
-    // observationVariableDbId.
-    if (isset($call_asset['parameter']['observationVariableDbId'])
-        && !empty($call_asset['parameter']['observationVariableDbId'])) {
-
-      $filter[] = 'trait.cvterm_id = :observationVariableDbId';
-      $args[':observationVariableDbId'] = $call_asset['parameter']['observationVariableDbId'];
-    }
-
-    // studyDbId
-    if (isset($call_asset['parameter']['studyDbId'])
-        && !empty($call_asset['parameter']['studyDbId'])) {
-
-      $filter[] = 'study.project_id = :studyDbId';
-      $args[':studyDbId'] = $call_asset['parameter']['studyDbId'];
     }
 
     // Transform parameters into a string, as where clause in the query.
@@ -173,47 +157,61 @@ class TripalWebServiceBrapiV1Observationunits extends TripalWebServiceDatabaseCa
         'n/a' AS blocknumber,
         'n/a' AS entrynumber,
         'n/a' AS entrytype,
-        germplasm.stock_id AS germplasmdbid,
-        germplasm.name AS germplasmname,
-        'n/a' AS observationlevel,
+        germ.stock_id AS germplasmdbid,
+        CONCAT(germ.name, ':', germ.uniquename) AS germplasmname,
+        'plant' AS observationlevel,
         'n/a' AS observationlevels,
-        pheno.observable_id AS observationunitdbid,
-        'n/a' AS observationunitname,
-        'n/a' AS observationunitxref,
-        'n/a' AS id,
-        'n/a' AS source,
-        ARRAY_TO_JSON(ARRAY_AGG(ARRAY[collector.value, pheno.phenotype_id::varchar, year.value::varchar, trait.cvterm_id::varchar, trait.name, 'n/a', pheno.value::varchar])) AS observations,
+        CONCAT(cv.cv_id, ':', unit.name) AS observationunitdbid,
+        unit.name AS observationunitname,
+        ARRAY_TO_JSON(ARRAY[unit.dbxref_id::varchar, 'source']) AS observationunitxref,
+        ARRAY_TO_JSON(ARRAY_AGG(ARRAY[obs.collector, obs.observationdbid::varchar,
+          obs.observationtimestamp::varchar, obs.observationvariabledbid::varchar, obs.observationvariablename,
+          obs.season::varchar, obs.value])) AS observations,
         'n/a' AS plantnumber,
         'n/a' AS plotnumber,
         'n/a' AS positioncoordinatex,
         'n/a' AS positioncoordinatextype,
         'n/a' AS positioncoordinatey,
         'n/a' AS positioncoordinateytype,
-        program.value AS programname,
-        replicate.value AS replicate,
-        study.project_id AS studydbid,
-        CONCAT(year.value, ' ', location.value) AS studylocation,
-        'n/a' AS studylocationdbid,
-        study.name AS studyname,
+        prg.value AS programname,
+        rep.value AS replicate,
+        prg.project_id AS studydbid,
+        loc.value AS studylocation,
+        CONCAT(year.value, '-', loc.value, '-', rep.value, '-', germ.name, '-', unit.name) studylocationdbid,
+        CONCAT(year.value, '-', loc.value) AS studyname,
         ARRAY_TO_JSON(ARRAY['n/a', 'n/a']) AS treatments,
-        COUNT(germplasm.stock_id) OVER() AS full_count
+        COUNT(germ.stock_id) OVER() AS full_count
       FROM {%s} AS pheno
-          INNER JOIN {stock} AS germplasm USING (stock_id)
-          INNER JOIN {project} AS study USING (project_id)
-            INNER JOIN {projectprop} AS program ON study.project_id = program.project_id AND program.type_id = %d
-          INNER JOIN {cvterm} AS trait ON pheno.attr_id = trait.cvterm_id
-          INNER JOIN {phenotypeprop} AS collector ON pheno.phenotype_id = collector.phenotype_id AND collector.type_id = %d
-          INNER JOIN {phenotypeprop} AS year ON pheno.phenotype_id = year.phenotype_id AND year.type_id = %d
-          INNER JOIN {phenotypeprop} AS location ON pheno.phenotype_id = location.phenotype_id AND location.type_id = %d
-          INNER JOIN {phenotypeprop} AS replicate ON pheno.phenotype_id = replicate.phenotype_id AND replicate.type_id = %d
+        LEFT JOIN {stock} AS germ USING (stock_id)
+        LEFT JOIN {project} AS prj USING (project_id)
+          LEFT JOIN {projectprop} AS prg ON prj.project_id = prg.project_id AND prg.type_id = %d
+        LEFT JOIN {cvterm} AS unit ON pheno.unit_id = unit.cvterm_id
+          LEFT JOIN {cv} AS cv ON unit.cv_id = cv.cv_id
+        LEFT JOIN {phenotypeprop} AS rep ON pheno.phenotype_id = rep.phenotype_id AND rep.type_id = %d
+        LEFT JOIN {phenotypeprop} AS loc ON pheno.phenotype_id = loc.phenotype_id AND loc.type_id = %d
+        LEFT JOIN {phenotypeprop} AS year ON pheno.phenotype_id = year.phenotype_id AND year.type_id = %d
+
+      LEFT JOIN (
+        SELECT c.value AS collector, p.phenotype_id AS observationdbid, 'n/a' AS observationtimestamp,
+          CONCAT(o.name, ':', t.name) AS observationvariabledbid, t.name AS observationvariablename,
+          'n/a' AS season, p.value AS value
+
+        FROM {%s} AS p
+          LEFT JOIN {phenotypeprop} AS c ON p.phenotype_id = c.phenotype_id AND c.type_id = %d
+          LEFT JOIN {cvterm} AS t ON p.attr_id = t.cvterm_id
+            LEFT JOIN {cv} AS o ON t.cv_id = o.cv_id
+      ) AS obs ON pheno.phenotype_id = obs.observationdbid
+
       %s
-      GROUP BY pheno.observable_id, germplasm.stock_id, germplasm.name, study.project_id, study.name, location.value, year.value, program.value, replicate.value
-      ORDER BY year.value DESC
+
+      GROUP BY prg.project_id, prg.value, unit.name, germ.name, germ.uniquename, germ.stock_id,
+               unit.dbxref_id, cv.cv_id, rep.value, loc.value, year.value
       LIMIT %d OFFSET %d
     ";
 
     $query = sprintf($sql, $this->class_name::$chado_table,
-      $arr_terms['category'], $arr_terms['Collected By'], $arr_terms['Year'], $arr_terms['location'], $arr_terms['replicate'],
+      $arr_terms['category'], $arr_terms['replicate'], $arr_terms['location'], $arr_terms['Year'],
+      $this->class_name::$chado_table, $arr_terms['Collected By'],
       $where, $page_size, $offset);
     $result = chado_query($query, $args);
 
@@ -221,13 +219,16 @@ class TripalWebServiceBrapiV1Observationunits extends TripalWebServiceDatabaseCa
 
     if ($result->rowCount() > 0) {
       foreach($result as $observation) {
-        // Remove markup from contact information.
+        // Source information.
+        $values = json_decode($observation->observationunitxref);
+        $observation->observationunitxref = [$values[0], 'EMBL-EBI Ontology Lookup Service'];
 
         // Traits and values.
         $values = json_decode($observation->observations);
         $phenotype = [];
 
         // Convert JSON result to PHP array.
+        // Fetch observations - per rep, year and location.
         foreach($values as $value) {
           $phenotype[] = [$value[0], $value[1], $value[2], $value[3], $value[4], $value[5], $value[6]];
         }
