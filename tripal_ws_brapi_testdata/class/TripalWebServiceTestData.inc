@@ -231,7 +231,7 @@ class TripalWebServiceTestData {
         $f = $dir . $section . '/terms.php';
         if (file_exists($f)) {
           include_once($f);
-          $ids = $this->registerTerm($terms);
+          $main_ids = $this->registerTerm($terms);
         }
 
         foreach($items as $table => $datafile) {
@@ -274,7 +274,7 @@ class TripalWebServiceTestData {
                     }
 
                     // Register all terms.
-                    $ids = $this->registerTerm($arr_terms);
+                    $prop_ids = $this->registerTerm($arr_terms);
                     unset($data);
                     $header = $new_data;
                   }
@@ -298,7 +298,7 @@ class TripalWebServiceTestData {
 
                       // Installing a property, ensure an exact term search - with the cv
                       // to use the term defined in the csv file (header row), in case or multiple identical terms.
-                      $type_id = $this->translateTerm($header[ $j - 1 ], $ids, $cvs[ $j - 1 ]);
+                      $type_id = $this->translateTerm($header[ $j - 1 ], $prop_ids, $cvs[ $j - 1 ]);
                       $line = [
                         // Less 1 in header key to account skip in if -- continue above.
                         $section . '_id' => $row_id,
@@ -321,7 +321,7 @@ class TripalWebServiceTestData {
                       @list($translate, $field) = explode(':', $header[ $j ]);
                       if ($translate == 'translate_term' || $translate == 'translate_value') {
                         if ($translate == 'translate_term') {
-                          $term = $this->translateTerm($data[ $j ], $ids);
+                          $term = $this->translateTerm($data[ $j ], $main_ids);
                           $val = $term;
                         }
                         else {
@@ -504,7 +504,9 @@ class TripalWebServiceTestData {
         // Else, default to the order it appears in the csv file.
 
         $download_csv = l('Source file: download CSV', $source_file, ['target' => '_blank']);
-        $summary_table[ $title ][] = '<div class="tripal-ws-brapi-download-link">' . $download_csv . '</div>'
+        $source_table = ($table == 'main' || $table == 'prop') ? $section : $table;
+
+        $summary_table[ $title ][] = '[' . $source_table . ']<div class="tripal-ws-brapi-download-link">' . $download_csv . '</div>'
           . theme('table', ['header' => $header, 'rows' => $rows, 'empty' => t('0 data')]);
       }
 
