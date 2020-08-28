@@ -74,6 +74,13 @@ class TripalWebServiceSearchCall extends TripalWebServiceCall {
               ? $this->call_asset['payload_key'] : $this->call_payload_key;
 
             $payload[ $payload_key ] = $map_data;
+
+            // Any additional metadata wanting to attach to response array.
+            if (isset($this->response_field_metadata)) {
+              foreach($this->response_field_metadata as $key => $items) {
+                $payload[ $key ] = $items;
+              }
+            }
           }
         }
         else {
