@@ -21,6 +21,14 @@ function tripal_ws_brapi_testdata_menu() {
     'type' => MENU_CALLBACK,
   ];
 
+  $items['tripalwsbrapi/testsearch'] = [
+    'title'       => 'TRIPAL BrAPI Calls Test Search Calls',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('tripal_ws_brapi_search'),
+    'access arguments' => ['access content'],
+    'type' => MENU_CALLBACK,
+  ];
+
   return $items;
 }
 
@@ -82,5 +90,89 @@ if (!function_exists('tripal_ws_brapi_generate_data')) {
     ];
 
     return $form;
+  }
+}
+
+/**
+ * Function callback (page callback), construct test search form.
+ */
+if (!function_exists('tripal_ws_brapi_search')) {
+  function tripal_ws_brapi_search($form, &$form_state) {
+
+    $form['tripal_ws_textfield_url'] = [
+      '#type' => 'textfield',
+      '#title' => t('Call URL'),
+      '#size' => 60,
+      '#default_value' => $GLOBALS['base_url'] . '/web-services/brapi/v1/search/',
+      '#required' => TRUE,
+    ];
+
+    $form['tripal_ws_textfield_tip'] = [
+      '#markup' => '<div>Parameter name + : (colon) + values (comma separated). Example germplasmDbIds:123,456,789</div>'
+    ];
+
+    $param = [
+      '#type' => 'textfield',
+    ];
+
+    foreach(range(0, 4) as $i) {
+      $param['#title'] = t('Parameter #' . ($i + 1));
+      $form['tripal_ws_textfield_param' . $i] = $param;
+    }
+
+    $form['tripal_ws_btn_submit'] = [
+      '#type' => 'submit',
+      '#value' => 'POST',
+    ];
+
+    return $form;
+  }
+}
+
+
+/**
+ * Implements hook_submit().
+ * Create post search request.
+ */
+if (!function_exists('tripal_ws_brapi_search_submit')) {
+  function tripal_ws_brapi_search_submit($form, &$form_state) {
+    if ($form_state['values'] && !empty($form_state['values'])) {
+      // Search URL.
+      $url = $form_state['values']['tripal_ws_textfield_url'];
+
+      // Parameters.
+      $param = [];
+      foreach(range(0, 4) as $i) {
+        $param_name = 'tripal_ws_textfield_param' . $i;
+
+        if ($form_state['values'][ $param_name ] && !empty($form_state['values'][ $param_name ])) {
+          @list($name, $val) = explode(':', $form_state['values'][ $param_name ]);
+
+          if ($name == 'pageSize' || $name == 'page') {
+            $param[$name] = (int) $val;
+          }
+          else {
+            $param[$name] = explode(',', $val);
+          }
+        }
+      }
+
+      // Construct POST request.
+      $ch = curl_init();
+      curl_setopt($ch, CURLOPT_URL, $url);
+      curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+      curl_setopt($ch, CURLOPT_HEADER, FALSE);
+      curl_setopt($ch, CURLOPT_POST, TRUE);
+      // Parameter
+      curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($param));
+
+      curl_setopt($ch, CURLOPT_HTTPHEADER, ["Content-Type: application/json"]);
+      $response = curl_exec($ch);
+      curl_close($ch);
+
+
+      $get_response = $url . '?searchResultDbId=HASH CODE';
+      drupal_set_message('Replace the <strong>HASH CODE</strong> in this URL <u>' . $get_response . '</u> with the searchResultDbId value in the respose below: <p> ' . $response . '</p>');
+    }
   }
 }
