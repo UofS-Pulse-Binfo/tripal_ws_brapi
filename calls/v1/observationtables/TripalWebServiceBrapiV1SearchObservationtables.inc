@@ -199,6 +199,7 @@ class TripalWebServiceBrapiV1SearchObservationtables extends TripalWebServiceSea
             LEFT JOIN {projectprop} AS prg ON prj.project_id = prg.project_id AND prg.type_id = %d
         WHERE pheno.attr_id IN (:traits)
         %s
+        ORDER BY pheno.phenotype_id ASC
         LIMIT %d OFFSET %d
       ";
 
