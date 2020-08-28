@@ -348,6 +348,14 @@ class TripalWebServiceCall {
 
             $j++;
           }
+          elseif (empty($response_field)) {
+            if ($key == 'full_count') {
+              $map_data[ $i ][ '#' . $key ] = $value;
+            }
+            else {
+              $map_data[ $i ] = $value;
+            }
+          }
           else {
             $map_data[ $response_field ] = $value;
           }
