@@ -307,57 +307,104 @@ class TripalWebServiceCall {
    * @return
    *   Data items mapped to response field.
    */
-  public function mapDataToResponseField($data, $response_field) {
+   public function mapDataToResponseField($data, $response_field) {
     $map_data = [];
-    $index = array_keys($response_field);
 
     if (is_array($data)) {
-      foreach($data as $i => $item) {
-        $item = (array) $item;
+      // Each data row.
+      foreach($data as $row_id => $dataset) {
+        $response_data = (array) $dataset;
 
-        $j = 0;
-        foreach($item as $key => $value) {
-          if (is_array($response_field) && !empty($response_field)) {
-            if (isset($response_field[ $index[ $j ] ]) && $response_field[ $index[ $j ] ]) {
-              if (is_array($response_field[ $index[ $j ] ])) {
-                // Sub entries required in this resonse.
-                foreach($value as $k => $sub_entry) {
-                  if (is_array($sub_entry)) {
-                    foreach($sub_entry as $e => $entry) {
-                      $f = 0;
-                      foreach($entry as $value) {
-                        $map_data[ $i ][ $index[ $j ] ][ $e ][ $response_field[ $index[ $j ] ][ $f ] ] = $value;
-                        $f++;
+        if (empty($response_field) || is_string($response_field)) {
+          // Empty and string response field.
+          foreach($response_data as $data_key => $data_value) {
+            if (empty($response_field)) {
+              // Response field is not defined - ie: /calls.
+              if ($data_key == 'full_count') {
+                $map_data[ $row_id ][ '#' . $data_key ] = $data_value;
+              }
+              else {
+                $map_data[ $row_id ] = $data_value;
+              }
+            }
+            elseif (is_string($response_field)) {
+              // String value as response field - ie: /crops.
+              $map_data[ $response_field ] = $data_value;
+            }
+          }
+        }
+        else {
+          $map_data[ $row_id ][ '#full_count' ] = $dataset->full_count;
+
+          // Full array response field.
+          if (is_array($response_field)) {
+            $key = 0;
+            $values = array_values($response_data);
+
+            foreach($response_field as $field_key => $field_value) {
+              if (is_array($field_value)) {
+                $l1 = 0;
+                foreach($field_value as $l1_key => $l1_value) {
+                  $values_l1 = array_values($values[ $key ]);
+
+                  if (is_array($l1_value)) {
+                    $l2 = 0;
+                    foreach($l1_value as $l2_key => $l2_value) {
+                      if (is_array($l2_value)) {
+                        $l3 = 0;
+                        foreach($l2_value as $l3_key => $l3_value) {
+                          if (is_array($l3_value)) {
+                            $l4 = 0;
+                            foreach($l3_value as $l4_key => $l4_value) {
+                              if (is_array($l4_value)) {
+                                $l5 = 0;
+                                foreach($l4_value as $l5_value) {
+                                  if (!is_array($l5_value)) {
+                                    $map_data[ $row_id ][ $field_key ][ $l1_key ][ $l2_key ][ $l3_key ][ $l4_key ][ $l5_value ] = $values_l1[ $l1 ][ $l2 ][ $l3 ][ $l4 ][ $l5 ];
+                                  }
+
+                                  $l5++;
+                                }
+                              }
+                              else {
+                                // 4 levels down.
+                                $map_data[ $row_id ][ $field_key ][ $l1_key ][ $l2_key ][ $l3_key ][ $l4_value ] = $values_l1[ $l1 ][ $l2 ][ $l3 ][ $l4 ];
+                              }
+
+                              $l4++;
+                            }
+                          }
+                          else {
+                            // 3 levels down.
+                            $map_data[ $row_id ][ $field_key ][ $l1_key ][ $l2_key ][ $l3_value ] = $values_l1[ $l1 ][ $l2 ][ $l3 ];
+                          }
+
+                          $l3++;
+                        }
                       }
+                      else {
+                        // 2 levels down.
+                        $map_data[ $row_id ][ $field_key ][ $l1_key ][ $l2_value ] = $values_l1[ $l1 ][ $l2 ];
+                      }
+
+                      $l2++;
                     }
                   }
                   else {
-                    $map_data[ $i ][ $index[ $j ] ][ $response_field[ $index[ $j ] ][ $k ] ] = $sub_entry;
+                    // 1 level down.
+                    $map_data[ $row_id ][ $field_key ][ $l1_value ] = $values_l1[ $l1 ];
                   }
+
+                  $l1++;
                 }
               }
               else {
-                $map_data[ $i ][ $response_field[ $index[ $j ] ] ] = $value;
+                // Top level - non-array value.
+                $map_data[ $row_id ][ $field_value ] = $values[ $key ];
               }
-            }
-            else {
-              if ($key == 'full_count') {
-                $map_data[ $i ][ '#' . $key ] = $value;
-              }
-            }
 
-            $j++;
-          }
-          elseif (empty($response_field)) {
-            if ($key == 'full_count') {
-              $map_data[ $i ][ '#' . $key ] = $value;
+              $key++;
             }
-            else {
-              $map_data[ $i ] = $value;
-            }
-          }
-          else {
-            $map_data[ $response_field ] = $value;
           }
         }
       }
