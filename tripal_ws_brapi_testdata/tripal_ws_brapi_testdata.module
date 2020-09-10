@@ -49,6 +49,7 @@ if (!function_exists('tripal_ws_brapi_generate_data')) {
       'genotype'   => ['main' => 'genotype-csv'],
       'feature'    => ['main' => 'feature-csv', 'prop' => 'featureprop-csv', 'feature_relationship' => 'feature_relationship-csv', 'genotype_call' => 'genotype_call-csv'],
       'featuremap' => ['main' => 'featuremap-csv', 'prop' => 'featuremapprop-csv', 'featuremap_organism' => 'featuremap_organism-csv', 'featurepos' => 'featurepos-csv'],
+      'cvterm'     => ['main' => 'cvterm-csv'],
     ];
 
     $testdata = new TripalWebServiceTestData($source);

@@ -64,7 +64,7 @@ class TripalWebServiceTestData {
 
     foreach($arr_terms as $cv => $terms) {
       // Fetch CV.
-      $id = tripal_get_cv(array('name' => $cv))
+      $id = tripal_get_cv(['name' => $cv])
         ->cv_id;
 
       if ($id) {
@@ -87,12 +87,12 @@ class TripalWebServiceTestData {
             $cvterm_id = $id2;
           }
           else {
-            $id2 = tripal_insert_cvterm(array(
+            $id2 = tripal_insert_cvterm([
               'id' => $cv . ':' . $term,
               'name' => $term,
               'cv_name' => $cv,
               'definition' => $term . ' definition',
-            ))
+            ])
               ->cvterm_id;
           }
 
@@ -213,8 +213,12 @@ class TripalWebServiceTestData {
     try {
       foreach($source as $section => $items) {
         // To prevent potential data duplication, only allow on an empty table.
-        $has_data = chado_query(sprintf("SELECT * FROM {%s} LIMIT 1", $section))
-          ->rowCount();
+        $has_data = 0;
+
+        if ($section != 'cvterm') {
+          $has_data = chado_query(sprintf("SELECT * FROM {%s} LIMIT 1", $section))
+            ->rowCount();
+        }
 
         if ($has_data) {
           drupal_set_message('Could not install test data, please delete records in CHADO '. $section . ' and try again', 'error', FALSE);
@@ -246,7 +250,19 @@ class TripalWebServiceTestData {
               $data = array_map('trim', $data);
 
               if (!empty($data) && strlen($row) > 0) {
-                if ($i == 0) {
+                if ($section == 'cvterm' && $i > 0) {
+                  // Insert terms only - cv and cvterms.
+                  // Name, definition, Controlled Vocabulary.
+                  tripal_insert_cvterm(
+                    [
+                      'id' => $data[2] . ':' . $data[0],
+                      'name' => $data[0],
+                      'cv_name' => $data[2],
+                      'definition' => $data[1] . ' definition',
+                    ]
+                  );
+                }
+                elseif ($i == 0) {
                   // Is the header. This is the header row, the first row in a csv
                   // file. In most cases it reflects the field name of the table
                   // it is trying to insert record into.
