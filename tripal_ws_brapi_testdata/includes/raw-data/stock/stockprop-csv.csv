@@ -1,57 +1,57 @@
-translate_value:name, null:prop stock
-lola, awesome
-stella, awesome
-luna, awesome
-nala, awesome
-izzy, awesome
-layla, awesome
-lulu, awesome
-ellie, awesome
-piper, awesome
-olivia, awesome
-king, awesome
-max, awesome
-owen, awesome
-ray, awesome
-ralph, awesome
-rex, not awesome
-scout, not awesome
-tesla, not awesome
-wyatt, not awesome
-ace, not awesome
-bailey, not awesome
-bennet, not awesome
-chase, not awesome
-dexter, not awesome
-emmet, not awesome
-felix, not awesome
-forrest, not awesome
-hudson, not awesome
-jack, not awesome
-emma, not awesome
-aria, not awesome
-ava, not awesome
-mia, not awesome
-mila, pretty
-chloe, pretty
-zoe, pretty
-abigail, pretty
-ariana, pretty
-elena, pretty
-eva, pretty
-sarah, pretty
-naomi, pretty
-sadie, pretty
-liam, pretty
-noah, pretty
-lucas, pretty
-leo, pretty
-jake, pretty
-dylan, pretty
-landon, pretty
-marcus, pretty
-david, pretty
-rowan, pretty
-cooper, pretty
-gunner, pretty
-tank, pretty
+translate_value:name, null:prop stock, stock_property:source_institute, stock_property:comment
+lola, awesome, "Institute A", "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+stella, awesome, "Person ABC", "Duis fringilla ante tortor. Aenean ut ex eu orci commodo pretium."
+luna, awesome, "Person ABC", "Duis fringilla ante tortor. Aenean ut ex eu orci commodo pretium."
+nala, awesome, "Person ABC", "Duis fringilla ante tortor. Aenean ut ex eu orci commodo pretium."
+izzy, awesome, "Person ABC", "Duis fringilla ante tortor. Aenean ut ex eu orci commodo pretium."
+layla, awesome, "Person ABC", "Duis fringilla ante tortor. Aenean ut ex eu orci commodo pretium."
+lulu, awesome, "Institute A", "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+ellie, awesome, "Person XYZ", "In hac habitasse platea dictumst. Donec blandit sodales venenatis."
+piper, awesome, "University Z", "Quisque semper, arcu in ultricies vehicula, velit turpis gravida est."
+olivia, awesome, "Institute A", "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+king, awesome, "University Z", "Quisque semper, arcu in ultricies vehicula, velit turpis gravida est."
+max, awesome, "University Z", "Quisque semper, arcu in ultricies vehicula, velit turpis gravida est."
+owen, awesome, "Institute A", "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+ray, awesome, "University Z", "Quisque semper, arcu in ultricies vehicula, velit turpis gravida est."
+ralph, awesome, "University Z", "Quisque semper, arcu in ultricies vehicula, velit turpis gravida est."
+rex, not awesome, "Person ABC", "Duis fringilla ante tortor. Aenean ut ex eu orci commodo pretium."
+scout, not awesome, "University Z", "Quisque semper, arcu in ultricies vehicula, velit turpis gravida est."
+tesla, not awesome, "Institute Y", "liquam id mauris eros. Mauris sit amet elit eu ex."
+wyatt, not awesome, "Institute A", "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+ace, not awesome, "Institute Y", "liquam id mauris eros. Mauris sit amet elit eu ex."
+bailey, not awesome, "Person ABC", "Duis fringilla ante tortor. Aenean ut ex eu orci commodo pretium."
+bennet, not awesome, "Person ABC", "Duis fringilla ante tortor. Aenean ut ex eu orci commodo pretium."
+chase, not awesome, "Institute Y", "liquam id mauris eros. Mauris sit amet elit eu ex."
+dexter, not awesome, "Person XYZ", "In hac habitasse platea dictumst. Donec blandit sodales venenatis."
+emmet, not awesome, "University Z", "Quisque semper, arcu in ultricies vehicula, velit turpis gravida est."
+felix, not awesome, "Institute Y", "liquam id mauris eros. Mauris sit amet elit eu ex."
+forrest, not awesome, "Institute A", "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+hudson, not awesome, "Institute Y", "liquam id mauris eros. Mauris sit amet elit eu ex."
+jack, not awesome, "Person ABC", "Duis fringilla ante tortor. Aenean ut ex eu orci commodo pretium."
+emma, not awesome, "Institute Y", "liquam id mauris eros. Mauris sit amet elit eu ex."
+aria, not awesome, "Person XYZ", "In hac habitasse platea dictumst. Donec blandit sodales venenatis."
+ava, not awesome, "Institute Y", "liquam id mauris eros. Mauris sit amet elit eu ex."
+mia, not awesome, "Institute Y", "liquam id mauris eros. Mauris sit amet elit eu ex."
+mila, pretty, "Institute A", "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+chloe, pretty, "Institute Y", "liquam id mauris eros. Mauris sit amet elit eu ex."
+zoe, pretty, "University Z", "Quisque semper, arcu in ultricies vehicula, velit turpis gravida est."
+abigail, pretty, "University Z", "Quisque semper, arcu in ultricies vehicula, velit turpis gravida est."
+ariana, pretty, "Institute Y", "liquam id mauris eros. Mauris sit amet elit eu ex."
+elena, pretty, "Person ABC", "Duis fringilla ante tortor. Aenean ut ex eu orci commodo pretium."
+eva, pretty, "Institute Y", "liquam id mauris eros. Mauris sit amet elit eu ex."
+sarah, pretty, "Institute Y", "liquam id mauris eros. Mauris sit amet elit eu ex."
+naomi, pretty, "University Z", "Quisque semper, arcu in ultricies vehicula, velit turpis gravida est."
+sadie, pretty, "Institute Y", "liquam id mauris eros. Mauris sit amet elit eu ex."
+liam, pretty, "Institute A", "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+noah, pretty, "Institute Y", "liquam id mauris eros. Mauris sit amet elit eu ex."
+lucas, pretty, "Person XYZ", "In hac habitasse platea dictumst. Donec blandit sodales venenatis."
+leo, pretty, "Person XYZ", "In hac habitasse platea dictumst. Donec blandit sodales venenatis."
+jake, pretty, "Institute Y", "liquam id mauris eros. Mauris sit amet elit eu ex."
+dylan, pretty, "Institute Y", "liquam id mauris eros. Mauris sit amet elit eu ex."
+landon, pretty, "Person XYZ", "In hac habitasse platea dictumst. Donec blandit sodales venenatis."
+marcus, pretty, "University Z", "Quisque semper, arcu in ultricies vehicula, velit turpis gravida est."
+david, pretty, "Institute Y", "liquam id mauris eros. Mauris sit amet elit eu ex."
+rowan, pretty, "Institute A", "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+cooper, pretty, "Institute A", "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+gunner, pretty, "Institute Y", "liquam id mauris eros. Mauris sit amet elit eu ex."
+tank, pretty, "Institute A", "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
