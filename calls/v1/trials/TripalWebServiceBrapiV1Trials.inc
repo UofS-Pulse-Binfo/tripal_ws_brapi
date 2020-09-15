@@ -91,11 +91,12 @@ class TripalWebServiceBrapiV1Trials extends TripalWebServiceDatabaseCall {
     $req_terms = [
       'taxonomic_rank' => 'genus',
       'NCI Thesaurus OBO Edition' => 'Year', // Project years, Terms associated with library types; to be used in library as type id
-      'relationship' => 'instance_of',       // The Semanticscience Integrated Ontology (SIO) is an ontology to facilitate biomedical knowledge discovery.
+      'relationship' => 'instance_of',       // Research area each project is categorized.
       'ncit' => 'location',                  // Phenotype trial location in chado.phenotypeprop.
       'efo'  => 'funder',                    // Project funder information.
       'GCP germplasm ontology' => 'collaborator', // Project collaborator/s.
-      'tripal_pub' => 'Year'                 // Phenotyping year.
+      'tripal_pub' => 'Year',                // Phenotyping year.
+      'local' => 'research area'             //
     ];
 
     foreach($req_terms as $cv => $term) {
@@ -142,7 +143,7 @@ class TripalWebServiceBrapiV1Trials extends TripalWebServiceDatabaseCall {
     // Transform parameters into a string, as where clause in the query.
     $where = '';
     if (isset($filter) && count($filter) > 0) {
-      $where = ' WHERE ' . implode(' AND ', $filter);
+      $where = ' AND ' . implode(' AND ', $filter);
     }
 
     // Transform sort order.
@@ -176,10 +177,11 @@ class TripalWebServiceBrapiV1Trials extends TripalWebServiceDatabaseCall {
         LEFT JOIN {projectprop} AS years    ON project.project_id = years.project_id AND years.type_id = %d
         LEFT JOIN {projectprop} AS funder   ON project.project_id = funder.project_id AND funder.type_id = %d
         LEFT JOIN {projectprop} AS people   ON project.project_id = people.project_id AND people.type_id = %d
+        LEFT JOIN {projectprop} AS is_research_area ON project.project_id = is_research_area.project_id AND is_research_area.type_id = %d
 
         LEFT JOIN {project_relationship} AS category ON project.project_id = category.subject_project_id AND category.type_id = %d
           LEFT JOIN {project} AS program ON category.object_project_id = program.project_id
-      %s
+      WHERE is_research_area.value::int = 0 OR is_research_area.value IS NULL %s
       %s
       LIMIT %d OFFSET %d
     ";
@@ -197,7 +199,7 @@ class TripalWebServiceBrapiV1Trials extends TripalWebServiceDatabaseCall {
     $query_studies = sprintf($sql_studies, $arr_terms['location'], $arr_terms['phenotyping-Year']);
 
     $query = sprintf($sql, $this->class_name::$chado_table,
-      $arr_terms['genus'], $arr_terms['Year'], $arr_terms['funder'], $arr_terms['collaborator'], $arr_terms['instance_of'],
+      $arr_terms['genus'], $arr_terms['Year'], $arr_terms['funder'], $arr_terms['collaborator'], $arr_terms['research area'], $arr_terms['instance_of'],
       $where, $order, $page_size, $offset);
 
     $result = chado_query($query, $args);
