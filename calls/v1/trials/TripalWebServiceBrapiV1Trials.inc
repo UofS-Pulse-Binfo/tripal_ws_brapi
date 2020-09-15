@@ -23,7 +23,7 @@ class TripalWebServiceBrapiV1Trials extends TripalWebServiceDatabaseCall {
     // Key : Expected value for this key.
     'commonCropName' => 'text',     // Common name for the crop associated with this trial
     'programDbId'    => 'int',      // Program filter to only return trials associated with given program id
-    'sortBy'         => ['commonCropName'], // Sort oder. Name of the field to sort by.
+    'sortBy'         => ['commonCropName', 'programName'], // Sort oder. Name of the field to sort by.
     'sortOrder'      => 'asc/desc', // Sort order direction. asc/desc.
     'page'           => 'int',      // Which result page is requested.
     'pageSize'       => 'int',      // The size of the pages to be returned.
@@ -90,11 +90,12 @@ class TripalWebServiceBrapiV1Trials extends TripalWebServiceDatabaseCall {
     $arr_terms = [];
     $req_terms = [
       'taxonomic_rank' => 'genus',
-      'NCI Thesaurus OBO Edition' => 'Year', // Terms associated with library types; to be used in library as type id
-      'SIO' => 'category',                   // The Semanticscience Integrated Ontology (SIO) is an ontology to facilitate biomedical knowledge discovery.
+      'NCI Thesaurus OBO Edition' => 'Year', // Project years, Terms associated with library types; to be used in library as type id
+      'relationship' => 'instance_of',       // The Semanticscience Integrated Ontology (SIO) is an ontology to facilitate biomedical knowledge discovery.
       'ncit' => 'location',                  // Phenotype trial location in chado.phenotypeprop.
       'efo'  => 'funder',                    // Project funder information.
-      'GCP germplasm ontology' => 'collaborator' // Project collaborator/s.
+      'GCP germplasm ontology' => 'collaborator', // Project collaborator/s.
+      'tripal_pub' => 'Year'                 // Phenotyping year.
     ];
 
     foreach($req_terms as $cv => $term) {
@@ -105,6 +106,9 @@ class TripalWebServiceBrapiV1Trials extends TripalWebServiceDatabaseCall {
         ->cvterm_id;
 
       if ($cvterm_id) {
+        if ($cv == 'tripal_pub') {
+          $term = 'phenotyping-' . $term;
+        }
         $arr_terms[ $term ] = $cvterm_id;
       }
     }
@@ -150,17 +154,17 @@ class TripalWebServiceBrapiV1Trials extends TripalWebServiceDatabaseCall {
     }
     else {
       // Default sort order.
-      $order = 'ORDER BY project.project_id DESC';
+      $order = 'ORDER BY project.name ASC';
     }
 
     $sql = "
       SELECT
         'n/a' AS active,
-        ARRAY_TO_JSON(ARRAY[category.value, funder.value, people.value, project.description]) AS additionalinfo,
+        ARRAY_TO_JSON(ARRAY[program.name, funder.value, people.value, project.description]) AS additionalinfo,
         genus.value AS commoncropname,
         'url' AS url,
-        category.projectprop_id AS programdbid,
-        category.value AS programname,
+        program.project_id AS programdbid,
+        program.name AS programname,
         'studies' AS studies,
         project.project_id AS trialdbid,
         project.name AS trialname,
@@ -170,24 +174,30 @@ class TripalWebServiceBrapiV1Trials extends TripalWebServiceDatabaseCall {
       FROM {%s}
         LEFT JOIN {projectprop} AS genus    ON project.project_id = genus.project_id AND genus.type_id = %d
         LEFT JOIN {projectprop} AS years    ON project.project_id = years.project_id AND years.type_id = %d
-        LEFT JOIN {projectprop} AS category ON project.project_id = category.project_id AND category.type_id = %d
         LEFT JOIN {projectprop} AS funder   ON project.project_id = funder.project_id AND funder.type_id = %d
         LEFT JOIN {projectprop} AS people   ON project.project_id = people.project_id AND people.type_id = %d
+
+        LEFT JOIN {project_relationship} AS category ON project.project_id = category.subject_project_id AND category.type_id = %d
+          LEFT JOIN {project} AS program ON category.object_project_id = program.project_id
       %s
       %s
       LIMIT %d OFFSET %d
     ";
 
-    // Query trials - locations in summarized rawphenotypes data (materialized view).
+    // Query trials - locations and years in phenotype.
     $sql_studies = "
-      SELECT DISTINCT ON (location) location, plant_id, 'n/a' AS studydbid, 'n/a' AS studyname, planting_date
-      FROM {rawpheno_rawdata_mview}
-      WHERE plant_id IN (SELECT plant_id FROM pheno_plant_project WHERE project_id = :project_id)
-      ORDER BY location ASC
+      SELECT DISTINCT ON (loc.value) loc.value AS location, pheno.phenotype_id, 'n/a' AS studydbid, 'n/a' AS studyname, year.value AS year
+      FROM {phenotype} AS pheno
+        LEFT JOIN {phenotypeprop} AS loc  ON pheno.phenotype_id = loc.phenotype_id AND loc.type_id = %d
+        LEFT JOIN {phenotypeprop} AS year ON pheno.phenotype_id = year.phenotype_id AND year.type_id = %d
+      WHERE pheno.project_id = :project_id
+      ORDER BY loc.value ASC
     ";
 
+    $query_studies = sprintf($sql_studies, $arr_terms['location'], $arr_terms['phenotyping-Year']);
+
     $query = sprintf($sql, $this->class_name::$chado_table,
-      $arr_terms['genus'], $arr_terms['Year'], $arr_terms['category'], $arr_terms['funder'], $arr_terms['collaborator'],
+      $arr_terms['genus'], $arr_terms['Year'], $arr_terms['funder'], $arr_terms['collaborator'], $arr_terms['instance_of'],
       $where, $order, $page_size, $offset);
 
     $result = chado_query($query, $args);
@@ -206,7 +216,7 @@ class TripalWebServiceBrapiV1Trials extends TripalWebServiceDatabaseCall {
         $project->additionalinfo = [$info[0], $info[1], $info[2], trim(html_entity_decode(strip_tags($info[3])))];
 
         // Studies.
-        $studies = chado_query($sql_studies, [':project_id' => $project->trialdbid])
+        $studies = chado_query($query_studies, [':project_id' => $project->trialdbid])
           ->fetchAll();
 
         $all_studies = [];
@@ -214,10 +224,9 @@ class TripalWebServiceBrapiV1Trials extends TripalWebServiceDatabaseCall {
         if ($studies) {
           foreach($studies as $study) {
             // Create year-location string as study name.
-            if(preg_match('/^[0-9]{4}/', $study->planting_date, $match)) {
-              $study->studyname = $match[0] . ' - ' . $study->location;
-            }
-            unset($study->planting_date);
+            $study->studyname = $study->year . ' - ' . $study->location;
+
+            unset($study->year);
             $all_studies[] = $study;
           }
         }
