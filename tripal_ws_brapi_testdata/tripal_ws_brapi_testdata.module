@@ -42,6 +42,7 @@ if (!function_exists('tripal_ws_brapi_generate_data')) {
     // Reverse order when remove command to prevent triggers from table constraints.
     $source = [
       'project'    => ['main' => 'project-csv', 'prop' => 'projectprop-csv'],
+      'project_relationship' => ['main' => 'project_relationship-csv'],
       'organism'   => ['main' => 'organism-csv'],
       'stock'      => ['main' => 'stock-csv', 'prop' => 'stockprop-csv'],
       'phenotype'  => ['main' => 'phenotype-csv' , 'prop' => 'phenotypeprop-csv'],

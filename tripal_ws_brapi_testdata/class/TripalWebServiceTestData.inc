@@ -314,16 +314,18 @@ class TripalWebServiceTestData {
 
                       // Installing a property, ensure an exact term search - with the cv
                       // to use the term defined in the csv file (header row), in case or multiple identical terms.
-                      $type_id = $this->translateTerm($header[ $j - 1 ], $prop_ids, $cvs[ $j - 1 ]);
-                      $line = [
-                        // Less 1 in header key to account skip in if -- continue above.
-                        $section . '_id' => $row_id,
-                        'value'   => $cell,
-                        'type_id' => $type_id
-                      ];
+                      if ($cell != '') {
+                        $type_id = $this->translateTerm($header[ $j - 1 ], $prop_ids, $cvs[ $j - 1 ]);
+                        $line = [
+                          // Less 1 in header key to account skip in if -- continue above.
+                          $section . '_id' => $row_id,
+                          'value'   => $cell,
+                          'type_id' => $type_id
+                        ];
 
-                      // Insert property.
-                      chado_insert_record($section . 'prop', $line);
+                        // Insert property.
+                        chado_insert_record($section . 'prop', $line);
+                      }
                     }
                   }
                   else {
@@ -412,19 +414,47 @@ class TripalWebServiceTestData {
             $data = str_getcsv($row, ",");
 
             if($i == 0) {
-              $field = trim($data[0]);
+              // Of type _relationship, use the type_id to remove the set.
+              if (strpos($section, 'relationship') !== FALSE) {
+                // Locate the type_id from csv.
+                foreach($data as $j => $field_name) {
+                  // Remove any replacement command.
+                  $f = str_replace(['translate_value:', 'translate_term:'], '', $field_name);
+                  if (trim($f) == 'type_id') {
+                    $field_i = $j;
+                    break;
+                  }
+                }
+
+                $tmp_field = 'type_id';
+              }
+              else {
+                // Otherwise, use the first item in the csv as the key.
+                $tmp_field = $data[0];
+              }
+
+              $field = trim($tmp_field);
             }
             else {
               $sql = "DELETE FROM {%s} WHERE %s = :field_value";
               $query = sprintf($sql, $section, $field);
-              chado_query($query, [':field_value' => trim($data[0])]);
+
+              if (isset($field_i)) {
+                $field_value = tripal_get_cvterm(['name' => trim($data[ $field_i ])])
+                  ->cvterm_id;
+              }
+              else {
+                $field_value = trim($data[0]);
+              }
+
+              chado_query($query, [':field_value' => $field_value]);
             }
 
             $i++;
           }
         }
       }
-
+      unset($field_i);
       fclose($handle);
     }
   }
