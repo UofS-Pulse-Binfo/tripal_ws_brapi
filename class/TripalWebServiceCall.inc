@@ -543,7 +543,7 @@ class TripalWebServiceCall {
   public function totalCount($payload) {
     if ($payload) {
       $full_count = $this->getResultFullCount($payload);
-      return ($full_count == '') ? count($payload) : $full_count;
+      return ($full_count == '') ? count($payload) : (int) $full_count;
     }
   }
 
@@ -614,9 +614,13 @@ class TripalWebServiceCall {
       // else it is the result of division.
       $p = $count / $resultset_limit;
       $total_page = ($count % $resultset_limit) ? floor($p) + 1 : $p;
+
+      // NOTE: BrAPI page count starts at 0.
+      // Account for when page is one and only, it should not minus 1.
+      $total_page = ($total_page > 1) ? $total_page - 1 : 1;
     }
 
-    return ($total_page == 0) ? 1 : $total_page - 1;
+    return $total_page;
   }
 
   /**
