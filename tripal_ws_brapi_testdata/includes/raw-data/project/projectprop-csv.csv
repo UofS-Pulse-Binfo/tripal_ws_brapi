@@ -1,56 +1,56 @@
-translate_value:name, local:research area, taxonomic_rank:genus, efo:funder, GCP germplasm ontology:collaborator, NCIT:lead, NCI Thesaurus OBO Edition:Year
-"Project A",, Tripalus, "Funder A", "Oliver Milo & Charlotte Amelia", "Dr. William Ava", 2015-2017
-"Project B",, Tripalus, "Funder B", "Liam Declan", "Dr. William Ava", 2015-2017
-"Project C",, Tripalus, "Funder B", "Charlotte Amelia & Liam Declan", "Dr. James William", 2015-2017
-"Project D",, Tripalus, "Funder A", "Abigail Sadie", "Dr. Isabella T.", 2015-2017
-"Project E",, Tripalus, "Funder B", "Charlotte Amelia", "Dr. Isabella T.", 2015-2017
-"Project F",, Tripalus, "Funder A", "Abigail Sadie", "Dr. Isabella T.", 2015-2017
-"Project G",, Tripalus, "Funder B", "Liam Declan & Liam Declan", "Dr. Noah S.", 2015-2017
-"Project H",, Tripalus, "Funder B", "Charlotte Amelia", "Dr. Noah S.", 2015-2017
-"Project I",, Tripalus, "Funder A", "Abigail Sadie", "Dr. Noah S.", 2015-2017
-"Project J",, Tripalus, "Funder A", "Abigail Sadie", "Dr. Noah S.", 2015-2017
-"Project K",, Tripalus, "Funder B", "Charlotte Amelia", "Dr. Noah S.", 2015-2017
-"Project L",, Tripalus, "Funder A", "Abigail Sadie", "Dr. Noah S.", 2015-2017
-"Project M",, Tripalus, "Funder A", "Oliver Milo", "Dr. Olivia William", 2015-2017
-"Project N",, Tripalus, "Funder B", "Liam Declan & Charlotte Amelia", "Dr. Olivia William", 2015-2017
-"Project O",, Brapus, "Funder B", "Charlotte Amelia", "Dr. Olivia William", 2013-2015
-"Project P",, Brapus, "Funder A", "Abigail Sadie", "Dr. Olivia William", 2013-2015
-"Project Q",, Brapus, "Funder B", "Charlotte Amelia", "Dr. Olivia William", 2013-2015
-"Project R",, Brapus, "Funder A", "Abigail Sadie & Charlotte Amelia", "Dr. Olivia William", 2013-2015
-"Project S",, Brapus, "Funder A", "Abigail Sadie", "Dr. Olivia William", 2010-2012
-"Project T",, Brapus, "Funder B", "Charlotte Amelia", "Dr. Bella M.", 2010-2012
-"Project U",, Brapus, "Funder A", "Abigail Sadie", "Dr. Bella M.", 2010-2012
-"Project V",, Brapus, "Funder A", "Oliver Milo", "Dr. Bella M.", 2010-2012
-"Project W",, Brapus, "Funder B", "Liam Declan & Abigail Sadie", "Dr. Bella M.", 2010-2012
-"Project X",, Brapus, "Funder B", "Charlotte Amelia", "Dr. Bella M.", 2010-2012
-"Project Y",, Brapus, "Funder A", "Abigail Sadie", "Dr. Bella M.", 2007-2009
-"Project Z",, Brapus, "Funder B", "Charlotte Amelia & Abigail Sadie", "Dr. Bella M.", 2007-2009
-"Project 1",, Tripalus, "Funder A", "Abigail Sadie", "Dr. Noah S.", 2007-2009
-"Project 2",, Tripalus, "Funder A", "Oliver Milo", "Dr. Olivia William", 2015-2018
-"Project 3",, Tripalus, "Funder B", "Liam Declan & Charlotte Amelia", "Dr. Olivia William", 2015-2018
-"Project 4",, Brapus, "Funder B", "Charlotte Amelia", "Dr. Olivia William", 2015-2018
-"Project 5",, Brapus, "Funder A", "Abigail Sadie", "Dr. Olivia William", 2015-2018
-"Project 6",, Brapus, "Funder B", "Charlotte Amelia", "Dr. Olivia William", 2015-2018
-"Project 7",, Brapus, "Funder A", "Abigail Sadie & Charlotte Amelia", "Dr. Olivia William", 2015-2018
-"Project 8",, Brapus, "Funder A", "Abigail Sadie", "Dr. Olivia William", 2015-2018
-"Project 9",, Brapus, "Funder B", "Charlotte Amelia", "Dr. Bella M.", 2015-2018
-"Project 10",, Brapus, "Funder A", "Abigail Sadie", "Dr. Bella M.", 2015-2018
-"Project 11",, Brapus, "Funder A", "Oliver Milo", "Dr. Bella M.", 2015-2018
-"Project 12",, Brapus, "Funder B", "Liam Declan & Abigail Sadie", "Dr. Bella M.", 2015-2018
-"Project 13",, Brapus, "Funder B", "Charlotte Amelia", "Dr. Bella M.", 2011-2015
-"Project 14",, Brapus, "Funder A", "Abigail Sadie", "Dr. Bella M.", 2011-2015
-"Project 15",, Brapus, "Funder B", "Charlotte Amelia & Abigail Sadie", "Dr. Bella M.", 2011-2015
-"Project 16",, Brapus, "Funder A", "Abigail Sadie", "Dr. Olivia William", 2011-2015
-"Project 17",, Brapus, "Funder B", "Charlotte Amelia", "Dr. Olivia William", 2011-2015
-"Project 18",, Brapus, "Funder A", "Abigail Sadie & Charlotte Amelia", "Dr. Olivia William", 2011-2015
-"Project 19",, Brapus, "Funder A", "Abigail Sadie", "Dr. Olivia William", 2011-2015
-"Project 20",, Brapus, "Funder A", "Abigail Sadie", "Dr. Olivia William", 2011-2015
-"Project 21",, Brapus, "Funder B", "Charlotte Amelia", "Dr. Bella M.", 2011-2015
-"Project 22",, Brapus, "Funder A", "Abigail Sadie", "Dr. Bella M.", 2011-2015
-"Project 23",, Brapus, "Funder A", "Oliver Milo", "Dr. Bella M.", 2011-2015
-"Project 24",, Brapus, "Funder B", "Liam Declan & Abigail Sadie", "Dr. Bella M.", 2011-2015
-"Project 25",, Brapus, "Funder A", "Oliver Milo", "Dr. Bella M.", 2011-2019
-"Research Area - Pathology",  1, Tripalus, "Funder B", "Abigail Sadie", "Dr. Olivia William", 2011-2019
-"Research Area - Physiology", 1, Tripalus, "Funder B", "Charlotte Amelia", "Dr. Isabella T.", 2011-2019
-"Research Area - Tissue Culture", 1, Tripalus, "Funder B", "Oliver Milo", "Dr. William Ava", 2011-2019
-"Research Area - Breeding & Gentics", 1, Tripalus, "Funder B", "Charlotte Amelia", "Dr. Bella M.", 2011-2019
+translate_value:name, local:research area, taxonomic_rank:genus, efo:funder, SIO:category, GCP germplasm ontology:collaborator, NCIT:lead, NCI Thesaurus OBO Edition:Year
+"Project A",, Tripalus, "Funder A", "Research Area - Pathology", "Oliver Milo & Charlotte Amelia", "Dr. William Ava", 2015-2017
+"Project B",, Tripalus, "Funder B", "Research Area - Pathology", "Liam Declan", "Dr. William Ava", 2015-2017
+"Project C",, Tripalus, "Funder B", "Research Area - Pathology", "Charlotte Amelia & Liam Declan", "Dr. James William", 2015-2017
+"Project D",, Tripalus, "Funder A", "Research Area - Pathology", "Abigail Sadie", "Dr. Isabella T.", 2015-2017
+"Project E",, Tripalus, "Funder B", "Research Area - Pathology", "Charlotte Amelia", "Dr. Isabella T.", 2015-2017
+"Project F",, Tripalus, "Funder A", "Research Area - Pathology", "Abigail Sadie", "Dr. Isabella T.", 2015-2017
+"Project G",, Tripalus, "Funder B", "Research Area - Physiology", "Liam Declan & Liam Declan", "Dr. Noah S.", 2015-2017
+"Project H",, Tripalus, "Funder B", "Research Area - Physiology", "Charlotte Amelia", "Dr. Noah S.", 2015-2017
+"Project I",, Tripalus, "Funder A", "Research Area - Physiology", "Abigail Sadie", "Dr. Noah S.", 2015-2017
+"Project J",, Tripalus, "Funder A", "Research Area - Physiology", "Abigail Sadie", "Dr. Noah S.", 2015-2017
+"Project K",, Tripalus, "Funder B", "Research Area - Physiology", "Charlotte Amelia", "Dr. Noah S.", 2015-2017
+"Project L",, Tripalus, "Funder A", "Research Area - Physiology", "Abigail Sadie", "Dr. Noah S.", 2015-2017
+"Project M",, Tripalus, "Funder A", "Research Area - Physiology", "Oliver Milo", "Dr. Olivia William", 2015-2017
+"Project N",, Tripalus, "Funder B", "Research Area - Physiology", "Liam Declan & Charlotte Amelia", "Dr. Olivia William", 2015-2017
+"Project O",, Brapus, "Funder B", "Research Area - Physiology", "Charlotte Amelia", "Dr. Olivia William", 2013-2015
+"Project P",, Brapus, "Funder A", "Research Area - Physiology", "Abigail Sadie", "Dr. Olivia William", 2013-2015
+"Project Q",, Brapus, "Funder B", "Research Area - Physiology", "Charlotte Amelia", "Dr. Olivia William", 2013-2015
+"Project R",, Brapus, "Funder A", "Research Area - Physiology", "Abigail Sadie & Charlotte Amelia", "Dr. Olivia William", 2013-2015
+"Project S",, Brapus, "Funder A", "Research Area - Physiology", "Abigail Sadie", "Dr. Olivia William", 2010-2012
+"Project T",, Brapus, "Funder B", "Research Area - Physiology", "Charlotte Amelia", "Dr. Bella M.", 2010-2012
+"Project U",, Brapus, "Funder A", "Research Area - Physiology", "Abigail Sadie", "Dr. Bella M.", 2010-2012
+"Project V",, Brapus, "Funder A", "Research Area - Physiology", "Oliver Milo", "Dr. Bella M.", 2010-2012
+"Project W",, Brapus, "Funder B", "Research Area - Tissue Culture", "Liam Declan & Abigail Sadie", "Dr. Bella M.", 2010-2012
+"Project X",, Brapus, "Funder B", "Research Area - Tissue Culture", "Charlotte Amelia", "Dr. Bella M.", 2010-2012
+"Project Y",, Brapus, "Funder A", "Research Area - Tissue Culture", "Abigail Sadie", "Dr. Bella M.", 2007-2009
+"Project Z",, Brapus, "Funder B", "Research Area - Tissue Culture", "Charlotte Amelia & Abigail Sadie", "Dr. Bella M.", 2007-2009
+"Project 1",, Tripalus, "Funder A", "Research Area - Tissue Culture", "Abigail Sadie", "Dr. Noah S.", 2007-2009
+"Project 2",, Tripalus, "Funder A", "Research Area - Tissue Culture", "Oliver Milo", "Dr. Olivia William", 2015-2018
+"Project 3",, Tripalus, "Funder B", "Research Area - Tissue Culture", "Liam Declan & Charlotte Amelia", "Dr. Olivia William", 2015-2018
+"Project 4",, Brapus, "Funder B", "Research Area - Tissue Culture", "Charlotte Amelia", "Dr. Olivia William", 2015-2018
+"Project 5",, Brapus, "Funder A", "Research Area - Tissue Culture", "Abigail Sadie", "Dr. Olivia William", 2015-2018
+"Project 6",, Brapus, "Funder B", "Research Area - Tissue Culture", "Charlotte Amelia", "Dr. Olivia William", 2015-2018
+"Project 7",, Brapus, "Funder A", "Research Area - Tissue Culture", "Abigail Sadie & Charlotte Amelia", "Dr. Olivia William", 2015-2018
+"Project 8",, Brapus, "Funder A", "Research Area - Tissue Culture", "Abigail Sadie", "Dr. Olivia William", 2015-2018
+"Project 9",, Brapus, "Funder B", "Research Area - Breeding & Gentics", "Charlotte Amelia", "Dr. Bella M.", 2015-2018
+"Project 10",, Brapus, "Funder A", "Research Area - Breeding & Gentics", "Abigail Sadie", "Dr. Bella M.", 2015-2018
+"Project 11",, Brapus, "Funder A", "Research Area - Breeding & Gentics", "Oliver Milo", "Dr. Bella M.", 2015-2018
+"Project 12",, Brapus, "Funder B", "Research Area - Breeding & Gentics", "Liam Declan & Abigail Sadie", "Dr. Bella M.", 2015-2018
+"Project 13",, Brapus, "Funder B", "Research Area - Breeding & Gentics", "Charlotte Amelia", "Dr. Bella M.", 2011-2015
+"Project 14",, Brapus, "Funder A", "Research Area - Breeding & Gentics", "Abigail Sadie", "Dr. Bella M.", 2011-2015
+"Project 15",, Brapus, "Funder B", "Research Area - Breeding & Gentics", "Charlotte Amelia & Abigail Sadie", "Dr. Bella M.", 2011-2015
+"Project 16",, Brapus, "Funder A", "Research Area - Tissue Culture", "Abigail Sadie", "Dr. Olivia William", 2011-2015
+"Project 17",, Brapus, "Funder B", "Research Area - Tissue Culture", "Charlotte Amelia", "Dr. Olivia William", 2011-2015
+"Project 18",, Brapus, "Funder A", "Research Area - Physiology", "Abigail Sadie & Charlotte Amelia", "Dr. Olivia William", 2011-2015
+"Project 19",, Brapus, "Funder A", "Research Area - Physiology", "Abigail Sadie", "Dr. Olivia William", 2011-2015
+"Project 20",, Brapus, "Funder A", "Research Area - Pathology", "Abigail Sadie", "Dr. Olivia William", 2011-2015
+"Project 21",, Brapus, "Funder B", "Research Area - Pathology", "Charlotte Amelia", "Dr. Bella M.", 2011-2015
+"Project 22",, Brapus, "Funder A", "Research Area - Breeding & Gentics", "Abigail Sadie", "Dr. Bella M.", 2011-2015
+"Project 23",, Brapus, "Funder A", "Research Area - Pathology", "Oliver Milo", "Dr. Bella M.", 2011-2015
+"Project 24",, Brapus, "Funder B", "Research Area - Physiology", "Liam Declan & Abigail Sadie", "Dr. Bella M.", 2011-2015
+"Project 25",, Brapus, "Funder A", "Research Area - Tissue Culture", "Oliver Milo", "Dr. Bella M.", 2011-2019
+"Research Area - Pathology",  1, Tripalus, "Funder B", "Research Area - Pathology", "Abigail Sadie", "Dr. Olivia William", 2011-2019
+"Research Area - Physiology", 1, Tripalus, "Funder B", "Research Area - Physiology", "Charlotte Amelia", "Dr. Isabella T.", 2011-2019
+"Research Area - Tissue Culture", 1, Tripalus, "Funder B", "Research Area - Tissue Culture", "Oliver Milo", "Dr. William Ava", 2011-2019
+"Research Area - Breeding & Gentics", 1, Tripalus, "Funder B", "Research Area - Breeding & Gentics", "Charlotte Amelia", "Dr. Bella M.", 2011-2019
