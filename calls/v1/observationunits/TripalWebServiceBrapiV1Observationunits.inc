@@ -23,9 +23,9 @@ class TripalWebServiceBrapiV1Observationunits extends TripalWebServiceDatabaseCa
   // Example: page => int, searchResultDbId => hash-code.
   public $call_parameter = [
     // Key : Expected value for this key.
-    'germplasmDbId'           => 'int', // The unique ID of a germplasm (accession) to filter on.
-    'page'                    => 'int', // Which result page is requested.
-    'pageSize'                => 'int', // The size of the pages to be returned.
+    'germplasmDbId'  => 'int', // The unique ID of a germplasm (accession) to filter on.
+    'page'           => 'int', // Which result page is requested.
+    'pageSize'       => 'int', // The size of the pages to be returned.
   ];
 
   // Keyword used to identify result items.
@@ -221,7 +221,7 @@ class TripalWebServiceBrapiV1Observationunits extends TripalWebServiceDatabaseCa
       foreach($result as $observation) {
         // Source information.
         $values = json_decode($observation->observationunitxref);
-        $observation->observationunitxref = [$values[0], 'EMBL-EBI Ontology Lookup Service'];
+        $observation->observationunitxref = ['set' => [[$values[0], 'EMBL-EBI Ontology Lookup Service']]];
 
         // Traits and values.
         $values = json_decode($observation->observations);
@@ -234,12 +234,12 @@ class TripalWebServiceBrapiV1Observationunits extends TripalWebServiceDatabaseCa
         }
 
         if (count($phenotype) > 0) {
-          $observation->observations = [$phenotype];
+          $observation->observations = ['set' => $phenotype];
         }
 
         // Treatments.
         $info = json_decode($observation->treatments);
-        $observation->treatments = [$info[0], $info[1]];
+        $observation->treatments = ['set' => [[$info[0], $info[1]]]];
 
         array_push($observations, $observation);
       }
