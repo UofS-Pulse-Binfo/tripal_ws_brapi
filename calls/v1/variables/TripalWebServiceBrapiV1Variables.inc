@@ -356,8 +356,8 @@ class TripalWebServiceBrapiV1Variables extends TripalWebServiceDatabaseCall {
 
         foreach($result as $i => $variable) {
           // Array values expected in core query.
-          $variable->contextofuse = json_decode($variable->contextofuse);
-          $variable->synonyms = json_decode($variable->synonyms);
+          $variable->contextofuse = ['list' => json_decode($variable->contextofuse)];
+          $variable->synonyms = ['list' => json_decode($variable->synonyms)];
 
           // Documentation links to method.
           $trait_id = chado_get_record_entity_by_table('cvterm', $variable->traitid);
@@ -365,7 +365,12 @@ class TripalWebServiceBrapiV1Variables extends TripalWebServiceDatabaseCall {
           $variable->documentationurl = $url;
 
           $or = json_decode($variable->ontologyreference);
-          $variable->ontologyreference = [ ['n/a', 'n/a'], $or[1], $or[2], $or[3] ];
+          $variable->ontologyreference = [
+            ['n/a', 'n/a'],
+            $or[1],
+            $or[2],
+            $or[3]
+          ];
 
           // Use uniquename to capture timestampe and date information.
           // AP constructs this field from concatenating fields:
@@ -400,7 +405,7 @@ class TripalWebServiceBrapiV1Variables extends TripalWebServiceDatabaseCall {
               $methods[$i]->methoddbid,
               $methods[$i]->methodname,
               $methods[$i]->name,
-              [ [$url, 'url'], $ref[1], $ref[2], $ref[3] ],
+              [ 'set' => [[$url, 'url']], $ref[1], $ref[2], $ref[3] ],
               $methods[$i]->reference
             ];
           }
@@ -417,7 +422,7 @@ class TripalWebServiceBrapiV1Variables extends TripalWebServiceDatabaseCall {
               $scales[$i]->datatype,
               $scales[$i]->decimalplaces,
               $scales[$i]->name,
-              [ [$url, 'url'], $ref[1], $ref[2], $ref[3] ],
+              [ 'set' => [[$url, 'url']], $ref[1], $ref[2], $ref[3] ],
               $scales[$i]->scaledbid,
               $scales[$i]->scalename,
               [ $val[0], $val[1], $val[2] ],
@@ -434,16 +439,16 @@ class TripalWebServiceBrapiV1Variables extends TripalWebServiceDatabaseCall {
             $abbr = implode('', array_map(function($v) { return $v[0]; }, explode(' ', $traits[$i]->name)));
 
             $variable->trait = [
-              [$abbr],
+              ['list' => [$abbr]],
               $traits[$i]->attribute,
               $traits[$i]->class,
               $traits[$i]->description,
               $traits[$i]->entity,
               $abbr,
               $traits[$i]->name,
-              [ [$variable->documentationurl, 'url'], $ref[1], $ref[2], $ref[3] ],
+              [ 'set' => [[$variable->documentationurl, 'url']], $ref[1], $ref[2], $ref[3] ],
               $traits[$i]->status,
-              $syn,
+              ['list' => $syn],
               $traits[$i]->traitdbid,
               $traits[$i]->traitname,
               $traits[$i]->xref,
