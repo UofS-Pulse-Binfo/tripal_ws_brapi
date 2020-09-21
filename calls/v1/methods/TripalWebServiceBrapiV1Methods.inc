@@ -40,7 +40,10 @@ class TripalWebServiceBrapiV1Methods extends TripalWebServiceDatabaseCall {
       'methodName',           // Human readable name for the method.
       'name',                 // A URL to the human readable documentation of this object.
       'ontologyReference' => [
-        'documentationLinks', // links to various ontology documentation.
+        'documentationLinks' => [
+          'url',
+          'type'
+        ], // links to various ontology documentation.
         'ontologyDbId',       // Ontology database unique identifier.
         'ontologyName',       // Ontology name.
         'version'             // Ontology version (no specific format).
@@ -141,7 +144,12 @@ class TripalWebServiceBrapiV1Methods extends TripalWebServiceDatabaseCall {
       foreach($result as $method) {
         // Reference.
         $ref = json_decode($method->ontologyreference);
-        $method->ontologyreference = [$ref[0], $ref[1], $ref[2], $ref[3]];
+        $method->ontologyreference = [
+          'set' => [[$ref[0],'n/a']],
+          $ref[1],
+          $ref[2],
+          $ref[3]
+        ];
 
         // Description
         $method->description = trim(html_entity_decode(strip_tags($method->description)));
