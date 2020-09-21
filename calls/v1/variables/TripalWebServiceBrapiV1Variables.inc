@@ -425,7 +425,7 @@ class TripalWebServiceBrapiV1Variables extends TripalWebServiceDatabaseCall {
               [ 'set' => [[$url, 'url']], $ref[1], $ref[2], $ref[3] ],
               $scales[$i]->scaledbid,
               $scales[$i]->scalename,
-              [ $val[0], $val[1], $val[2] ],
+              [ ['list' => [$val[0]]], $val[1], $val[2] ],
               $scales[$i]->xref
             ];
           }
