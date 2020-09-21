@@ -366,7 +366,7 @@ class TripalWebServiceBrapiV1Variables extends TripalWebServiceDatabaseCall {
 
           $or = json_decode($variable->ontologyreference);
           $variable->ontologyreference = [
-            ['n/a', 'n/a'],
+            'set' => [['n/a', 'n/a']],
             $or[1],
             $or[2],
             $or[3]
