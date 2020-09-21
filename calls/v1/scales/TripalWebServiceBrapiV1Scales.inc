@@ -38,7 +38,10 @@ class TripalWebServiceBrapiV1Scales extends TripalWebServiceDatabaseCall {
       'name',                 // Name of the scale.
       'scaleName',            // Name of the scale.
       'ontologyReference' => [
-        'documentationLinks', // links to various ontology documentation.
+        'documentationLinks' => [
+          'url',
+          'type'
+        ], // links to various ontology documentation.
         'ontologyDbId',       // Ontology database unique identifier.
         'ontologyName',       // Ontology name.
         'version'             // Ontology version (no specific format).
@@ -118,7 +121,7 @@ class TripalWebServiceBrapiV1Scales extends TripalWebServiceDatabaseCall {
         term.name AS scalename,
         ARRAY_TO_JSON(ARRAY['n/a', accession.accession, cv.name, 'n/a']) AS ontologyreference,
         term.cvterm_id AS scaledbid,
-        ARRAY_TO_JSON(ARRAY[term.definition, 'n/a', 'n/a']) AS validvalues,
+        ARRAY_TO_JSON(ARRAY[class.value, 'n/a', 'n/a']) AS validvalues,
         'xref' AS xref,
         COUNT(term.cvterm_id) OVER() AS full_count
       FROM {%s} AS term
@@ -140,17 +143,25 @@ class TripalWebServiceBrapiV1Scales extends TripalWebServiceDatabaseCall {
     // Additional step: populate reference and valid values array.
     // Strip any markup from definition.
     if ($result->rowCount() > 0) {
+      $conf = [
+        'url_tripal' => $GLOBALS['base_url']  . '/admin/tripal/loaders/chado_vocabs/chado_cvterms?cv=%s',
+        'url_biodata' => $GLOBALS['base_url'] . '/bio_data/%d',
+      ];
+
       foreach($result as $scale) {
         // Reference.
         $ref = json_decode($scale->ontologyreference);
-        $scale->ontologyreference = [$ref[0], $ref[1], $ref[2], $ref[3]];
+
+        $scale_id = chado_get_record_entity_by_table('cvterm', $scale->scaledbid);
+        $url = ($scale_id) ? sprintf($conf['url_biodata'], $scale_id) : sprintf($conf['url_tripal'], urlencode($scale->name));
+        $scale->ontologyreference = ['set' => [[$url, 'url']], $ref[1], $ref[2], $ref[3]];
 
         // Valid valiues.
         // Categories - uses description of scale where it contains possible
         // values allowed.
         $val = json_decode($scale->validvalues);
         $val[0] = trim(html_entity_decode(strip_tags($val[0])));
-        $scale->validvalues = [$val[0], $val[1], $val[2]];
+        $scale->validvalues = [['list' => [$val[0]]], $val[1], $val[2]];
 
         array_push($scales, $scale);
       }
