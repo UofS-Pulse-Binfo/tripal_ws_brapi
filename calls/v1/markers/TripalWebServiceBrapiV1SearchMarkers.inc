@@ -198,16 +198,16 @@ class TripalWebServiceBrapiV1SearchMarkers extends TripalWebServiceSearchCall {
       foreach($result as $marker) {
         // analysismethod.
         $method = json_decode($marker->analysismethod);
-        $marker->analysismethod = $method;
+        $marker->analysismethod = ['list' => $method];
 
         // refalt.
         // Do not split!
         $ref = json_decode($marker->refalt);
-        $marker->refalt = $ref;
+        $marker->refalt = ['list' => $ref];
 
         // synonyms.
         $synonym = json_decode($marker->synonyms);
-        $marker->synonyms = [$synonym[0], $synonym[1]];
+        $marker->synonyms = ['list' => [$synonym[0], $synonym[1]]];
 
         array_push($markers, $marker);
       }
