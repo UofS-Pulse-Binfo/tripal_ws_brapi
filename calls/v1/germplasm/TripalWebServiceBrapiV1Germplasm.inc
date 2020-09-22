@@ -156,7 +156,7 @@ class TripalWebServiceBrapiV1Germplasm extends TripalWebServiceDatabaseCall {
         stock.name AS defaultdisplayname,
         'n/a' AS documentationurl,
         ARRAY_TO_JSON(ARRAY['n/a', 'n/a']) AS donors,
-        'n/a' AS germplasmpui,
+        stock.stock_id AS germplasmpui,
         org.genus AS genus,
         stock.stock_id AS germplasmdbid,
         org.genus AS germplasmgenus,
