@@ -42,37 +42,173 @@ class TripalWebServiceBrapiV1Calls extends TripalWebServiceCustomCall {
 
 
   public function getResult() {
-    return [
+    $calls = [];
+
+    $calls = [
       [
-        'commoncropnames',
-        ['application/json'],
-        ['GET'],
-        ['1.2', '1.3']
+        'calls'     => 'locations',
+        'datatypes' => ['list' => ['application/json']],
+        'methods'   => ['list' => ['GET']],
+        'versions'  => ['list' => ['1.3']],
       ],
       [
-        'serverinfo',
-        ['application/json'],
-        ['GET'],
-        ['2.0']
+        'calls'     => 'commoncropnames',
+        'datatypes' => ['list' => ['application/json']],
+        'methods'   => ['list' => ['GET']],
+        'versions'  => ['list' => ['1.3', '2.0']],
       ],
       [
-        'crops',
-        ['application/json'],
-        ['GET'],
-        ['1.2']
+        'calls'     => 'crops',
+        'datatypes' => ['list' => ['application/json']],
+        'methods'   => ['list' => ['GET']],
+        'versions'  => ['list' => ['1.3']],
       ],
       [
-        'germplasm',
-        ['application/json'],
-        ['GET'],
-        ['1.3', '2.0']
+        'calls'     => 'germplasm',
+        'datatypes' => ['list' => ['application/json']],
+        'methods'   => ['list' => ['GET']],
+        'versions'  => ['list' => ['1.3', '2.0']],
       ],
       [
-        'search/germplasm',
-        ['application/json'],
-        ['GET', 'POST'],
-        ['1.3', '2.0']
-      ]
+        'calls'     => 'germplasm-search',
+        'datatypes' => ['list' => ['application/json']],
+        'methods'   => ['list' => ['GET', 'POST']],
+        'versions'  => ['list' => ['1.3', '2.0']],
+      ],
+      [
+        'calls'     => 'observationunits',
+        'datatypes' => ['list' => ['application/json']],
+        'methods'   => ['list' => ['GET']],
+        'versions'  => ['list' => ['1.3']],
+      ],
+      [
+        'calls'     => 'observationlevels',
+        'datatypes' => ['list' => ['application/json']],
+        'methods'   => ['list' => ['GET']],
+        'versions'  => ['list' => ['1.3']],
+      ],
+      [
+        'calls'     => 'seasons',
+        'datatypes' => ['list' => ['application/json']],
+        'methods'   => ['list' => ['GET']],
+        'versions'  => ['list' => ['1.3']],
+      ],
+      [
+        'calls'     => 'studies',
+        'datatypes' => ['list' => ['application/json']],
+        'methods'   => ['list' => ['GET']],
+        'versions'  => ['list' => ['1.3']],
+      ],
+      [
+        'calls'     => 'studies-search',
+        'datatypes' => ['list' => ['application/json']],
+        'methods'   => ['list' => ['GET', 'POST']],
+        'versions'  => ['list' => ['1.3']],
+      ],
+      [
+        'calls'     => 'breedingmethods',
+        'datatypes' => ['list' => ['application/json']],
+        'methods'   => ['list' => ['GET']],
+        'versions'  => ['list' => ['1.3']],
+      ],
+      [
+        'calls'     => 'people',
+        'datatypes' => ['list' => ['application/json']],
+        'methods'   => ['list' => ['GET']],
+        'versions'  => ['list' => ['1.3']],
+      ],
+      [
+        'calls'     => 'programs',
+        'datatypes' => ['list' => ['application/json']],
+        'methods'   => ['list' => ['GET']],
+        'versions'  => ['list' => ['1.3']],
+      ],
+      [
+        'calls'     => 'programs-search',
+        'datatypes' => ['list' => ['application/json']],
+        'methods'   => ['list' => ['GET', 'POST']],
+        'versions'  => ['list' => ['1.3']],
+      ],
+      [
+        'calls'     => 'trials',
+        'datatypes' => ['list' => ['application/json']],
+        'methods'   => ['list' => ['GET']],
+        'versions'  => ['list' => ['1.3']],
+      ],
+      [
+        'calls'     => 'variables',
+        'datatypes' => ['list' => ['application/json']],
+        'methods'   => ['list' => ['GET']],
+        'versions'  => ['list' => ['1.3']],
+      ],
+      [
+        'calls'     => 'attributes/categories',
+        'datatypes' => ['list' => ['application/json']],
+        'methods'   => ['list' => ['GET']],
+        'versions'  => ['list' => ['1.3']],
+      ],
+      [
+        'calls'     => 'maps',
+        'datatypes' => ['list' => ['application/json']],
+        'methods'   => ['list' => ['GET']],
+        'versions'  => ['list' => ['1.3']],
+      ],
+      [
+        'calls'     => 'markerprofiles',
+        'datatypes' => ['list' => ['application/json']],
+        'methods'   => ['list' => ['GET']],
+        'versions'  => ['list' => ['1.3']],
+      ],
+      [
+        'calls'     => 'markers',
+        'datatypes' => ['list' => ['application/json']],
+        'methods'   => ['list' => ['GET']],
+        'versions'  => ['list' => ['1.3']],
+      ],
+      [
+        'calls'     => 'markers-search',
+        'datatypes' => ['list' => ['application/json']],
+        'methods'   => ['list' => ['GET', 'POST']],
+        'versions'  => ['list' => ['1.3']],
+      ],
+      [
+        'calls'     => 'methods',
+        'datatypes' => ['list' => ['application/json']],
+        'methods'   => ['list' => ['GET']],
+        'versions'  => ['list' => ['1.3']],
+      ],
+      [
+        'calls'     => 'observationtables-search',
+        'datatypes' => ['list' => ['application/json']],
+        'methods'   => ['list' => ['GET', 'POST']],
+        'versions'  => ['list' => ['1.3']],
+      ],
+      [
+        'calls'     => 'ontologies',
+        'datatypes' => ['list' => ['application/json']],
+        'methods'   => ['list' => ['GET']],
+        'versions'  => ['list' => ['1.3']],
+      ],
+      [
+        'calls'     => 'samples',
+        'datatypes' => ['list' => ['application/json']],
+        'methods'   => ['list' => ['GET']],
+        'versions'  => ['list' => ['1.3']],
+      ],
+      [
+        'calls'     => 'scales',
+        'datatypes' => ['list' => ['application/json']],
+        'methods'   => ['list' => ['GET']],
+        'versions'  => ['list' => ['1.3']],
+      ],
+      [
+        'calls'     => 'traits',
+        'datatypes' => ['list' => ['application/json']],
+        'methods'   => ['list' => ['GET']],
+        'versions'  => ['list' => ['1.3']],
+      ],
     ];
+
+    return $calls;
   }
 }
