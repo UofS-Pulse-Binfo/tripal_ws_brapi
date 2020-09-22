@@ -56,13 +56,11 @@ class TripalWebServiceBrapiV1Studies extends TripalWebServiceDatabaseCall {
       'name',                 // DEPRECATED in v1.3 - Use "studyName".
       'programDbId',          // The ID which uniquely identifies a program within the given database server
       'programName',          //The humane readable name of a program
-      'seasons',              // List of seasons over which this study was performed.
-        //[ 'season', 	      // Name of the season. ex. 'Spring', 'Q2', 'Season A', etc.
-        // 'seasonDbId', 	    // The ID which uniquely identifies a season
-        // 'year' ]           // The 4 digit year of the season.
-      'season',               // Name of the season. ex. 'Spring', 'Q2', 'Season A', etc.
-      'seasonDbId',           // The ID which uniquely identifies a season.
-      'year',                 // The 4 digit year of the season.
+      'seasons' => [
+        'season', 	          // Name of the season. ex. 'Spring', 'Q2', 'Season A', etc.
+        'seasonDbId', 	      // The ID which uniquely identifies a season
+        'year'                // The 4 digit year of the season.
+      ],                      // List of seasons over which this study was performed.
       'startDate', 	          // The date this study started
       'studyDbId', 	          // The ID which uniquely identifies a study within the given database server
       'studyName',  	        // The humane readable name of a study
@@ -218,10 +216,7 @@ class TripalWebServiceBrapiV1Studies extends TripalWebServiceDatabaseCall {
           CONCAT(year.value, ' - ', loc.value) AS name,
           category.projectprop_id AS programdbid,
           category.value AS programname,
-          'n/a' AS seasons,
-          'n/a' AS season,
-          'n/a' AS seasondbid,
-          year.value AS year,
+          ARRAY_TO_JSON(ARRAY['n/a', 'n/a', year.value]) AS seasons,
           'n/a' AS startdate,
           'n/a' AS studydbid,
           CONCAT(year.value, ' - ', loc.value) AS studyname,
@@ -259,6 +254,10 @@ class TripalWebServiceBrapiV1Studies extends TripalWebServiceDatabaseCall {
         // URL
         $entity = chado_get_record_entity_by_table('project', $study->trialdbid);
         $study->url = ($entity) ? $GLOBALS['base_url'] . '/study/' . $entity : 'n/a';
+
+        // Seasons.
+        $season = json_decode($study->seasons);
+        $study->seasons = ['set' => [[$season[0], $season[1], $season[2]]]];
 
         array_push($studies, $study);
       }
