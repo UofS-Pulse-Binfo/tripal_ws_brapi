@@ -215,7 +215,7 @@ class TripalWebServiceTestData {
         // To prevent potential data duplication, only allow on an empty table.
         $has_data = 0;
 
-        if ($section != 'cvterm') {
+        if ($section != 'cvterm' && $section != 'contact') {
           $has_data = chado_query(sprintf("SELECT * FROM {%s} LIMIT 1", $section))
             ->rowCount();
         }
@@ -405,7 +405,7 @@ class TripalWebServiceTestData {
 
     foreach($source as $section => $items) {
       foreach($items as $table => $datafile) {
-        if ($table == 'main') {
+        if ($table == 'main' || $table == 'cvtermprop') {
           $handle = fopen($dir . $section . '/' . $datafile . '.csv', 'r');
 
           $i = 0;
@@ -415,7 +415,7 @@ class TripalWebServiceTestData {
 
             if($i == 0) {
               // Of type _relationship, use the type_id to remove the set.
-              if (strpos($section, 'relationship') !== FALSE) {
+              if (strpos($section, 'relationship') !== FALSE || $table == 'cvtermprop') {
                 // Locate the type_id from csv.
                 foreach($data as $j => $field_name) {
                   // Remove any replacement command.
@@ -436,7 +436,15 @@ class TripalWebServiceTestData {
               $field = trim($tmp_field);
             }
             else {
-              $sql = "DELETE FROM {%s} WHERE %s = :field_value";
+              if ($section == 'contact') {
+                // Because contact has a required null row.
+                $sql = "DELETE FROM {%s} WHERE %s = :field_value AND contact.contact_id > 1";
+              }
+              else {
+                $sql = "DELETE FROM {%s} WHERE %s = :field_value";
+              }
+              
+              $section = ($table == 'cvtermprop') ? 'cvtermprop' : $section;
               $query = sprintf($sql, $section, $field);
 
               if (isset($field_i)) {
