@@ -182,7 +182,8 @@ class TripalWebServiceBrapiV1SearchGermplasm extends TripalWebServiceSearchCall 
         'n/a' AS subtaxaauthority,
         ARRAY_TO_JSON(ARRAY[syn.value, stock.name, stock.uniquename]) AS synonyms,
         ARRAY_TO_JSON(ARRAY['n/a', 'n/a']) AS taxonids,
-        'n/a' AS typeofgermplasmstoragecode
+        'n/a' AS typeofgermplasmstoragecode,
+        COUNT(stock.stock_id) OVER() AS full_count
       FROM {%s}
         LEFT JOIN {organism} AS org USING (organism_id)
         LEFT JOIN {stockprop} AS institute ON stock.stock_id = institute.stock_id AND institute.type_id = %d
