@@ -308,110 +308,207 @@ class TripalWebServiceCall {
    *   Data items mapped to response field.
    */
    public function mapDataToResponseField($data, $response_field) {
-    $map_data = [];
+     $map_data = [];
+     // Index, all top level keys from response field.
+     $fld_index = array_keys($response_field);
 
-    if (is_array($data)) {
-      // Each data row.
-      foreach($data as $row_id => $dataset) {
-        $response_data = (array) $dataset;
+     // Map data to response field when data array has elements.
+     if (is_array($data) && count($data) > 0) {
+       foreach($data as $data_ctr => $item) {
+         $item = (array) $item;
+         // Field counter used to access field index above.
+         $fld_ctr = 0;
 
-        if (empty($response_field) || is_string($response_field)) {
-          // Empty and string response field.
-          foreach($response_data as $data_key => $data_value) {
-            if (empty($response_field)) {
-              // Response field is not defined - ie: /calls.
-              if ($data_key == 'full_count') {
-                $map_data[ $row_id ][ '#' . $data_key ] = $data_value;
-              }
-              else {
-                $map_data[ $row_id ] = $data_value;
-              }
-            }
-            elseif (is_string($response_field)) {
-              // String value as response field - ie: /crops.
-              $map_data[ $response_field ] = $data_value;
-            }
-          }
-        }
-        else {
-          $map_data[ $row_id ][ '#full_count' ] = $dataset->full_count;
+         foreach($item as $key => $value) {
+           if (is_array($response_field) && count($response_field) > 0) {
+             // Response field is a full array.
 
-          // Full array response field.
-          if (is_array($response_field)) {
-            $key = 0;
-            $values = array_values($response_data);
+             // If it is the full count, key full_count, mark it as comment.
+             // Comments # will be removed by response class and will only be used
+             // for pagination at this point.
+             if ($key == 'full_count') {
+               $map_data[ $data_ctr ][ '#' . $key ] = $value;
+             }
+             else {
+               if (isset($response_field[ $fld_index[ $fld_ctr ] ]) && $response_field[ $fld_index[ $fld_ctr ] ]) {
+                 // Data has matching response field item.
+                 $value_response_field = $response_field[ $fld_index[ $fld_ctr ] ];
 
-            foreach($response_field as $field_key => $field_value) {
-              if (is_array($field_value)) {
-                $l1 = 0;
-                foreach($field_value as $l1_key => $l1_value) {
-                  $values_l1 = array_values($values[ $key ]);
+                 if (is_array($value_response_field)) {
+                   // The response field has items down the line.
+                   $l1_index = array_keys($value_response_field);
 
-                  if (is_array($l1_value)) {
-                    $l2 = 0;
-                    foreach($l1_value as $l2_key => $l2_value) {
-                      if (is_array($l2_value)) {
-                        $l3 = 0;
-                        foreach($l2_value as $l3_key => $l3_value) {
-                          if (is_array($l3_value)) {
-                            $l4 = 0;
-                            foreach($l3_value as $l4_key => $l4_value) {
-                              if (is_array($l4_value)) {
-                                $l5 = 0;
-                                foreach($l4_value as $l5_value) {
-                                  if (!is_array($l5_value)) {
-                                    $map_data[ $row_id ][ $field_key ][ $l1_key ][ $l2_key ][ $l3_key ][ $l4_key ][ $l5_value ] = $values_l1[ $l1 ][ $l2 ][ $l3 ][ $l4 ][ $l5 ];
-                                  }
+                   $z = 0;
+                   foreach($value as $l1_key => $l1_value) {
+                     if (is_array($l1_value)) {
+                       // Items and response field in this item.
+                       $l2_response_field = $value_response_field[ $l1_index[ $z ] ];
+                       $l2_index = array_keys($l2_response_field);
 
-                                  $l5++;
-                                }
-                              }
-                              else {
-                                // 4 levels down.
-                                $map_data[ $row_id ][ $field_key ][ $l1_key ][ $l2_key ][ $l3_key ][ $l4_value ] = $values_l1[ $l1 ][ $l2 ][ $l3 ][ $l4 ];
-                              }
+                       if ($l1_key === 'set') {
+                         if (is_array($response_field[ $fld_index[ $fld_ctr ] ])) {
+                           if (is_string($response_field[ $fld_index[ $fld_ctr ] ][ $l1_index[ $z ] ])) {
+                             $map_data[ $data_ctr ][ $fld_index[ $fld_ctr ] ]
+                               = $this->mapSet($l1_value, $response_field[ $fld_index[ $fld_ctr ] ]);
+                           }
+                           else {
+                             $map_data[ $data_ctr ][ $fld_index[ $fld_ctr ] ][ $l1_index[ $z ] ]
+                               = $this->mapSet($l1_value, $response_field[ $fld_index[ $fld_ctr ] ][ $l1_index[ $z ] ]);
+                           }
+                         }
 
-                              $l4++;
-                            }
-                          }
-                          else {
-                            // 3 levels down.
-                            $map_data[ $row_id ][ $field_key ][ $l1_key ][ $l2_key ][ $l3_value ] = $values_l1[ $l1 ][ $l2 ][ $l3 ];
-                          }
+                         // Stay on this response field til all items in the set have been mapped.
+                         $z++; continue;
+                       }
 
-                          $l3++;
-                        }
-                      }
-                      else {
-                        // 2 levels down.
-                        $map_data[ $row_id ][ $field_key ][ $l1_key ][ $l2_value ] = $values_l1[ $l1 ][ $l2 ];
-                      }
+                       $a = 0;
+                       foreach($l1_value as $l2_key => $l2_value) {
+                         if (is_array($l2_value)) {
+                           // Items and response field in this item.
+                           $l3_response_field = $l2_response_field[ $l2_index[ $a ] ];
+                           $l3_index = array_keys($l3_response_field);
 
-                      $l2++;
-                    }
-                  }
-                  else {
-                    // 1 level down.
-                    $map_data[ $row_id ][ $field_key ][ $l1_value ] = $values_l1[ $l1 ];
-                  }
+                           if ($l2_key === 'set') {
+                             // Use $a since this key is equals to set.
+                             $map_data[ $data_ctr ][ $fld_index[ $fld_ctr ] ][ $l1_index[ $z ] ][ $l2_index[ $a ] ]
+                               = $this->mapSet($l2_value, $l2_response_field[ $l2_index[ $a ] ]);
+                             // Stay on this response field til all items in the set have been mapped.
+                             $a++; continue;
+                           }
+                           elseif ($l2_key === 'list') {
+                             // List of values in array..
+                             $map_data[ $data_ctr ][ $fld_index[ $fld_ctr ] ][ $l2_response_field ] = $l2_value;
+                             $a++; continue;
+                           }
 
-                  $l1++;
-                }
-              }
-              else {
-                // Top level - non-array value.
-                $map_data[ $row_id ][ $field_value ] = $values[ $key ];
-              }
+                           $b = 0;
+                           foreach($l2_value as $l3_key => $l3_value) {
+                             if (is_array($l3_value)) {
+                               // Items and response field in this item.
+                               $l4_response_field = $l3_response_field[ $l3_index[ $b ] ];
+                               $l4_index = array_keys($l4_response_field);
 
-              $key++;
-            }
-          }
-        }
-      }
-    }
+                               if ($l3_key === 'set') {
+                                 // Use $a and $b since this key is equals to set.
+                                 $map_data[ $data_ctr ][ $fld_index[ $fld_ctr ] ][ $l1_index[ $z ] ][ $l2_index[ $a ] ][ $l3_index[ $b ] ]
+                                   = $this->mapSet($l2_value, $l3_response_field[ $l3_index[ $b ] ]);
+                                 // Stay on this response field til all items in the set have been mapped.
+                                 $b++; continue;
+                               }
+                               elseif ($l3_key == 'list') {
+                                 $map_data[ $data_ctr ][ $fld_index[ $fld_ctr ] ][ $l1_index[ $z ] ][ $l3_response_field ] = $l3_value;
+                                 $b++; continue;
+                               }
 
-    return $map_data;
-  }
+                               foreach($l3_value as $l4_key => $l4_value) {
+                                 if (!is_array($l4_value)) {
+                                   // $l1_index[ $l1_key ], $l2_index[ $l2_key ] and $l3_index[ $l3_key ] contain non numeric index number.
+                                   $map_data[ $data_ctr ][ $fld_index[ $fld_ctr ] ][ $l1_index[ $z ] ][ $l2_index[ $a ] ][ $l3_index[ $b ] ]
+                                     [ $l4_response_field[ $l4_index[ $l4_key ] ] ] = $l4_value;
+                                 }
+                               }
+                             }
+                             else {
+                               // $l1_index[ $l1_key ] and $l2_index[ $l2_key ] contain non numeric index number.
+                               if (isset($l3_response_field[ $l3_index[ $b ] ])) {
+                                 $map_data[ $data_ctr ][ $fld_index[ $fld_ctr ] ][ $l1_index[ $z ] ][ $l2_index[ $a ] ]
+                                   [ $l3_response_field[ $l3_index[ $b ] ] ] = $l3_value;
+                               }
+                             }
+
+                             $b++;
+                           }
+                         }
+                         else {
+                           // $l1_index[ $l1_key ] contains non numeric index number.
+                           if (isset($l2_response_field[ $l2_index[ $a ] ])) {
+                             $map_data[ $data_ctr ][ $fld_index[ $fld_ctr ] ][ $l1_index[ $z ] ]
+                               [ $l2_response_field[ $l2_index[ $a ] ] ] = $l2_value;
+                           }
+                         }
+
+                         $a++;
+                       }
+                     }
+                     else {
+                       if (isset($value_response_field[ $l1_index[ $z ] ])) {
+                         $map_data[ $data_ctr ][ $fld_index[ $fld_ctr ] ][ $value_response_field[ $l1_index[ $z ] ] ] = $l1_value;
+                       }
+                     }
+
+                     $z++;
+                   }
+                 }
+                 else {
+                   // Flat string field - map response field to value.
+                   if (is_array($value)) {
+                     // List is given.
+                     $value_key = array_keys($value)[0];
+                     $value = ($value_key == 'list') ? $value['list'] : $value;
+                   }
+
+                   $map_data[ $data_ctr ][ $value_response_field ] = $value;
+                 }
+               }
+             }
+
+             // Next value.
+             $fld_ctr++;
+           }
+           else {
+             // An empty array, ie in crops or commoncropnames.
+             if ($key == 'full_count') {
+               $map_data[ $data_ctr ][ '#' . $key ] = $value;
+             }
+             else {
+               $map_data[ $data_ctr ] = $value;
+             }
+           }
+         }
+       }
+     }
+
+     return $map_data;
+   }
+
+   /**
+    * Map a set of arrays into the same response field.
+    *
+    * @param $data
+    *   Array, set of array marked by set keyword that belongs to the same response field.
+    * @param $response_field
+    *   Array, current response field the set will be mapped.
+    *
+    * @return array
+    *   Set of array values mapped to the same response field.
+    */
+   private function mapSet($data, $response_field) {
+     // This method will handle values tagged with set keyword to indicate
+     // the a response field expects an array of values. ie:
+     // response field [
+     //   {
+     //     name 1,
+     //     age 1
+     //   },
+     //   {
+     //     name 2,
+     //     age 2
+     //   } ....
+     // ]
+
+     $map_data = [];
+
+     foreach($data as $set_key => $set_value) {
+       $set_ctr = 0;
+
+       foreach($set_value as $set_item_value) {
+         $map_data[ $set_key ][ $response_field[ $set_ctr ] ] = $set_item_value;
+         $set_ctr++;
+       }
+     }
+
+     return $map_data;
+   }
 
   /**
    * Establish the total count.
