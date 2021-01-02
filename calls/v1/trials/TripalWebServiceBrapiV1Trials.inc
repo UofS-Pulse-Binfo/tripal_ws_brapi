@@ -90,11 +90,12 @@ class TripalWebServiceBrapiV1Trials extends TripalWebServiceDatabaseCall {
     $arr_terms = [];
     $req_terms = [
       'taxonomic_rank' => 'genus',
-      'NCI Thesaurus OBO Edition' => 'Year', // Terms associated with library types; to be used in library as type id
+      'NCI Thesaurus OBO Edition' => 'Year', // Project years, Terms associated with library types; to be used in library as type id
       'SIO' => 'category',                   // The Semanticscience Integrated Ontology (SIO) is an ontology to facilitate biomedical knowledge discovery.
       'ncit' => 'location',                  // Phenotype trial location in chado.phenotypeprop.
       'efo'  => 'funder',                    // Project funder information.
-      'GCP germplasm ontology' => 'collaborator' // Project collaborator/s.
+      'GCP germplasm ontology' => 'collaborator', // Project collaborator/s.
+      'tripal_pub' => 'Year'                 // Phenotyping year.
     ];
 
     foreach($req_terms as $cv => $term) {
@@ -105,6 +106,9 @@ class TripalWebServiceBrapiV1Trials extends TripalWebServiceDatabaseCall {
         ->cvterm_id;
 
       if ($cvterm_id) {
+        if ($cv == 'tripal_pub') {
+          $term = 'phenotyping-' . $term;
+        }
         $arr_terms[ $term ] = $cvterm_id;
       }
     }
@@ -150,7 +154,7 @@ class TripalWebServiceBrapiV1Trials extends TripalWebServiceDatabaseCall {
     }
     else {
       // Default sort order.
-      $order = 'ORDER BY project.project_id DESC';
+      $order = 'ORDER BY project.name ASC';
     }
 
     $sql = "
@@ -178,13 +182,17 @@ class TripalWebServiceBrapiV1Trials extends TripalWebServiceDatabaseCall {
       LIMIT %d OFFSET %d
     ";
 
-    // Query trials - locations in summarized rawphenotypes data (materialized view).
+    // Query trials - locations and years in phenotype.
     $sql_studies = "
-      SELECT DISTINCT ON (location) location, plant_id, 'n/a' AS studydbid, 'n/a' AS studyname, planting_date
-      FROM {rawpheno_rawdata_mview}
-      WHERE plant_id IN (SELECT plant_id FROM pheno_plant_project WHERE project_id = :project_id)
-      ORDER BY location ASC
+      SELECT DISTINCT ON (loc.value) loc.value AS location, pheno.phenotype_id, 'n/a' AS studydbid, 'n/a' AS studyname, year.value AS year
+      FROM {phenotype} AS pheno
+        LEFT JOIN {phenotypeprop} AS loc  ON pheno.phenotype_id = loc.phenotype_id AND loc.type_id = %d
+        LEFT JOIN {phenotypeprop} AS year ON pheno.phenotype_id = year.phenotype_id AND year.type_id = %d
+      WHERE pheno.project_id = :project_id
+      ORDER BY loc.value ASC
     ";
+
+    $query_studies = sprintf($sql_studies, $arr_terms['location'], $arr_terms['phenotyping-Year']);
 
     $query = sprintf($sql, $this->class_name::$chado_table,
       $arr_terms['genus'], $arr_terms['Year'], $arr_terms['category'], $arr_terms['funder'], $arr_terms['collaborator'],
@@ -206,7 +214,7 @@ class TripalWebServiceBrapiV1Trials extends TripalWebServiceDatabaseCall {
         $project->additionalinfo = [$info[0], $info[1], $info[2], trim(html_entity_decode(strip_tags($info[3])))];
 
         // Studies.
-        $studies = chado_query($sql_studies, [':project_id' => $project->trialdbid])
+        $studies = chado_query($query_studies, [':project_id' => $project->trialdbid])
           ->fetchAll();
 
         $all_studies = [];
@@ -214,10 +222,9 @@ class TripalWebServiceBrapiV1Trials extends TripalWebServiceDatabaseCall {
         if ($studies) {
           foreach($studies as $study) {
             // Create year-location string as study name.
-            if(preg_match('/^[0-9]{4}/', $study->planting_date, $match)) {
-              $study->studyname = $match[0] . ' - ' . $study->location;
-            }
-            unset($study->planting_date);
+            $study->studyname = $study->year . ' - ' . $study->location;
+
+            unset($study->year);
             $all_studies[] = $study;
           }
         }
