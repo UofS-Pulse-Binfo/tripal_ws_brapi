@@ -34,7 +34,7 @@ class TripalWebServiceCustomCall extends TripalWebServiceCall {
       // Check response field for active/default version of a major
       // version in configuration page.
       $this->validateResponseField();
-      $this->response_field = $this->response_field[ $call_asset['configuration']['active_version'] ];
+      $this->response_field = $this->response_field[ (string) $call_asset['configuration']['active_version'] ];
 
       // Validate parameters.
       $this->validateCallParameter();

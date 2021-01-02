@@ -79,6 +79,13 @@ class TripalWebServiceDatabaseCall extends TripalWebServiceCall {
     // Map data to response field item.
     $payload[ $payload_key ] = $map_data;
 
+    // Any additional metadata wanting to attach to response array.
+    if (isset($this->response_field_metadata)) {
+      foreach($this->response_field_metadata as $key => $items) {
+        $payload[ $key ] = $items;
+      }
+    }
+
     // Return response.
     TripalWebServiceResponse::sendResponse($payload, $metadata);
   }
