@@ -141,14 +141,14 @@ class TripalWebServiceBrapiV1People extends TripalWebServiceDatabaseCall {
 
     $sql = "
       SELECT
-        'n/a' AS description,
-        com.value AS emailaddress,
+        CONCAT('(', com.value, ') ', contact.description) AS description,
+        '' AS emailaddress,
         firstname.value AS firstname,
         surname.value AS lastname,
-        com.value AS mailingaddress,
-        'n/a' AS middlename,
+        '' AS mailingaddress,
+        '' AS middlename,
         contact.contact_id AS persondbid,
-        com.value AS phonenumber,
+        '' AS phonenumber,
         contact.contact_id AS userid,
         COUNT(contact.contact_id) OVER() AS full_count
       FROM {%s}
