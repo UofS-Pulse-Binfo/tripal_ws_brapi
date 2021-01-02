@@ -25,7 +25,31 @@ This will run all tests associated with the Tripal WS BrAPI extension module. If
 Manual Testing (Demonstration)
 --------------------------------
 
-We have provided a `Tripal Test Suite Database Seeder <https://tripaltestsuite.readthedocs.io/en/latest/db-seeders.html>` to make development and demonstration of functionality easier. To populate your development database with fake germplasm data:
+Using the Testing Helper Module
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+First enable the helper module through the UI or using Drush:
+
+.. code::
+
+  drush en tripal_ws_brapi_testdata
+
+Then go to the provided user interface at https://[yourdrupalsite]/tripalwsbrapi/testdata
+
+.. image:: contribute/mainpage.png
+
+The tabbed table shows you all the test data which will be loaded into your site when you click the "Load Test Data" button.
+
+You can edit the test data by editing the CSV files distributed with this helper module. More tables can be added by editing the array of chado table names in the tripal_ws_brapi_testdata.module file.
+
+There is also an interface provided for testing POST calls. This is available at https://[yourdrupalsite]/tripalwsbrapi/testsearch
+
+.. image:: contribute/searchpage.png
+
+Using the Database Seeder
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+We have provided a `Tripal Test Suite Database Seeder <https://tripaltestsuite.readthedocs.io/en/latest/db-seeders.html>`_ to make development and demonstration of functionality easier. To populate your development database with fake germplasm data:
 
 1. Install this module according to the instructions in this guide.
 2. Run the database seeder to populate the database using the following commands:

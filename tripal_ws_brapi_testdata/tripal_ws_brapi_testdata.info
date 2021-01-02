@@ -1,0 +1,9 @@
+name = Tripal Web Services BrAPI Test Data
+description = Generate test data to test Tripal WS BrAPI calls.
+
+package = Tripal Extensions
+core = 7.x
+dependencies[] = tripal_ws_brapi
+
+scripts[] = includes/tripal_ws_script_tab.js
+stylesheets[all][] = includes/tripal_ws_style_tab.css

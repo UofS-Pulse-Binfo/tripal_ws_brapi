@@ -1,0 +1,25 @@
+/**
+ * @file
+ * Contains style used in tabs.
+ */
+
+#tripal-ws-brapi-tabs li a {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 0.7em;
+}
+
+.tripal-ws-brapi-download-link {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 0.8em;
+  text-decoration: underline;
+}
+
+.tripal-ws-brapi-context-link {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 1em;
+  padding: 0 0 10px 0;
+}
+
+#tabs th, #tabs td {
+  font-size: 0.8em;
+}
