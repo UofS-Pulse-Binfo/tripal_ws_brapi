@@ -42,6 +42,10 @@ The tabbed table shows you all the test data which will be loaded into your site
 
 You can edit the test data by editing the CSV files distributed with this helper module. More tables can be added by editing the array of chado table names in the tripal_ws_brapi_testdata.module file.
 
+There is also an interface provided for testing POST calls. This is available at https://[yourdrupalsite]/tripalwsbrapi/testsearch
+
+.. image:: contribute/searchpage.png
+
 Using the Database Seeder
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
