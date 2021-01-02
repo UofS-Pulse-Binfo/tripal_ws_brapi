@@ -1,0 +1,52 @@
+translate_value:subject_project_id, translate_value:object_project_id, translate_term:type_id
+"Project A", "Research Area - Pathology", instance_of
+"Project B", "Research Area - Pathology", instance_of
+"Project C", "Research Area - Pathology", instance_of
+"Project D", "Research Area - Pathology", instance_of
+"Project E", "Research Area - Pathology", instance_of
+"Project F", "Research Area - Pathology", instance_of
+"Project G", "Research Area - Physiology", instance_of
+"Project H", "Research Area - Physiology", instance_of
+"Project I", "Research Area - Physiology", instance_of
+"Project J", "Research Area - Physiology", instance_of
+"Project K", "Research Area - Physiology", instance_of
+"Project L", "Research Area - Physiology", instance_of
+"Project M", "Research Area - Physiology", instance_of
+"Project N", "Research Area - Physiology", instance_of
+"Project O", "Research Area - Physiology", instance_of
+"Project P", "Research Area - Physiology", instance_of
+"Project Q", "Research Area - Physiology", instance_of
+"Project R", "Research Area - Physiology", instance_of
+"Project S", "Research Area - Physiology", instance_of
+"Project T", "Research Area - Physiology", instance_of
+"Project U", "Research Area - Physiology", instance_of
+"Project V", "Research Area - Physiology", instance_of
+"Project W", "Research Area - Tissue Culture", instance_of
+"Project X", "Research Area - Tissue Culture", instance_of
+"Project Y", "Research Area - Tissue Culture", instance_of
+"Project Z", "Research Area - Tissue Culture", instance_of
+"Project 1", "Research Area - Tissue Culture", instance_of
+"Project 2", "Research Area - Tissue Culture", instance_of
+"Project 3", "Research Area - Tissue Culture", instance_of
+"Project 4", "Research Area - Tissue Culture", instance_of
+"Project 5", "Research Area - Tissue Culture", instance_of
+"Project 6", "Research Area - Tissue Culture", instance_of
+"Project 7", "Research Area - Tissue Culture", instance_of
+"Project 8", "Research Area - Tissue Culture", instance_of
+"Project 9", "Research Area - Breeding & Gentics", instance_of
+"Project 10", "Research Area - Breeding & Gentics", instance_of
+"Project 11", "Research Area - Breeding & Gentics", instance_of
+"Project 12", "Research Area - Breeding & Gentics", instance_of
+"Project 13", "Research Area - Breeding & Gentics", instance_of
+"Project 14", "Research Area - Breeding & Gentics", instance_of
+"Project 15", "Research Area - Breeding & Gentics", instance_of
+"Project 16", "Research Area - Tissue Culture", instance_of
+"Project 17", "Research Area - Tissue Culture", instance_of
+"Project 18", "Research Area - Physiology", instance_of
+"Project 19", "Research Area - Physiology", instance_of
+"Project 20", "Research Area - Pathology", instance_of
+"Project 21", "Research Area - Pathology", instance_of
+"Project 22", "Research Area - Breeding & Gentics", instance_of
+"Project 23", "Research Area - Pathology", instance_of
+"Project 24", "Research Area - Physiology", instance_of
+"Project 25", "Research Area - Tissue Culture", instance_of

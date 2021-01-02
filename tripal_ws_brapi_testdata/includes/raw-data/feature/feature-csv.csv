@@ -1,0 +1,157 @@
+name, uniquename, translate_value:organism_id, translate_term:type_id, is_analysis, is_obsolete, timeaccessioned, timelastmodified
+lgA1, "lgA1 from map1", "Wild Tripal", linkage_group, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+lgB1, "lgB1 from map1", "Wild Tripal", linkage_group, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+lgC1, "lgC1 from map1", "Wild Tripal", linkage_group, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+lgD1, "lgD1 from map1", "Wild Tripal", linkage_group, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+lgE1, "lgE1 from map1", "Wild Tripal", linkage_group, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+lgF1, "lgF1 from map1", "Wild Tripal", linkage_group, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+lgG1, "lgG1 from map1", "Wild Tripal", linkage_group, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+lgH1, "lgH1 from map1", "Wild Tripal", linkage_group, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+lgI1, "lgI1 from map1", "Wild Tripal", linkage_group, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+lgJ1, "lgJ1 from map1", "Wild Tripal", linkage_group, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+lgK1, "lgK1 from map1", "Wild Tripal", linkage_group, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+lgL1, "lgL1 from map1", "Wild Tripal", linkage_group, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+lgM1, "lgM1 from map1", "Wild Tripal", linkage_group, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+lgN1, "lgN1 from map1", "Wild Tripal", linkage_group, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+lgO1, "lgO1 from map1", "Wild Tripal", linkage_group, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+lgP1, "lgP1 from map1", "Wild Tripal", linkage_group, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+lgQ1, "lgQ1 from map1", "Wild Tripal", linkage_group, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+lgR1, "lgR1 from map1", "Wild Tripal", linkage_group, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+lgS1, "lgS1 from map1", "Wild Tripal", linkage_group, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+lgT1, "lgT1 from map1", "Wild Tripal", linkage_group, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+lgU1, "lgU1 from map1", "Wild Tripal", linkage_group, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+lgV1, "lgV1 from map1", "Wild Tripal", linkage_group, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+lgW1, "lgW1 from map1", "Wild Tripal", linkage_group, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+lgX1, "lgX1 from map1", "Wild Tripal", linkage_group, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+lgY1, "lgY1 from map1", "Wild Tripal", linkage_group, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+lgZ1, "lgZ1 from map1", "Wild Tripal", linkage_group, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+"LcCA1 Assay", "LcCA1 Assay", "Wild Tripal", marker_locus, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+"LcCB1 Assay", "LcCB1 Assay", "Wild Tripal", marker_locus, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+"LcCC1 Assay", "LcCC1 Assay", "Wild Tripal", marker_locus, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+"LcCD1 Assay", "LcCD1 Assay", "Wild Tripal", marker_locus, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+"LcCE1 Assay", "LcCE1 Assay", "Wild Tripal", marker_locus, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+"LcCF1 Assay", "LcCF1 Assay", "Wild Tripal", marker_locus, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+"LcCG1 Assay", "LcCG1 Assay", "Wild Tripal", marker_locus, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+"LcCH1 Assay", "LcCH1 Assay", "Wild Tripal", marker_locus, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+"LcCI1 Assay", "LcCI1 Assay", "Wild Tripal", marker_locus, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+"LcCJ1 Assay", "LcCJ1 Assay", "Wild Tripal", marker_locus, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+"LcCK1 Assay", "LcCK1 Assay", "Wild Tripal", marker_locus, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+"LcCL1 Assay", "LcCL1 Assay", "Wild Tripal", marker_locus, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+"LcCM1 Assay", "LcCM1 Assay", "Wild Tripal", marker_locus, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+"LcCN1 Assay", "LcCN1 Assay", "Wild Tripal", marker_locus, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+"LcCO1 Assay", "LcCO1 Assay", "Wild Tripal", marker_locus, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+"LcCP1 Assay", "LcCP1 Assay", "Wild Tripal", marker_locus, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+"LcCQ1 Assay", "LcCQ1 Assay", "Wild Tripal", marker_locus, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+"LcCR1 Assay", "LcCR1 Assay", "Wild Tripal", marker_locus, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+"LcCS1 Assay", "LcCS1 Assay", "Wild Tripal", marker_locus, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+"LcCT1 Assay", "LcCT1 Assay", "Wild Tripal", marker_locus, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+"LcCU1 Assay", "LcCU1 Assay", "Wild Tripal", marker_locus, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+"LcCV1 Assay", "LcCV1 Assay", "Wild Tripal", marker_locus, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+"LcCW1 Assay", "LcCW1 Assay", "Wild Tripal", marker_locus, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+"LcCX1 Assay", "LcCX1 Assay", "Wild Tripal", marker_locus, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+"LcCY1 Assay", "LcCY1 Assay", "Wild Tripal", marker_locus, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+"LcCZ1 Assay", "LcCZ1 Assay", "Wild Tripal", marker_locus, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+lgA2, "lgA2 from map2", "Tripal WS", linkage_group, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+lgB2, "lgB2 from map2", "Tripal WS", linkage_group, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+lgC2, "lgC2 from map2", "Tripal WS", linkage_group, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+lgD2, "lgD2 from map2", "Tripal WS", linkage_group, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+lgE2, "lgE2 from map2", "Tripal WS", linkage_group, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+lgF2, "lgF2 from map2", "Tripal WS", linkage_group, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+lgG2, "lgG2 from map2", "Tripal WS", linkage_group, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+lgH2, "lgH2 from map2", "Tripal WS", linkage_group, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+lgI2, "lgI2 from map2", "Tripal WS", linkage_group, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+lgJ2, "lgJ2 from map2", "Tripal WS", linkage_group, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+lgK2, "lgK2 from map2", "Tripal WS", linkage_group, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+lgL2, "lgL2 from map2", "Tripal WS", linkage_group, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+lgM2, "lgM2 from map2", "Tripal WS", linkage_group, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+lgN2, "lgN2 from map2", "Tripal WS", linkage_group, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+lgO2, "lgO2 from map2", "Tripal WS", linkage_group, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+lgP2, "lgP2 from map2", "Tripal WS", linkage_group, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+lgQ2, "lgQ2 from map2", "Tripal WS", linkage_group, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+lgR2, "lgR2 from map2", "Tripal WS", linkage_group, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+lgS2, "lgS2 from map2", "Tripal WS", linkage_group, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+lgT2, "lgT2 from map2", "Tripal WS", linkage_group, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+lgU2, "lgU2 from map2", "Tripal WS", linkage_group, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+lgV2, "lgV2 from map2", "Tripal WS", linkage_group, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+lgW2, "lgW2 from map2", "Tripal WS", linkage_group, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+lgX2, "lgX2 from map2", "Tripal WS", linkage_group, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+lgY2, "lgY2 from map2", "Tripal WS", linkage_group, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+lgZ2, "lgZ2 from map2", "Tripal WS", linkage_group, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+"LcCA2 Assay", "LcCA2 Assay", "Tripal WS", marker_locus, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+"LcCB2 Assay", "LcCB2 Assay", "Tripal WS", marker_locus, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+"LcCC2 Assay", "LcCC2 Assay", "Tripal WS", marker_locus, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+"LcCD2 Assay", "LcCD2 Assay", "Tripal WS", marker_locus, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+"LcCE2 Assay", "LcCE2 Assay", "Tripal WS", marker_locus, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+"LcCF2 Assay", "LcCF2 Assay", "Tripal WS", marker_locus, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+"LcCG2 Assay", "LcCG2 Assay", "Tripal WS", marker_locus, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+"LcCH2 Assay", "LcCH2 Assay", "Tripal WS", marker_locus, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+"LcCI2 Assay", "LcCI2 Assay", "Tripal WS", marker_locus, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+"LcCJ2 Assay", "LcCJ2 Assay", "Tripal WS", marker_locus, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+"LcCK2 Assay", "LcCK2 Assay", "Tripal WS", marker_locus, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+"LcCL2 Assay", "LcCL2 Assay", "Tripal WS", marker_locus, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+"LcCM2 Assay", "LcCM2 Assay", "Tripal WS", marker_locus, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+"LcCN2 Assay", "LcCN2 Assay", "Tripal WS", marker_locus, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+"LcCO2 Assay", "LcCO2 Assay", "Tripal WS", marker_locus, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+"LcCP2 Assay", "LcCP2 Assay", "Tripal WS", marker_locus, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+"LcCQ2 Assay", "LcCQ2 Assay", "Tripal WS", marker_locus, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+"LcCR2 Assay", "LcCR2 Assay", "Tripal WS", marker_locus, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+"LcCS2 Assay", "LcCS2 Assay", "Tripal WS", marker_locus, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+"LcCT2 Assay", "LcCT2 Assay", "Tripal WS", marker_locus, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+"LcCU2 Assay", "LcCU2 Assay", "Tripal WS", marker_locus, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+"LcCV2 Assay", "LcCV2 Assay", "Tripal WS", marker_locus, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+"LcCW2 Assay", "LcCW2 Assay", "Tripal WS", marker_locus, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+"LcCX2 Assay", "LcCX2 Assay", "Tripal WS", marker_locus, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+"LcCY2 Assay", "LcCY2 Assay", "Tripal WS", marker_locus, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+"LcCZ2 Assay", "LcCZ2 Assay", "Tripal WS", marker_locus, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+"Synonym LcChrA Exome Capture", "Synonym LcChrA Exome Capture", "Cultivated Tripal", marker_locus, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+"Synonym LcChrB Exome Capture", "Synonym LcChrB Exome Capture", "Cultivated Tripal", marker_locus, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+"Synonym LcChrC Exome Capture", "Synonym LcChrC Exome Capture", "Cultivated Tripal", marker_locus, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+"Synonym LcChrD Exome Capture", "Synonym LcChrD Exome Capture", "Cultivated Tripal", marker_locus, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+"Synonym LcChrE Exome Capture", "Synonym LcChrE Exome Capture", "Cultivated Tripal", marker_locus, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+"Synonym LcChrF Exome Capture", "Synonym LcChrF Exome Capture", "Cultivated Tripal", marker_locus, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+"Synonym LcChrG Exome Capture", "Synonym LcChrG Exome Capture", "Cultivated Tripal", marker_locus, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+"Synonym LcChrH Exome Capture", "Synonym LcChrH Exome Capture", "Cultivated Tripal", marker_locus, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+"Synonym LcChrI Exome Capture", "Synonym LcChrI Exome Capture", "Cultivated Tripal", marker_locus, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+"Synonym LcChrJ Exome Capture", "Synonym LcChrJ Exome Capture", "Cultivated Tripal", marker_locus, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+"Synonym LcChrK Exome Capture", "Synonym LcChrK Exome Capture", "Cultivated Tripal", marker_locus, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+"Synonym LcChrL Exome Capture", "Synonym LcChrL Exome Capture", "Cultivated Tripal", marker_locus, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+"Synonym LcChrM Exome Capture", "Synonym LcChrM Exome Capture", "Cultivated Tripal", marker_locus, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+"Synonym LcChrN Exome Capture", "Synonym LcChrN Exome Capture", "Cultivated Tripal", marker_locus, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+"Synonym LcChrO Exome Capture", "Synonym LcChrO Exome Capture", "Cultivated Tripal", marker_locus, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+"Synonym LcChrP Exome Capture", "Synonym LcChrP Exome Capture", "Cultivated Tripal", marker_locus, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+"Synonym LcChrQ Exome Capture", "Synonym LcChrQ Exome Capture", "Cultivated Tripal", marker_locus, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+"Synonym LcChrR Exome Capture", "Synonym LcChrR Exome Capture", "Cultivated Tripal", marker_locus, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+"Synonym LcChrS Exome Capture", "Synonym LcChrS Exome Capture", "Cultivated Tripal", marker_locus, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+"Synonym LcChrT Exome Capture", "Synonym LcChrT Exome Capture", "Cultivated Tripal", marker_locus, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+"Synonym LcChrU Exome Capture", "Synonym LcChrU Exome Capture", "Cultivated Tripal", marker_locus, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+"Synonym LcChrV Exome Capture", "Synonym LcChrV Exome Capture", "Cultivated Tripal", marker_locus, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+"Synonym LcChrW Exome Capture", "Synonym LcChrW Exome Capture", "Cultivated Tripal", marker_locus, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+"Synonym LcChrX Exome Capture", "Synonym LcChrX Exome Capture", "Cultivated Tripal", marker_locus, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+"Synonym LcChrY Exome Capture", "Synonym LcChrY Exome Capture", "Cultivated Tripal", marker_locus, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+"Synonym LcChrZ Exome Capture", "Synonym LcChrZ Exome Capture", "Cultivated Tripal", marker_locus, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+"LcChrA Exome Capture", "LcChrA Exome Capture", "Cultivated Tripal", genetic_marker, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+"LcChrB Exome Capture", "LcChrB Exome Capture", "Cultivated Tripal", genetic_marker, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+"LcChrC Exome Capture", "LcChrC Exome Capture", "Cultivated Tripal", genetic_marker, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+"LcChrD Exome Capture", "LcChrD Exome Capture", "Cultivated Tripal", genetic_marker, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+"LcChrE Exome Capture", "LcChrE Exome Capture", "Cultivated Tripal", genetic_marker, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+"LcChrF Exome Capture", "LcChrF Exome Capture", "Cultivated Tripal", genetic_marker, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+"LcChrG Exome Capture", "LcChrG Exome Capture", "Cultivated Tripal", genetic_marker, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+"LcChrH Exome Capture", "LcChrH Exome Capture", "Cultivated Tripal", genetic_marker, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+"LcChrI Exome Capture", "LcChrI Exome Capture", "Cultivated Tripal", genetic_marker, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+"LcChrJ Exome Capture", "LcChrJ Exome Capture", "Cultivated Tripal", genetic_marker, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+"LcChrK Exome Capture", "LcChrK Exome Capture", "Cultivated Tripal", genetic_marker, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+"LcChrL Exome Capture", "LcChrL Exome Capture", "Cultivated Tripal", genetic_marker, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+"LcChrM Exome Capture", "LcChrM Exome Capture", "Cultivated Tripal", genetic_marker, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+"LcChrN Exome Capture", "LcChrN Exome Capture", "Cultivated Tripal", genetic_marker, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+"LcChrO Exome Capture", "LcChrO Exome Capture", "Cultivated Tripal", genetic_marker, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+"LcChrP Exome Capture", "LcChrP Exome Capture", "Cultivated Tripal", genetic_marker, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+"LcChrQ Exome Capture", "LcChrQ Exome Capture", "Cultivated Tripal", genetic_marker, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+"LcChrR Exome Capture", "LcChrR Exome Capture", "Cultivated Tripal", genetic_marker, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+"LcChrS Exome Capture", "LcChrS Exome Capture", "Cultivated Tripal", genetic_marker, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+"LcChrT Exome Capture", "LcChrT Exome Capture", "Cultivated Tripal", genetic_marker, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+"LcChrU Exome Capture", "LcChrU Exome Capture", "Cultivated Tripal", genetic_marker, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+"LcChrV Exome Capture", "LcChrV Exome Capture", "Cultivated Tripal", genetic_marker, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+"LcChrW Exome Capture", "LcChrW Exome Capture", "Cultivated Tripal", genetic_marker, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+"LcChrX Exome Capture", "LcChrX Exome Capture", "Cultivated Tripal", genetic_marker, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+"LcChrY Exome Capture", "LcChrY Exome Capture", "Cultivated Tripal", genetic_marker, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152
+"LcChrZ Exome Capture", "LcChrZ Exome Capture", "Cultivated Tripal", genetic_marker, f, f, 2019-09-20 08:32:41.964152, 2019-09-20 08:32:41.964152

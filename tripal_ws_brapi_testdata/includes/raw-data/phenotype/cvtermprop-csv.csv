@@ -1,0 +1,10 @@
+translate_term:cvterm_id, translate_term:type_id, value
+"Unit A", additionalType, quantitative
+"Unit B", additionalType, qualitative
+"Unit C", additionalType, quantitative
+"Unit D", additionalType, qualitative
+"Unit E", additionalType, quantitative
+"Unit F", additionalType, qualitative
+"Unit G", additionalType, quantitative
+"Unit H", additionalType, qualitative
+"Unit I", additionalType, quantitative

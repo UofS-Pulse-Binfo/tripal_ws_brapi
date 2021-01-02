@@ -344,7 +344,7 @@ if (!function_exists('tripal_ws_create_search_id')) {
        $id    = $request_id;
      }
 
-     $sql = "SELECT * FROM {tripal_ws_brapi_search_request} WHERE %s LIMIT 1";
+     $sql = "SELECT * FROM tripal_ws_brapi_search_request WHERE %s LIMIT 1";
      $q = sprintf($sql, $where);
      $query = chado_query($q, [':id' => $id]);
 
