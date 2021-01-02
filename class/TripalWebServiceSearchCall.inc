@@ -92,7 +92,7 @@ class TripalWebServiceSearchCall extends TripalWebServiceCall {
         // Response field set for a version number.
         // Override call response field to searchResultDbId. Use active version
         // to ensure this call has response field regardless of version.
-        $this->response_field = [$call_asset['configuration']['active_version'] => ['searchResultDbId']];
+        $this->response_field = [ (string) $call_asset['configuration']['active_version'] => ['searchResultDbId']];
         $this->validateResponseField();
         // Check parameters.
         parent::validateCallParameter();
@@ -100,7 +100,7 @@ class TripalWebServiceSearchCall extends TripalWebServiceCall {
 
         // Prepare result - hash code request id #.
         $match_id = $this->matchSearchRequest();
-        $response_field = $this->response_field[ $call_asset['configuration']['active_version'] ];
+        $response_field = $this->response_field[ (string) $call_asset['configuration']['active_version'] ];
 
         $data[] = ($match_id) ? $match_id : $this->saveSearchRequest();
         $map_data = $this->mapDataToResponseField($data, $response_field);
@@ -143,7 +143,7 @@ class TripalWebServiceSearchCall extends TripalWebServiceCall {
     }
 
     // Match a record given the call name and parameter string.
-    $sql = "SELECT * FROM {tripal_ws_brapi_search_request}
+    $sql = "SELECT * FROM tripal_ws_brapi_search_request
       WHERE search_request_type = :call AND search_request_parameter = :parameter LIMIT 1";
 
     $query = chado_query($sql, [':call' => $call_asset['call'], ':parameter' => $parameter]);
@@ -154,7 +154,7 @@ class TripalWebServiceSearchCall extends TripalWebServiceCall {
       // Increment # of times match has been requested.
       // This will indicate number of times a search has been requested/used.
       $new_count = $result->request + 1;
-      chado_query("UPDATE {tripal_ws_brapi_search_request}
+      chado_query("UPDATE tripal_ws_brapi_search_request
         SET request = $new_count WHERE id = :id", [':id' => $result->id]);
 
       // Return id/ hash code.

@@ -1,0 +1,6 @@
+common_name, abbreviation, genus, species
+"Cultivated Tripal", "T. databasica", Tripalus, databasica
+"Wild Tripal", "T. ferox", Tripalus, ferox
+"Tripal WS", "T. spideria", Tripalus, spideria
+"Cultivated BrAPI", "B. specificus", Brapus, specificus
+"BrAPI Tripal Hybrid", "B. tripalus", Brapus, tripalus
