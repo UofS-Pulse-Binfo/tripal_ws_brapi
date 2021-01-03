@@ -25,6 +25,10 @@ You can access the web-serivces provided by this module by going to `https://[yo
 
 There is an extensive user guide available here: https://tripal-ws-brapi.readthedocs.io/en/latest/
 
+## Automated Testing ![Run PHPUnit Tests](https://github.com/UofS-Pulse-Binfo/tripal_ws_brapi/workflows/Run%20PHPUnit%20Tests/badge.svg)
+
+There is automated testing included using PHPUnit Tests with Guzzle. Additionally, there is a helper module providing test data for [manual demonstration](https://tripal-ws-brapi.readthedocs.io/en/latest/topics/contribute.html#using-the-testing-helper-module) of the module.
+
 ## Funding
 
 This work is supported by Saskatchewan Pulse Growers [grant: BRE1516, BRE0601], Western Grains Research Foundation, Genome Canada [grant: 8302, 16302], Government of Saskatchewan [grant: 20150331], and the University of Saskatchewan.
