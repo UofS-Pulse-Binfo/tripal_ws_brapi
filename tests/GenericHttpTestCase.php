@@ -80,9 +80,5 @@ class GenericHttpTestCase extends TripalTestCase {
     $this->assertObjectHasAttribute('currentPage', $response->metadata->pagination,
       "The response for $callname ->metadata->pagination should have a currentPage key.");
 
-    // Check Response->result.
-    $this->assertObjectHasAttribute('result', $response,
-      "The response for $callname should have a result key.");
-
   }
 }
