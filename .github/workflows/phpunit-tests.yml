@@ -45,7 +45,7 @@ jobs:
         docker run --publish=80:80 --name=tripaldocker -tid \
           --volume=`pwd`:/var/www/html/sites/all/modules/tripal_ws_brapi \
           laceysanderson/drupal7dev:latest
-        docker exec -it tripaldocker /app/init_scripts/startup_container.sh
+        docker exec tripaldocker /app/init_scripts/startup_container.sh
         docker exec --workdir=/var/www/html/vendor/bin tripaldocker ./drush status
         docker exec --workdir=/var/www/html/vendor/bin tripaldocker ./drush en -y tripal_ws_brapi tripal_ws_brapi_testdata
     # Runs the PHPUnit tests.
