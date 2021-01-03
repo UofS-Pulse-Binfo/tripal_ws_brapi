@@ -83,7 +83,7 @@ jobs:
         DRUSH: ${{ steps.tripalsetup.outputs.drush_path }}
         DRUPAL_ROOT: ${{ steps.tripalsetup.outputs.drupal_root }}
       run: |
-        service apache2 restart
+        sudo systemctl restart apache2
         cd $DRUPAL_ROOT/sites/all/modules/tripal_ws_brapi
         $DRUSH php-script tripal_ws_brapi_testdata/drush-scripts/loadTestData.php
         composer require --dev mheap/phpunit-github-actions-printer --quiet
