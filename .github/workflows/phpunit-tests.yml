@@ -64,9 +64,9 @@ jobs:
         docker exec tripaldocker service postgresql restart
         docker exec --workdir=/var/www/html tripaldocker \
           ./vendor/bin/drush php-script sites/all/modules/tripal_ws_brapi/tripal_ws_brapi_testdata/drush-scripts/loadTestData.php
-        docker exec --workdir=/var/www/html/sites/all/modules/tripal_ws_brapi \
+        docker exec --workdir=/var/www/html/sites/all/modules/tripal_ws_brapi tripaldocker \
           composer require --dev mheap/phpunit-github-actions-printer --quiet
-        docker exec --workdir=/var/www/html/sites/all/modules/tripal_ws_brapi \
+        docker exec --workdir=/var/www/html/sites/all/modules/tripal_ws_brapi tripaldocker \
           composer update --quiet
-        docker exec --workdir=/var/www/html/sites/all/modules/tripal_ws_brapi \
+        docker exec --workdir=/var/www/html/sites/all/modules/tripal_ws_brapi tripaldocker \
           ./vendor/bin/phpunit --printer mheap\\GithubActionsReporter\\Printer
