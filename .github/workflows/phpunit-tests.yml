@@ -52,7 +52,12 @@ jobs:
         coverage: xdebug
         # Install composer and phpunit globally.
         tools: composer, phpunit
-    # Check Drush
+    # Make sure we have apache...
+    - name: Install Apache
+      run: |
+        sudo apt update --yes -qq
+        sudo apt install apache2 curl libapache2-mod-php
+    # Install Drupal/Tripal
     - id: tripalsetup
       uses: tripal/setup-tripal-action@7.x-3.x-1.0
       with:
