@@ -41,13 +41,13 @@ jobs:
     - uses: actions/checkout@v2
     # Setup the docker environment
     - name: Spin up Docker
-        run: |
-          docker run --publish=80:80 --name=tripaldocker -tid \
-            --volume=`pwd`:/var/www/html/sites/all/modules/tripal_ws_brapi \
-            laceysanderson/drupal7dev:latest
-          docker exec tripaldocker service postgresql restart
-          docker exec --workdir=/var/www/html/vendor/bin tripaldocker drush status
-          docker exec --workdir=/var/www/html/vendor/bin tripaldocker drush en -y tripal_ws_brapi tripal_ws_brapi_testdata
+      run: |
+        docker run --publish=80:80 --name=tripaldocker -tid \
+          --volume=`pwd`:/var/www/html/sites/all/modules/tripal_ws_brapi \
+          laceysanderson/drupal7dev:latest
+        docker exec tripaldocker service postgresql restart
+        docker exec --workdir=/var/www/html/vendor/bin tripaldocker drush status
+        docker exec --workdir=/var/www/html/vendor/bin tripaldocker drush en -y tripal_ws_brapi tripal_ws_brapi_testdata
     # Runs the PHPUnit tests.
     # https://github.com/mheap/phpunit-github-actions-printer is used
     # to report PHPUnit fails in a meaningful way to github in PRs.
