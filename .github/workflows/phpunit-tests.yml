@@ -39,7 +39,6 @@ jobs:
     steps:
     # Checkout the repository and setup workspace.
     - uses: actions/checkout@v2
-
     # Setup PHP according to the version passed in.
     - name: Setup PHP
       uses: shivammathur/setup-php@v2
@@ -60,15 +59,26 @@ jobs:
         postgres_user: tripaladmin
         postgres_pass: somesupersecurepassword
         postgres_db: testdb
-    - name: test_install
+    # Install Tripal Extension Module.
+    - name: Install Tripal Extension Module
+      id: installextension
       env:
         DRUSH: ${{ steps.tripalsetup.outputs.drush_path }}
         DRUPAL_ROOT: ${{ steps.tripalsetup.outputs.drupal_root }}
       run: |
-        $DRUSH --version
+        mkdir -p $DRUPAL_ROOT/sites/all/modules/tripal_ws_brapi
+        cp -R * $DRUPAL_ROOT/sites/all/modules/tripal_ws_brapi
         cd $DRUPAL_ROOT
-        $DRUSH status
-        echo "==> File contents of Drupal Root"
-        ls
-        echo "==> File content of Modules Directory"
-        ls $DRUPAL_ROOT/sites/all/modules
+        $DRUSH en -y tripal_ws_brapi
+    # Runs the PHPUnit tests.
+    # https://github.com/mheap/phpunit-github-actions-printer is used
+    # to report PHPUnit fails in a meaningful way to github in PRs.
+    - name: PHPUnit Tests
+      env:
+        DRUSH: ${{ steps.tripalsetup.outputs.drush_path }}
+        DRUPAL_ROOT: ${{ steps.tripalsetup.outputs.drupal_root }}
+      run: |
+        cd $DRUPAL_ROOT/sites/all/modules/tripal_ws_brapi
+        composer require --dev mheap/phpunit-github-actions-printer --quiet
+        composer update --quiet
+        ./vendor/bin/phpunit --printer mheap\\GithubActionsReporter\\Printer
