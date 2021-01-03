@@ -75,6 +75,9 @@ jobs:
         cp -R * $DRUPAL_ROOT/sites/all/modules/tripal_ws_brapi
         cd $DRUPAL_ROOT
         $DRUSH en -y tripal_ws_brapi tripal_ws_brapi_testdata
+        cd /var/www/
+        sudo rm -r html
+        sudo ln -s /home/runner/work/drupal html
     # Runs the PHPUnit tests.
     # https://github.com/mheap/phpunit-github-actions-printer is used
     # to report PHPUnit fails in a meaningful way to github in PRs.
