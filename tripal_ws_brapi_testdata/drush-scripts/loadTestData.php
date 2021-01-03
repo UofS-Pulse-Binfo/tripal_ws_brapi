@@ -3,6 +3,7 @@
  * This script uses the tripal_ws_brapi_testdata module to load Test Data.
  * This is the same action as going to https://[yourdrupalsite]/tripalwsbrapi/testdata
  */
+include_once('../class/TripalWebServiceTestData');
 
 // In this order, project info is required in phenotype, and organism
 // info is require in stocks.
