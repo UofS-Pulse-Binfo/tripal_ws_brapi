@@ -62,8 +62,8 @@ jobs:
         DRUPAL_ROOT: ${{ steps.tripalsetup.outputs.drupal_root }}
       run: |
         docker exec tripaldocker service postgresql restart
-        docker exec --workdir=/var/www/html/vendor/bin tripaldocker \
-          ./drush php-script tripal_ws_brapi_testdata/drush-scripts/loadTestData.php
+        docker exec --workdir=/var/www/html tripaldocker \
+          ./vendor/bin/drush php-script sites/all/modules/tripal_ws_brapi/tripal_ws_brapi_testdata/drush-scripts/loadTestData.php
         docker exec --workdir=/var/www/html/sites/all/modules/tripal_ws_brapi \
           composer require --dev mheap/phpunit-github-actions-printer --quiet
         docker exec --workdir=/var/www/html/sites/all/modules/tripal_ws_brapi \
