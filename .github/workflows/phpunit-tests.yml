@@ -42,11 +42,8 @@ jobs:
     # Setup the docker environment
     - name: Spin up Docker
       run: |
-        echo 'DBADMIN=tripaladmin
-DBNAME=tripaldb
-DRUPALADMIN=tripaladmin
-DRUPALEMAIL=tripaladmin@knowpulse.usask.ca
-SITENAME="Tripal WS BrAPI Docker"' > .env
+        wget https://raw.githubusercontent.com/laceysanderson/drupal_dev_CI/master/drupal7dev/.env
+        cat .env
         docker run --publish=80:80 --name=tripaldocker -tid \
           -e DBPASS='somesecurepassword' \
           -e ADMINPASS='anothersecurepassword' \
