@@ -95,9 +95,8 @@ class breedingMethodsCallTest extends GenericHttpTestCase {
 
     // There should be multiple pages.
     // Actually the same number as results before.
-    // @FAILS due to bug #38
-    // $this->assertEquals($numOfResults, $response->metadata->pagination->totalPages,
-    //   "There should be $numOfResults pages. $msg");
+    $this->assertEquals($numOfResults, $response->metadata->pagination->totalPages,
+      "There should be $numOfResults pages. $msg");
 
     $page1_results = $response->result->data;
 
@@ -144,9 +143,8 @@ class breedingMethodsCallTest extends GenericHttpTestCase {
 
     // There should be multiple pages.
     // Actually the same number as results before.
-    // @FAILS due to bug #38
-    // $this->assertEquals($numOfResults, $response->metadata->pagination->totalPages,
-    //   "There should be $numOfResults pages. $msg");
+    $this->assertEquals($numOfResults, $response->metadata->pagination->totalPages,
+      "There should be $numOfResults pages. $msg");
 
     // Page 3 should not have the same results as page 1.
     $this->assertNotEquals($page1_results, $response->result->data,
