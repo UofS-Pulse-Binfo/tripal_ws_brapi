@@ -48,6 +48,10 @@ class BrAPIDatabaseSeeder extends Seeder
         ]
       ];
 
+
+      // Store in array all germplasm id corresponding to organism_id in chado.organism
+      // after they have all been inserted. Later when, stocks are inserted will randomly
+      // select a value from this id pool for the field stock.germplasm_id key.
       $all_organism = [];
       foreach($values as $organism) {
         $match = [
@@ -61,7 +65,7 @@ class BrAPIDatabaseSeeder extends Seeder
         }
         else {
           $r = chado_insert_record('organism', $organism);
-          $all_organism = $r['organism_id'];
+          $all_organism[] = $r['organism_id'];
         }
       }
 
@@ -72,11 +76,23 @@ class BrAPIDatabaseSeeder extends Seeder
 
       // Term used to indicate what term a value in prop table means.
       // Array below.
-      $property = tripal_insert_cvterm(
-        array('id' => 'test:' . 'prop stock', 'name' => 'prop stock', 'cv_name' =>'null')
-      );
+      $prop_stock_term = tripal_get_cvterm(array('name' => 'prop stock'));
 
-      $propvaltype = $property->cvterm_id;
+      if (!$prop_stock_term) {
+        // Term prop stock is not installed.
+        $property = tripal_insert_cvterm(
+          array('id' => 'test:' . 'prop stock', 'name' => 'prop stock', 'cv_name' =>'null')
+        );
+
+        $prop_stock_term_id = $property->cvterm_id;
+      }
+      else {
+        // Prop stock term found in chado.cvterm
+        $prop_stock_term_id = $prop_stock_term->cvterm_id;
+      }
+
+      $propvaltype = $prop_stock_term_id;
+
       $awesome = array(1 => 'awesome', 2 => 'not awesome', 3 => 'pretty');
 
       // Inserts 56 sample stocks.
