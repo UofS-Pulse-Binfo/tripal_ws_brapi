@@ -703,6 +703,9 @@ class TripalWebServiceCall {
   /**
    * Total number of pages.
    * Callback method for key: totalPages in metadata.
+   * NOTE: BrAPI page count starts at 0.
+   *       Pages are zero indexed, so the first page will be page 0 (zero),
+   *       so that when totalPages is 1 does NOT mean 2 pages (page 0 and page 1).
    *
    * @param $payload
    *   Array of information comprising the response data.
@@ -720,6 +723,7 @@ class TripalWebServiceCall {
     $total_page = 0;
 
     if ($count <= $resultset_limit) {
+      // Comparing result count with the configuration relating to default result limit.
       // Result count is less or equal to limit, page is 1.
       $total_page = 1;
     }
@@ -727,12 +731,9 @@ class TripalWebServiceCall {
       // Otherwise, if dividing the count by the limit and result
       // has floating point value, then page is the quotient plus 1,
       // else it is the result of division.
+
       $p = $count / $resultset_limit;
       $total_page = ($count % $resultset_limit) ? floor($p) + 1 : $p;
-
-      // NOTE: BrAPI page count starts at 0.
-      // Account for when page is one and only, it should not minus 1.
-      $total_page = ($total_page > 1) ? $total_page - 1 : 1;
     }
 
     return $total_page;
@@ -751,6 +752,7 @@ class TripalWebServiceCall {
    *   Computed page number or 0 (start page) when none provided in the parameter.
    */
   public function currentPage($payload, $parameter) {
-    return (isset($parameter['page'])) ? $parameter['page'] : 0;
+    $current_page = (isset($parameter['page'])) ? $parameter['page'] : 0;
+    return (int) $current_page;
   }
 }
