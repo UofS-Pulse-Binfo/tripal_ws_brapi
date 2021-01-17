@@ -5,39 +5,42 @@ use StatonLab\TripalTestSuite\TripalTestCase;
 use Tests\GenericHttpTestCase;
 
 /**
- * Breeding Methods Call (Version 1.3)
- * https://brapi.docs.apiary.io/#reference/germplasm/breedingmethods
+ * People Call (Version 1.3)
+ * https://brapi.docs.apiary.io/#reference/people/people/get-people
  */
-class breedingMethodsCallTest extends GenericHttpTestCase {
+class peopleCallTest extends GenericHttpTestCase {
 
   /**
    * The short name of the call for Assestion messages.
    */
-  public $callname = 'breedingmethods';
+  public $callname = 'people';
 
   /**
    * The URL for the call for requests.
    * For example: web-services/brapi/v1/people
    */
-  public $url = 'web-services/brapi/v1/breedingmethods';
+  public $url = 'web-services/brapi/v1/people';
 
   /**
    * The structure of the data result.
    * Each entry should be key => valuetype | array.
-   * Valid valuetypes are: string, integer, object, array.
    */
   public $data_structure = [
-    'abbreviation' => 'string',
-    'breedingMethodDbId' => 'string',
-    'breedingMethodName' => 'string',
     'description' => 'string',
-    // 'name' => 'string', DEPRECATED in 1.3
+    'emailAddress' => 'string',
+    'firstName' => 'string',
+    'lastName' => 'string',
+    'mailingAddress' => 'string',
+    'middleName' => 'string',
+    'personDbId' => 'string',
+    'phoneNumber' => 'string',
+    'userID' => 'string',
   ];
 
   /**
    * CORE TEST.
    */
-  public function testBreedingMethodsCall() {
+  public function testPeopleCall() {
 
     //---------------------------------
     // 1. NO PARAMETERS.
@@ -55,5 +58,22 @@ class breedingMethodsCallTest extends GenericHttpTestCase {
     // 3. WITH PARAMETERS: page, pageSize
     $response = NULL;
     $this->assertPaging($response, $numOfResults, $page1_results);
+
+    //---------------------------------
+    // 4. WITH PARAMETERS: firstName
+    // $response = NULL;
+    // $this->assertWithFirstName($response);
+
+    //---------------------------------
+    // 5. WITH PARAMETERS: lastName
+    // $response = NULL;
+    // $this->assertWithLastName($response);
+    // $personDbId = $response->result->data[0]['personDbId'];
+
+    //---------------------------------
+    // 6. WITH PARAMETERS: personDbId
+    // $response = NULL;
+    // $this->assertWithPersonDbId($response, $personDbId);
+
   }
 }
