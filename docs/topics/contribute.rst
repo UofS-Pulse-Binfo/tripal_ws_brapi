@@ -3,6 +3,36 @@ Contributing
 
 We’re excited to work with you! Post in the issues queue with any questions, feature requests, or proposals.
 
+Quickly setting up a Testing/Demo Environment using Docker
+------------------------------------------------------------
+
+The following commands clone this repository and then start a Drupal7Docker container with the the current directory mounted. It also initializes the Tripal site by starting postgresql, installing Tripal and Chado, and preparing the database.
+
+.. code:: bash
+
+  git clone https://github.com/UofS-Pulse-Binfo/tripal_ws_brapi.git
+  cd tripal_ws_brapi
+  docker pull laceysanderson/drupal7dev
+  docker run --publish=8888:80 --name=tdocker -tid --env-file=tests/example.env --volume=`pwd`:/var/www/html/sites/all/modules/tripal_ws_brapi laceysanderson/drupal7dev:latest
+  docker exec -it tdocker /app/init_scripts/startup_container.sh
+
+Next we need to install this module and add test data to the site. The following commands achomplish this given the above setup.
+
+.. code:: bash
+
+  docker exec tdocker /var/www/html/vendor/bin/drush en tripal_ws_brapi tripal_ws_brapi_testdata -y
+  docker exec --workdir=/var/www/html tdocker ./vendor/bin/drush php-script sites/all/modules/tripal_ws_brapi/tripal_ws_brapi_testdata/drush-scripts/loadTestData.php
+
+Now you can proceed by running the automated tests:
+
+.. code:: bash
+
+  docker exec --workdir=/var/www/html/sites/all/modules/tripal_ws_brapi tdocker composer up
+  docker exec --workdir=/var/www/html/sites/all/modules/tripal_ws_brapi tdocker vendor/bin/phpunit
+
+Or manually testing it through http://localhost:8888/web-services.
+
+
 Automated Testing
 --------------------
 
