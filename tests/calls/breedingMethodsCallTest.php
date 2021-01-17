@@ -37,7 +37,7 @@ class breedingMethodsCallTest extends GenericHttpTestCase {
   /**
    * CORE TEST.
    */
-  public function testBreedingMethodsCall() {
+  public function testCall() {
 
     //---------------------------------
     // 1. NO PARAMETERS.

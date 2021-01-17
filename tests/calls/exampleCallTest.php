@@ -32,7 +32,7 @@ class exampleCallTest extends GenericHttpTestCase {
   /**
    * CORE TEST.
    */
-  public function testAttributesCategoriesCall() {
+  public function testCall() {
 
     //---------------------------------
     // 1. NO PARAMETERS.

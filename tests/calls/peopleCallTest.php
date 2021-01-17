@@ -40,7 +40,7 @@ class peopleCallTest extends GenericHttpTestCase {
   /**
    * CORE TEST.
    */
-  public function testPeopleCall() {
+  public function testCall() {
 
     //---------------------------------
     // 1. NO PARAMETERS.
