@@ -133,8 +133,12 @@ class GenericHttpTestCase extends TripalTestCase {
             "The value of $key should be a $valuetype.");
           break;
         case 'integer':
-          $this->assertIsInt($datapoint->{$key},
-            "The value of $key should be a $valuetype.");
+          // What is the missing value for integer data?
+          // Currently using n/a.
+          if ($datapoint->{$key} !== 'n/a') {
+            $this->assertIsInt($datapoint->{$key},
+              "The value of $key should be a $valuetype.");
+            }
           break;
         case 'object':
           $this->assertIsObject($datapoint->{$key},
