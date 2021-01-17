@@ -7,46 +7,54 @@ use Tests\GenericHttpTestCase;
 class peopleCallTest extends GenericHttpTestCase {
 
   /**
+   * The short name of the call for Assestion messages.
+   */
+  public $callname = 'people';
+
+  /**
+   * The URL for the call for requests.
+   * For example: web-services/brapi/v1/people
+   */
+  public $url = 'web-services/brapi/v1/people';
+
+  /**
    * People Call (Version 1.3)
    * https://brapi.docs.apiary.io/#reference/people/people/get-people
    */
   public function testPeopleCall() {
-    $callname = 'people';
-    $url = 'web-services/brapi/v1/people';
-    $msg = "If it doesn't make sure you have Loaded the test data provided by the tripal_ws_brapi_tesdata helper module.";
 
     //---------------------------------
     // 1. NO PARAMETERS.
     $response = NULL;
-    $this->assertWithNoParameters($response, $callname, $url);
+    $this->assertWithNoParameters($response);
     $numOfResults = sizeof($response->result->data);
 
     //---------------------------------
     // 2. WITH PARAMETERS: pageSize
     $response = NULL;
-    $this->assertPageSize($response, $callname, $url, $numOfResults);
+    $this->assertPageSize($response, $numOfResults);
     $page1_results = $response->result->data;
 
     //---------------------------------
     // 3. WITH PARAMETERS: page, pageSize
     $response = NULL;
-    $this->assertPaging($response, $callname, $url, $numOfResults, $page1_results);
+    $this->assertPaging($response, $numOfResults, $page1_results);
 
     //---------------------------------
     // 4. WITH PARAMETERS: firstName
     // $response = NULL;
-    // $this->assertWithFirstName($response, $callname, $url);
+    // $this->assertWithFirstName($response);
 
     //---------------------------------
     // 5. WITH PARAMETERS: lastName
     // $response = NULL;
-    // $this->assertWithLastName($response, $callname, $url);
+    // $this->assertWithLastName($response);
     // $personDbId = $response->result->data[0]['personDbId'];
 
     //---------------------------------
     // 6. WITH PARAMETERS: personDbId
     // $response = NULL;
-    // $this->assertWithPersonDbId($response, $callname, $url, $personDbId);
+    // $this->assertWithPersonDbId($response, $personDbId);
 
   }
 
@@ -55,23 +63,21 @@ class peopleCallTest extends GenericHttpTestCase {
    *
    * @param object $response
    *   The decoded response from the page to test.
-   * @param string $callname
-   *   The name of the call for assertion messages.
    */
-  public function assertResultFormat($response, $callname) {
+  public function assertResultFormat($response) {
     $msg = "If it doesn't make sure you have Loaded the test data provided by the tripal_ws_brapi_tesdata helper module.";
 
     // Check Response->result.
     $this->assertObjectHasAttribute('result', $response,
-      "The response for $callname should have a result key.");
+      "The response for " . $this->callname . " should have a result key.");
 
     // Check Response->result->data.
     $this->assertObjectHasAttribute('data', $response->result,
-      "The response for $callname ->result should have a data key.");
+      "The response for " . $this->callname . " ->result should have a data key.");
 
     // The data should be an array.
     $this->assertIsArray($response->result->data,
-      "The data for $callname should be an array.");
+      "The data for " . $this->callname . " should be an array.");
 
     // A single result should have various keys.
     $datapoint = $response->result->data[0];

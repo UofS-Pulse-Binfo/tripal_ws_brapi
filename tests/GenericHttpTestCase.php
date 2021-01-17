@@ -6,6 +6,17 @@ use StatonLab\TripalTestSuite\TripalTestCase;
 class GenericHttpTestCase extends TripalTestCase {
 
   /**
+   * The short name of the call for Assestion messages.
+   */
+  public $callname;
+
+  /**
+   * The URL for the call for requests.
+   * For example: web-services/brapi/v1/people
+   */
+  public $url;
+
+  /**
    * Stores the Guzzle client.
    */
   public $http;
@@ -31,54 +42,52 @@ class GenericHttpTestCase extends TripalTestCase {
    *
    * @param object $response
    *   The decoded response from the page to test.
-   * @param string $callname
-   *   The name of the call for assertion messages.
    */
-  public function assertHeader($response, $callname) {
+  public function assertHeader($response) {
 
     // Check Response->metadata.
     $this->assertObjectHasAttribute('metadata', $response,
-      "The response for $callname should have a metadata key.");
+      "The response for " . $this->callname . " should have a metadata key.");
 
     // Check Response->metadata->datafiles.
     $this->assertObjectHasAttribute('datafiles', $response->metadata,
-      "The response for $callname ->metadata should have a datafiles key.");
+      "The response for " . $this->callname . " ->metadata should have a datafiles key.");
 
     // Check Response->metadata->status.
     $this->assertObjectHasAttribute('status', $response->metadata,
-      "The response for $callname ->metadata should have a status key.");
+      "The response for " . $this->callname . " ->metadata should have a status key.");
 
     // Check Response->metadata->status->code.
     $this->assertObjectHasAttribute('code', $response->metadata->status,
-      "The response for $callname ->metadata->status should have a code key.");
+      "The response for " . $this->callname . " ->metadata->status should have a code key.");
 
     // Check Response->metadata->status->message.
     $this->assertObjectHasAttribute('message', $response->metadata->status,
-      "The response for $callname ->metadata->status should have a message key.");
+      "The response for " . $this->callname . " ->metadata->status should have a message key.");
 
     // Check Response->metadata->status->messageType.
     $this->assertObjectHasAttribute('messageType', $response->metadata->status,
-      "The response for $callname ->metadata->status should have a messageType key.");
+      "The response for " . $this->callname . " ->metadata->status should have a messageType key.");
 
     // Check Response->metadata->pagination.
     $this->assertObjectHasAttribute('pagination', $response->metadata,
-      "The response for $callname ->metadata should have a pagination key.");
+      "The response for " . $this->callname . " ->metadata should have a pagination key.");
 
     // Check Response->metadata->pagination->totalCount.
     $this->assertObjectHasAttribute('totalCount', $response->metadata->pagination,
-      "The response for $callname ->metadata->pagination should have a totalCount key.");
+      "The response for " . $this->callname . " ->metadata->pagination should have a totalCount key.");
 
     // Check Response->metadata->pagination->pageSize.
     $this->assertObjectHasAttribute('pageSize', $response->metadata->pagination,
-      "The response for $callname ->metadata->pagination should have a pageSize key.");
+      "The response for " . $this->callname . " ->metadata->pagination should have a pageSize key.");
 
     // Check Response->metadata->pagination->totalPages.
     $this->assertObjectHasAttribute('totalPages', $response->metadata->pagination,
-      "The response for $callname ->metadata->pagination should have a totalPages key.");
+      "The response for " . $this->callname . " ->metadata->pagination should have a totalPages key.");
 
     // Check Response->metadata->pagination->currentPage.
     $this->assertObjectHasAttribute('currentPage', $response->metadata->pagination,
-      "The response for $callname ->metadata->pagination should have a currentPage key.");
+      "The response for " . $this->callname . " ->metadata->pagination should have a currentPage key.");
 
   }
 
@@ -87,41 +96,37 @@ class GenericHttpTestCase extends TripalTestCase {
    *
    * @param mixed $response
    *   Used to return the results. Can be NULL to begin with.
-   * @param string $callname
-   *   The name of the call for assertion messages.
-   * @param string $url
-   *   The URL of the call.
    */
-  public function assertWithNoParameters(&$response, $callname, $url) {
+  public function assertWithNoParameters(&$response) {
 
     // Make the HTTP GET Request.
-    $response = $this->http->request('GET', $url);
+    $response = $this->http->request('GET', $this->url);
 
     // Ensure it was successful.
     $this->assertEquals(200, $response->getStatusCode(),
-      "We should be able to access the page at $url.");
+      "We should be able to access the page at $this->url.");
 
     // Ensure the page returned is JSON.
     $contentType = $response->getHeaders()["Content-Type"][0];
     $this->assertEquals("application/json", $contentType,
-      "The returned page for $callname should be JSON.");
+      "The returned page for " . $this->callname . " should be JSON.");
 
     // Retrieve the JSON from the page and decode it for testing.
     $response = json_decode($response->getBody());
     $this->assertIsObject($response,
-      "The response for $callname should be valid JSON.");
+      "The response for " . $this->callname . " should be valid JSON.");
 
     // Ensure the metadata header is correct.
     // This helper method includes multiple assertions.
-    $this->assertHeader($response, $callname);
+    $this->assertHeader($response, " . $this->callname . ");
 
     // Ensure the result is correct.
     // This helper method includes multiple assertions.
-    $this->assertResultFormat($response, $callname);
+    $this->assertResultFormat($response, " . $this->callname . ");
 
     // The data should not be empty.
     $this->assertNotEmpty($response->result->data,
-      "The data for $callname should contain results. $msg");
+      "The data for " . $this->callname . " should contain results. $msg");
 
     // The data should have at least 4 results.
     $this->assertGreaterThanOrEqual(4, sizeof($response->result->data),
@@ -134,46 +139,42 @@ class GenericHttpTestCase extends TripalTestCase {
    *
    * @param mixed $response
    *   Used to return the results. Can be NULL to begin with.
-   * @param string $callname
-   *   The name of the call for assertion messages.
-   * @param string $url
-   *   The URL of the call.
    * @param int $numOfResults
    *   The number of results from the call with no parameters.
    */
-  public function assertPageSize(&$response, $callname, $url, $numOfResults) {
+  public function assertPageSize(&$response, $numOfResults) {
 
     // Make the HTTP GET Request.
     $query = [
       'pageSize' => 1,
     ];
-    $response = $this->http->request('GET', $url, ['query' => $query]);
+    $response = $this->http->request('GET', $this->url, ['query' => $query]);
 
     // Ensure it was successful.
     $this->assertEquals(200, $response->getStatusCode(),
-      "We should be able to access the page at $url.");
+      "We should be able to access the page at $this->url.");
 
     // Ensure the page returned is JSON.
     $contentType = $response->getHeaders()["Content-Type"][0];
     $this->assertEquals("application/json", $contentType,
-      "The returned page for $callname should be JSON.");
+      "The returned page for " . $this->callname . " should be JSON.");
 
     // Retrieve the JSON from the page and decode it for testing.
     $response = json_decode($response->getBody());
     $this->assertIsObject($response,
-      "The response for $callname should be valid JSON.");
+      "The response for " . $this->callname . " should be valid JSON.");
 
     // Ensure the metadata header is correct.
     // This helper method includes multiple assertions.
-    $this->assertHeader($response, $callname);
+    $this->assertHeader($response, " . $this->callname . ");
 
     // Ensure the result is correct.
     // This helper method includes multiple assertions.
-    $this->assertResultFormat($response, $callname);
+    $this->assertResultFormat($response, " . $this->callname . ");
 
     // The data should not be empty.
     $this->assertNotEmpty($response->result->data,
-      "The data for $callname should contain results. $msg");
+      "The data for " . $this->callname . " should contain results. $msg");
 
     // The data should have only have 1 result.
     $this->assertEquals(1, sizeof($response->result->data),
@@ -191,49 +192,45 @@ class GenericHttpTestCase extends TripalTestCase {
    *
    * @param mixed $response
    *   Used to return the results. Can be NULL to begin with.
-   * @param string $callname
-   *   The name of the call for assertion messages.
-   * @param string $url
-   *   The URL of the call.
    * @param array $page1_results
    *   An array of the results on the first page from previous tests.
    * @param int $numOfResults
    *   The number of results from the call with no parameters.
    */
-  public function assertPaging(&$response, $callname, $url, $numOfResults, $page1_results) {
+  public function assertPaging(&$response, $numOfResults, $page1_results) {
 
     // Make the HTTP GET Request.
     $query = [
       'pageSize' => 1,
       'page' => 2,
     ];
-    $response = $this->http->request('GET', $url, ['query' => $query]);
+    $response = $this->http->request('GET', $this->url, ['query' => $query]);
 
     // Ensure it was successful.
     $this->assertEquals(200, $response->getStatusCode(),
-      "We should be able to access the page at $url.");
+      "We should be able to access the page at $this->url.");
 
     // Ensure the page returned is JSON.
     $contentType = $response->getHeaders()["Content-Type"][0];
     $this->assertEquals("application/json", $contentType,
-      "The returned page for $callname should be JSON.");
+      "The returned page for " . $this->callname . " should be JSON.");
 
     // Retrieve the JSON from the page and decode it for testing.
     $response = json_decode($response->getBody());
     $this->assertIsObject($response,
-      "The response for $callname should be valid JSON.");
+      "The response for " . $this->callname . " should be valid JSON.");
 
     // Ensure the metadata header is correct.
     // This helper method includes multiple assertions.
-    $this->assertHeader($response, $callname);
+    $this->assertHeader($response);
 
     // Ensure the result is correct.
     // This helper method includes multiple assertions.
-    $this->assertResultFormat($response, $callname);
+    $this->assertResultFormat($response);
 
     // The data should not be empty.
     $this->assertNotEmpty($response->result->data,
-      "The data for $callname should contain results. $msg");
+      "The data for " . $this->callname . " should contain results. $msg");
 
     // The data should have only have 1 result.
     $this->assertEquals(1, sizeof($response->result->data),
