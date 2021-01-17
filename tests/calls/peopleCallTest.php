@@ -4,6 +4,10 @@ namespace Tests\calls;
 use StatonLab\TripalTestSuite\TripalTestCase;
 use Tests\GenericHttpTestCase;
 
+/**
+ * People Call (Version 1.3)
+ * https://brapi.docs.apiary.io/#reference/people/people/get-people
+ */
 class peopleCallTest extends GenericHttpTestCase {
 
   /**
@@ -18,8 +22,23 @@ class peopleCallTest extends GenericHttpTestCase {
   public $url = 'web-services/brapi/v1/people';
 
   /**
-   * People Call (Version 1.3)
-   * https://brapi.docs.apiary.io/#reference/people/people/get-people
+   * The structure of the data result.
+   * Each entry should be key => valuetype | array.
+   */
+  public $data_structure = [
+    'description' => 'string',
+    'emailAddress' => 'string',
+    'firstName' => 'string',
+    'lastName' => 'string',
+    'mailingAddress' => 'string',
+    'middleName' => 'string',
+    'personDbId' => 'string',
+    'phoneNumber' => 'string',
+    'userID' => 'string',
+  ];
+
+  /**
+   * CORE TEST.
    */
   public function testPeopleCall() {
 
@@ -57,48 +76,4 @@ class peopleCallTest extends GenericHttpTestCase {
     // $this->assertWithPersonDbId($response, $personDbId);
 
   }
-
-  /**
-   * Ensure the 'result' is present and correct.
-   *
-   * @param object $response
-   *   The decoded response from the page to test.
-   */
-  public function assertResultFormat($response) {
-    $msg = "If it doesn't make sure you have Loaded the test data provided by the tripal_ws_brapi_tesdata helper module.";
-
-    // Check Response->result.
-    $this->assertObjectHasAttribute('result', $response,
-      "The response for " . $this->callname . " should have a result key.");
-
-    // Check Response->result->data.
-    $this->assertObjectHasAttribute('data', $response->result,
-      "The response for " . $this->callname . " ->result should have a data key.");
-
-    // The data should be an array.
-    $this->assertIsArray($response->result->data,
-      "The data for " . $this->callname . " should be an array.");
-
-    // A single result should have various keys.
-    $datapoint = $response->result->data[0];
-    $this->assertObjectHasAttribute('firstName', $datapoint,
-      "A single result should have an firstName key.");
-    $this->assertObjectHasAttribute('middleName', $datapoint,
-      "A single result should have an middleName key.");
-    $this->assertObjectHasAttribute('lastName', $datapoint,
-      "A single result should have an lastName key.");
-    $this->assertObjectHasAttribute('emailAddress', $datapoint,
-      "A single result should have an emailAddress key.");
-    $this->assertObjectHasAttribute('mailingAddress', $datapoint,
-      "A single result should have an mailingAddress key.");
-    $this->assertObjectHasAttribute('phoneNumber', $datapoint,
-      "A single result should have an phoneNumber key.");
-    $this->assertObjectHasAttribute('personDbId', $datapoint,
-      "A single result should have an personDbId key.");
-    $this->assertObjectHasAttribute('userID', $datapoint,
-      "A single result should have an userID key.");
-    $this->assertObjectHasAttribute('description', $datapoint,
-      "A single result should have an description key.");
-  }
-
 }

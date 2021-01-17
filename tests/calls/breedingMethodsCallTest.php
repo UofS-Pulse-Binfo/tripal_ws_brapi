@@ -4,6 +4,10 @@ namespace Tests\calls;
 use StatonLab\TripalTestSuite\TripalTestCase;
 use Tests\GenericHttpTestCase;
 
+/**
+ * Breeding Methods Call (Version 1.3)
+ * https://brapi.docs.apiary.io/#reference/germplasm/breedingmethods
+ */
 class breedingMethodsCallTest extends GenericHttpTestCase {
 
   /**
@@ -18,8 +22,20 @@ class breedingMethodsCallTest extends GenericHttpTestCase {
   public $url = 'web-services/brapi/v1/breedingmethods';
 
   /**
-   * Breeding Methods Call (Version 1.3)
-   * https://brapi.docs.apiary.io/#reference/germplasm/breedingmethods/get-breedingmethods-by-breedingmethoddbid
+   * The structure of the data result.
+   * Each entry should be key => valuetype | array.
+   * Valid valuetypes are: string, integer, object, array.
+   */
+  public $data_structure = [
+    'abbreviation' => 'string',
+    'breedingMethodDbId' => 'string',
+    'breedingMethodName' => 'string',
+    'description' => 'string',
+    // 'name' => 'string', DEPRECATED in 1.3
+  ];
+
+  /**
+   * CORE TEST.
    */
   public function testBreedingMethodsCall() {
 
@@ -40,38 +56,4 @@ class breedingMethodsCallTest extends GenericHttpTestCase {
     $response = NULL;
     $this->assertPaging($response, $numOfResults, $page1_results);
   }
-
-  /**
-   * Ensure the 'result' is present and correct.
-   *
-   * @param object $response
-   *   The decoded response from the page to test.
-   */
-  public function assertResultFormat($response) {
-    $msg = "If it doesn't make sure you have Loaded the test data provided by the tripal_ws_brapi_tesdata helper module.";
-
-    // Check Response->result.
-    $this->assertObjectHasAttribute('result', $response,
-      "The response for " . $this->callname . " should have a result key.");
-
-    // Check Response->result->data.
-    $this->assertObjectHasAttribute('data', $response->result,
-      "The response for " . $this->callname . " ->result should have a data key.");
-
-    // The data should be an array.
-    $this->assertIsArray($response->result->data,
-      "The data for " . $this->callname . " should be an array.");
-
-    // A single result should have various keys.
-    $datapoint = $response->result->data[0];
-    $this->assertObjectHasAttribute('abbreviation', $datapoint,
-      "A single result should have an abbreviation key.");
-    $this->assertObjectHasAttribute('breedingMethodDbId', $datapoint,
-      "A single result should have an breedingMethodDbId key.");
-    $this->assertObjectHasAttribute('breedingMethodName', $datapoint,
-      "A single result should have an breedingMethodName key.");
-    $this->assertObjectHasAttribute('description', $datapoint,
-      "A single result should have an description key.");
-  }
-
 }

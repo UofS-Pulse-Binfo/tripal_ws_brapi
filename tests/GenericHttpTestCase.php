@@ -17,6 +17,12 @@ class GenericHttpTestCase extends TripalTestCase {
   public $url;
 
   /**
+   * The structure of the data result.
+   * Each entry should be key => valuetype | array.
+   */
+  public $data_structure;
+
+  /**
    * Stores the Guzzle client.
    */
   public $http;
@@ -89,6 +95,57 @@ class GenericHttpTestCase extends TripalTestCase {
     $this->assertObjectHasAttribute('currentPage', $response->metadata->pagination,
       "The response for " . $this->callname . " ->metadata->pagination should have a currentPage key.");
 
+  }
+
+  /**
+   * Ensure the 'result' is present and correct.
+   *
+   * @param object $response
+   *   The decoded response from the page to test.
+   */
+  public function assertResultFormat($response) {
+    $msg = "If it doesn't make sure you have Loaded the test data provided by the tripal_ws_brapi_tesdata helper module.";
+
+    // Check Response->result.
+    $this->assertObjectHasAttribute('result', $response,
+      "The response for " . $this->callname . " should have a result key.");
+
+    // Check Response->result->data.
+    $this->assertObjectHasAttribute('data', $response->result,
+      "The response for " . $this->callname . " ->result should have a data key.");
+
+    // The data should be an array.
+    $this->assertIsArray($response->result->data,
+      "The data for " . $this->callname . " should be an array.");
+
+    // A single result should have various keys.
+    $datapoint = $response->result->data[0];
+    foreach ($this->data_structure as $key => $valuetype) {
+
+      // Check the key exists.
+      $this->assertObjectHasAttribute($key, $datapoint,
+        "A single result should have an $key key.");
+
+      // Check they value type.
+      switch ($valuetype) {
+        case 'string':
+          $this->assertIsString($datapoint->{$key},
+            "The value of $key should be a $valuetype.");
+          break;
+        case 'integer':
+          $this->assertIsInt($datapoint->{$key},
+            "The value of $key should be a $valuetype.");
+          break;
+        case 'object':
+          $this->assertIsObject($datapoint->{$key},
+            "The value of $key should be a $valuetype.");
+          break;
+        case 'array':
+          $this->assertIsArray($datapoint->{$key},
+            "The value of $key should be a $valuetype.");
+          break;
+      }
+    }
   }
 
   /**
