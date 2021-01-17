@@ -76,5 +76,27 @@ class germplasmCallTest extends GenericHttpTestCase {
     // 3. WITH PARAMETERS: page, pageSize
     $response = NULL;
     $this->assertPaging($response, $numOfResults, $page1_results);
+
+    //---------------------------------
+    // 4. WITH PARAMETERS: germplasmPUI
+    // $response = NULL;
+    // $this->assertGermplasmPUI($response);
+
+    //---------------------------------
+    // 5. WITH PARAMETERS: germplasmDbId
+    // $response = NULL;
+    // $this->assertGermplasmDbId($response);
+
+    //---------------------------------
+    // 6. WITH PARAMETERS: germplasmName
+    // $response = NULL;
+    // $this->assertGermplasmName($response);
+
+    //---------------------------------
+    // 7. WITH PARAMETERS: commonCropName
+    // $response = NULL;
+    // $this->assertCommonCropName($response);
+
+
   }
 }
