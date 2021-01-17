@@ -32,6 +32,22 @@ class peopleCallTest extends GenericHttpTestCase {
     $response = NULL;
     $this->assertPaging($response, $callname, $url, $numOfResults, $page1_results);
 
+    //---------------------------------
+    // 4. WITH PARAMETERS: firstName
+    // $response = NULL;
+    // $this->assertWithFirstName($response, $callname, $url);
+
+    //---------------------------------
+    // 5. WITH PARAMETERS: lastName
+    // $response = NULL;
+    // $this->assertWithLastName($response, $callname, $url);
+    // $personDbId = $response->result->data[0]['personDbId'];
+
+    //---------------------------------
+    // 6. WITH PARAMETERS: personDbId
+    // $response = NULL;
+    // $this->assertWithPersonDbId($response, $callname, $url, $personDbId);
+
   }
 
   /**
