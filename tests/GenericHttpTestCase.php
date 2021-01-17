@@ -81,4 +81,171 @@ class GenericHttpTestCase extends TripalTestCase {
       "The response for $callname ->metadata->pagination should have a currentPage key.");
 
   }
+
+  /**
+   * Tests the call without any parameters.
+   *
+   * @param mixed $response
+   *   Used to return the results. Can be NULL to begin with.
+   * @param string $callname
+   *   The name of the call for assertion messages.
+   * @param string $url
+   *   The URL of the call.
+   */
+  public function assertWithNoParameters(&$response, $callname, $url) {
+
+    // Make the HTTP GET Request.
+    $response = $this->http->request('GET', $url);
+
+    // Ensure it was successful.
+    $this->assertEquals(200, $response->getStatusCode(),
+      "We should be able to access the page at $url.");
+
+    // Ensure the page returned is JSON.
+    $contentType = $response->getHeaders()["Content-Type"][0];
+    $this->assertEquals("application/json", $contentType,
+      "The returned page for $callname should be JSON.");
+
+    // Retrieve the JSON from the page and decode it for testing.
+    $response = json_decode($response->getBody());
+    $this->assertIsObject($response,
+      "The response for $callname should be valid JSON.");
+
+    // Ensure the metadata header is correct.
+    // This helper method includes multiple assertions.
+    $this->assertHeader($response, $callname);
+
+    // Ensure the result is correct.
+    // This helper method includes multiple assertions.
+    $this->assertResultFormat($response, $callname);
+
+    // The data should not be empty.
+    $this->assertNotEmpty($response->result->data,
+      "The data for $callname should contain results. $msg");
+
+    // The data should have at least 4 results.
+    $this->assertGreaterThanOrEqual(4, sizeof($response->result->data),
+      "There should be at least 4 datapoints. $msg");
+  }
+
+  /**
+   * Tests that the pageSize parameter returns the correct format with the
+   * expected number of results.
+   *
+   * @param mixed $response
+   *   Used to return the results. Can be NULL to begin with.
+   * @param string $callname
+   *   The name of the call for assertion messages.
+   * @param string $url
+   *   The URL of the call.
+   * @param int $numOfResults
+   *   The number of results from the call with no parameters.
+   */
+  public function assertPageSize(&$response, $callname, $url, $numOfResults) {
+
+    // Make the HTTP GET Request.
+    $query = [
+      'pageSize' => 1,
+    ];
+    $response = $this->http->request('GET', $url, ['query' => $query]);
+
+    // Ensure it was successful.
+    $this->assertEquals(200, $response->getStatusCode(),
+      "We should be able to access the page at $url.");
+
+    // Ensure the page returned is JSON.
+    $contentType = $response->getHeaders()["Content-Type"][0];
+    $this->assertEquals("application/json", $contentType,
+      "The returned page for $callname should be JSON.");
+
+    // Retrieve the JSON from the page and decode it for testing.
+    $response = json_decode($response->getBody());
+    $this->assertIsObject($response,
+      "The response for $callname should be valid JSON.");
+
+    // Ensure the metadata header is correct.
+    // This helper method includes multiple assertions.
+    $this->assertHeader($response, $callname);
+
+    // Ensure the result is correct.
+    // This helper method includes multiple assertions.
+    $this->assertResultFormat($response, $callname);
+
+    // The data should not be empty.
+    $this->assertNotEmpty($response->result->data,
+      "The data for $callname should contain results. $msg");
+
+    // The data should have only have 1 result.
+    $this->assertEquals(1, sizeof($response->result->data),
+      "There should be only 1 datapoint due to pageSize=1. $msg");
+
+    // There should be multiple pages.
+    // Actually the same number as results before.
+    $this->assertEquals($numOfResults, $response->metadata->pagination->totalPages,
+      "There should be $numOfResults pages. $msg");
+  }
+
+  /**
+   * Tests that the pageSize and page parameters return the correct format
+   * with the expected results. Specifically, that paging works.
+   *
+   * @param mixed $response
+   *   Used to return the results. Can be NULL to begin with.
+   * @param string $callname
+   *   The name of the call for assertion messages.
+   * @param string $url
+   *   The URL of the call.
+   * @param array $page1_results
+   *   An array of the results on the first page from previous tests.
+   * @param int $numOfResults
+   *   The number of results from the call with no parameters.
+   */
+  public function assertPaging(&$response, $callname, $url, $numOfResults, $page1_results) {
+
+    // Make the HTTP GET Request.
+    $query = [
+      'pageSize' => 1,
+      'page' => 2,
+    ];
+    $response = $this->http->request('GET', $url, ['query' => $query]);
+
+    // Ensure it was successful.
+    $this->assertEquals(200, $response->getStatusCode(),
+      "We should be able to access the page at $url.");
+
+    // Ensure the page returned is JSON.
+    $contentType = $response->getHeaders()["Content-Type"][0];
+    $this->assertEquals("application/json", $contentType,
+      "The returned page for $callname should be JSON.");
+
+    // Retrieve the JSON from the page and decode it for testing.
+    $response = json_decode($response->getBody());
+    $this->assertIsObject($response,
+      "The response for $callname should be valid JSON.");
+
+    // Ensure the metadata header is correct.
+    // This helper method includes multiple assertions.
+    $this->assertHeader($response, $callname);
+
+    // Ensure the result is correct.
+    // This helper method includes multiple assertions.
+    $this->assertResultFormat($response, $callname);
+
+    // The data should not be empty.
+    $this->assertNotEmpty($response->result->data,
+      "The data for $callname should contain results. $msg");
+
+    // The data should have only have 1 result.
+    $this->assertEquals(1, sizeof($response->result->data),
+      "There should be only 1 datapoint due to pageSize=1. $msg");
+
+    // There should be multiple pages.
+    // Actually the same number as results before.
+    $this->assertEquals($numOfResults, $response->metadata->pagination->totalPages,
+      "There should be $numOfResults pages. $msg");
+
+    // Page 3 should not have the same results as page 1.
+    $this->assertNotEquals($page1_results, $response->result->data,
+      "The results should not be the same on different pages.");
+  }
 }

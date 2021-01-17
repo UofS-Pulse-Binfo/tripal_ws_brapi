@@ -4,15 +4,15 @@ namespace Tests\calls;
 use StatonLab\TripalTestSuite\TripalTestCase;
 use Tests\GenericHttpTestCase;
 
-class breedingMethodsCallTest extends GenericHttpTestCase {
+class peopleCallTest extends GenericHttpTestCase {
 
   /**
-   * Breeding Methods Call (Version 1.3)
-   * https://brapi.docs.apiary.io/#reference/germplasm/breedingmethods/get-breedingmethods-by-breedingmethoddbid
+   * People Call (Version 1.3)
+   * https://brapi.docs.apiary.io/#reference/people/people/get-people
    */
-  public function testBreedingMethodsCall() {
-    $callname = 'breedingmethods';
-    $url = 'web-services/brapi/v1/breedingmethods';
+  public function testPeopleCall() {
+    $callname = 'people';
+    $url = 'web-services/brapi/v1/people';
     $msg = "If it doesn't make sure you have Loaded the test data provided by the tripal_ws_brapi_tesdata helper module.";
 
     //---------------------------------
@@ -31,6 +31,7 @@ class breedingMethodsCallTest extends GenericHttpTestCase {
     // 3. WITH PARAMETERS: page, pageSize
     $response = NULL;
     $this->assertPaging($response, $callname, $url, $numOfResults, $page1_results);
+
   }
 
   /**
@@ -58,12 +59,22 @@ class breedingMethodsCallTest extends GenericHttpTestCase {
 
     // A single result should have various keys.
     $datapoint = $response->result->data[0];
-    $this->assertObjectHasAttribute('abbreviation', $datapoint,
-      "A single result should have an abbreviation key.");
-    $this->assertObjectHasAttribute('breedingMethodDbId', $datapoint,
-      "A single result should have an breedingMethodDbId key.");
-    $this->assertObjectHasAttribute('breedingMethodName', $datapoint,
-      "A single result should have an breedingMethodName key.");
+    $this->assertObjectHasAttribute('firstName', $datapoint,
+      "A single result should have an firstName key.");
+    $this->assertObjectHasAttribute('middleName', $datapoint,
+      "A single result should have an middleName key.");
+    $this->assertObjectHasAttribute('lastName', $datapoint,
+      "A single result should have an lastName key.");
+    $this->assertObjectHasAttribute('emailAddress', $datapoint,
+      "A single result should have an emailAddress key.");
+    $this->assertObjectHasAttribute('mailingAddress', $datapoint,
+      "A single result should have an mailingAddress key.");
+    $this->assertObjectHasAttribute('phoneNumber', $datapoint,
+      "A single result should have an phoneNumber key.");
+    $this->assertObjectHasAttribute('personDbId', $datapoint,
+      "A single result should have an personDbId key.");
+    $this->assertObjectHasAttribute('userID', $datapoint,
+      "A single result should have an userID key.");
     $this->assertObjectHasAttribute('description', $datapoint,
       "A single result should have an description key.");
   }
