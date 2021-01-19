@@ -28,7 +28,7 @@ class TripalWebServiceCustomCall extends TripalWebServiceCall {
       TripalWebServiceCall::callAlias(static::$is_alias_of);
     }
     else {
-      // Call of database type only supports GET request.
+      // Call of custom call type only supports GET request.
       $this->validateRequestMethod($this->custom_call_method);
 
       // Check response field for active/default version of a major
@@ -41,6 +41,8 @@ class TripalWebServiceCustomCall extends TripalWebServiceCall {
     }
 
     TripalWebServiceCall::__construct();
+    // Compute resultset limit.
+    $this->call_asset['configuration']['resultset_limit'] = $this->getResultsetLimit();
   }
 
   /**
