@@ -336,6 +336,14 @@ class GenericHttpTestCase extends TripalTestCase {
     // Retrieve the JSON from the page and decode it for testing.
     $response = json_decode($response->getBody());
 
+    // Ensure the metadata header is correct.
+    // This helper method includes multiple assertions.
+    $this->assertHeader($response, " . $this->callname . ");
+
+    // Ensure the result is correct.
+    // This helper method includes multiple assertions.
+    $this->assertResultFormat($response, " . $this->callname . ");
+      
     // Test each response item (base on key) to match the parameter value.
     foreach($response->result->data as $i => $item) {
       $key = $parameter['key'];
