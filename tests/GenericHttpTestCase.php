@@ -306,4 +306,49 @@ class GenericHttpTestCase extends TripalTestCase {
     $this->assertNotEquals($page1_results, $response->result->data,
       "The results should not be the same on different pages.");
   }
+
+  /**
+   * Tests that the response is a subset (filtered result), where a response key
+   * of each item matches the parameter value.
+   *
+   * @param mixed $response
+   *   Used to return the results. Can be NULL to begin with.
+   * @param array $parameter
+   *   Contains the parameter name, the target response key the paramter
+   *   applies to and the value of the parameter.
+   */
+  public function assertWithParameter(&$response, $parameter) {
+    $query = [
+      $parameter['name'] => $parameter['value'],
+    ];
+
+    $response = $this->http->request('GET', $this->url, ['query' => $query]);
+
+    // Ensure it was successful.
+    $this->assertEquals(200, $response->getStatusCode(),
+      "We should be able to access the page at $this->url.");
+
+    // Ensure the page returned is JSON.
+    $contentType = $response->getHeaders()["Content-Type"][0];
+    $this->assertEquals("application/json", $contentType,
+      "The returned page for " . $this->callname . " should be JSON.");
+
+    // Retrieve the JSON from the page and decode it for testing.
+    $response = json_decode($response->getBody());
+
+    // Test each response item (base on key) to match the parameter value.
+    foreach($response->result->data as $i => $item) {
+      $key = $parameter['key'];
+      if (is_array($item->{$key})) {
+        // If it has the value.
+        $this->assertContains($parameter['value'], $item->{$key},
+          'Response contains items that do not match the parameter requested');
+      }
+      else {
+        // If key value matches the parameter value.
+        $this->assertEquals($item->{$key}, $parameter['value'],
+          'Response contains items that do not match the parameter requested');
+      }
+    }
+  }
 }

@@ -58,9 +58,15 @@ class callsCallTest extends GenericHttpTestCase {
 
     //---------------------------------
     // 4. WITH PARAMETERS: dataType
-    // $response = NULL;
-    // $this->assertWithDataType($response);
 
+    // See if the response is a subset where all items (based on a key)
+    // matches the parameter value.
 
+    $response = NULL;
+    $this->assertWithParameter($response, [
+      'name' => 'dataType', // Parameter name.
+      'key'   => 'dataTypes', // The response key the parameter name will match.
+      'value'  => 'application/json' // Parameter value.
+    ]);
   }
 }
