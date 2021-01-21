@@ -183,6 +183,7 @@ class TripalWebServiceBrapiV1Maps extends TripalWebServiceDatabaseCall {
       foreach($result as $map) {
         // Comments.
         $map->comments = trim(html_entity_decode(strip_tags($map->comments)));
+        $map->markercount = (int) $map->markercount;
 
         array_push($maps, $map);
       }

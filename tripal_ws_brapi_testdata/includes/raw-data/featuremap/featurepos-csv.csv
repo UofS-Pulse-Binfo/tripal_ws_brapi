@@ -103,3 +103,5 @@ translate_value:featuremap_id, translate_value:feature_id, translate_value:map_f
 "MAP 2 (Germ1 X Germ2 RIL); Person 1; BMC Genomic 2013", LcCX2 Assay, lgA2, 1.0
 "MAP 2 (Germ1 X Germ2 RIL); Person 1; BMC Genomic 2013", LcCY2 Assay, lgA2, 1.0
 "MAP 2 (Germ1 X Germ2 RIL); Person 1; BMC Genomic 2013", LcCZ2 Assay, lgA2, 1.0
+"MAP 3 (Germ1 X Germ2 RIL); Person 1; Plant Genome 2013", LcCY2 Assay, lgA2, 1.0
+"MAP 4 (Germ1 X Germ2 RIL); Person 1; BMC Genomic 2013", LcCZ2 Assay, lgA2, 1.0

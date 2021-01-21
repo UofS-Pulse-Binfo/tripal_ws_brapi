@@ -51,17 +51,40 @@ class mapsCallTest extends GenericHttpTestCase {
     // 1. NO PARAMETERS.
     $response = NULL;
     $this->assertWithNoParameters($response);
-    // $numOfResults = sizeof($response->result->data);
+    $numOfResults = sizeof($response->result->data);
 
     //---------------------------------
     // 2. WITH PARAMETERS: pageSize
-    // $response = NULL;
-    // $this->assertPageSize($response, $numOfResults);
-    // $page1_results = $response->result->data;
+    $response = NULL;
+    $this->assertPageSize($response, $numOfResults);
+    $page1_results = $response->result->data;
 
     //---------------------------------
     // 3. WITH PARAMETERS: page, pageSize
-    // $response = NULL;
-    // $this->assertPaging($response, $numOfResults, $page1_results);
+    $response = NULL;
+    $this->assertPaging($response, $numOfResults, $page1_results);
+
+    //---------------------------------
+    // 3. WITH PARAMETERS: species, commonCropName, type
+    $response = NULL;
+    $this->assertWithParameter($response, [
+      'name' => 'species', // Parameter name.
+      'key'   => 'species', // The response key the parameter name will match.
+      'value'  => 'ferox' // Parameter value.
+    ]);
+
+    $response = NULL;
+    $this->assertWithParameter($response, [
+      'name' => 'commonCropName', // Parameter name.
+      'key'   => 'commonCropName', // The response key the parameter name will match.
+      'value'  => 'Tripalus' // Parameter value.
+    ]);
+
+    $response = NULL;
+    $this->assertWithParameter($response, [
+      'name' => 'type', // Parameter name.
+      'key'   => 'type', // The response key the parameter name will match.
+      'value'  => 'genetic' // Parameter value.
+    ]);
   }
 }
