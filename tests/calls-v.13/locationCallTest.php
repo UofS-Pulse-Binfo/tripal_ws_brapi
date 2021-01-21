@@ -35,7 +35,6 @@ class locationsCallTest extends GenericHttpTestCase {
     'countryName' => 'string',
     'documentationURL' => 'string', //uri
     'instituteAddress' => 'string',
-    'instituteAdress' => 'string',
     'instituteName' => 'string',
     'latitude' => 'integer',
     'locationDbId' => 'string',
