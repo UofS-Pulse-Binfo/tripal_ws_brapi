@@ -145,6 +145,9 @@ class TripalWebServiceBrapiV1Locations extends TripalWebServiceDatabaseCall {
         }
 
         array_push($locations, $location);
+
+        // Additionalinfo set to object type.
+        $location->additionalinfo = (object)[];
       }
     }
 

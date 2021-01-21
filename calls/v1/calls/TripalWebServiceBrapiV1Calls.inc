@@ -16,6 +16,9 @@ class TripalWebServiceBrapiV1Calls extends TripalWebServiceCustomCall {
   // Example: page => int, searchResultDbId => hash-code.
   public $call_parameter = [
     // Key : Expected value for this key.
+    'dataType' => 'text', // The data format supported by the call. Example: json.
+    'page'     => 'int',  // Which result page is requested.
+    'pageSize' => 'int',  // The size of the pages to be returned.
   ];
 
   // Keyword used to identify result items.
@@ -47,168 +50,216 @@ class TripalWebServiceBrapiV1Calls extends TripalWebServiceCustomCall {
     $calls = [
       [
         'calls'     => 'locations',
-        'datatypes' => ['list' => ['application/json']],
+        'dataTypes' => ['list' => ['application/json']],
         'methods'   => ['list' => ['GET']],
         'versions'  => ['list' => ['1.3']],
       ],
       [
         'calls'     => 'commoncropnames',
-        'datatypes' => ['list' => ['application/json']],
+        'dataTypes' => ['list' => ['application/json']],
         'methods'   => ['list' => ['GET']],
         'versions'  => ['list' => ['1.3', '2.0']],
       ],
       [
         'calls'     => 'crops',
-        'datatypes' => ['list' => ['application/json']],
+        'dataTypes' => ['list' => ['application/json']],
         'methods'   => ['list' => ['GET']],
         'versions'  => ['list' => ['1.3']],
       ],
       [
         'calls'     => 'germplasm',
-        'datatypes' => ['list' => ['application/json']],
+        'dataTypes' => ['list' => ['application/json']],
         'methods'   => ['list' => ['GET']],
         'versions'  => ['list' => ['1.3', '2.0']],
       ],
       [
         'calls'     => 'germplasm-search',
-        'datatypes' => ['list' => ['application/json']],
+        'dataTypes' => ['list' => ['application/json']],
         'methods'   => ['list' => ['GET', 'POST']],
         'versions'  => ['list' => ['1.3', '2.0']],
       ],
       [
         'calls'     => 'observationunits',
-        'datatypes' => ['list' => ['application/json']],
+        'dataTypes' => ['list' => ['application/json']],
         'methods'   => ['list' => ['GET']],
         'versions'  => ['list' => ['1.3']],
       ],
       [
         'calls'     => 'observationlevels',
-        'datatypes' => ['list' => ['application/json']],
+        'dataTypes' => ['list' => ['application/json']],
         'methods'   => ['list' => ['GET']],
         'versions'  => ['list' => ['1.3']],
       ],
       [
         'calls'     => 'seasons',
-        'datatypes' => ['list' => ['application/json']],
+        'dataTypes' => ['list' => ['application/json']],
         'methods'   => ['list' => ['GET']],
         'versions'  => ['list' => ['1.3']],
       ],
       [
         'calls'     => 'studies',
-        'datatypes' => ['list' => ['application/json']],
+        'dataTypes' => ['list' => ['application/json']],
         'methods'   => ['list' => ['GET']],
         'versions'  => ['list' => ['1.3']],
       ],
       [
         'calls'     => 'studies-search',
-        'datatypes' => ['list' => ['application/json']],
+        'dataTypes' => ['list' => ['application/json']],
         'methods'   => ['list' => ['GET', 'POST']],
         'versions'  => ['list' => ['1.3']],
       ],
       [
         'calls'     => 'breedingmethods',
-        'datatypes' => ['list' => ['application/json']],
+        'dataTypes' => ['list' => ['application/json']],
         'methods'   => ['list' => ['GET']],
         'versions'  => ['list' => ['1.3']],
       ],
       [
         'calls'     => 'people',
-        'datatypes' => ['list' => ['application/json']],
+        'dataTypes' => ['list' => ['application/json']],
         'methods'   => ['list' => ['GET']],
         'versions'  => ['list' => ['1.3']],
       ],
       [
         'calls'     => 'programs',
-        'datatypes' => ['list' => ['application/json']],
+        'dataTypes' => ['list' => ['application/json']],
         'methods'   => ['list' => ['GET']],
         'versions'  => ['list' => ['1.3']],
       ],
       [
         'calls'     => 'programs-search',
-        'datatypes' => ['list' => ['application/json']],
+        'dataTypes' => ['list' => ['application/json']],
         'methods'   => ['list' => ['GET', 'POST']],
         'versions'  => ['list' => ['1.3']],
       ],
       [
         'calls'     => 'trials',
-        'datatypes' => ['list' => ['application/json']],
+        'dataTypes' => ['list' => ['application/json']],
         'methods'   => ['list' => ['GET']],
         'versions'  => ['list' => ['1.3']],
       ],
       [
         'calls'     => 'variables',
-        'datatypes' => ['list' => ['application/json']],
+        'dataTypes' => ['list' => ['application/json']],
         'methods'   => ['list' => ['GET']],
         'versions'  => ['list' => ['1.3']],
       ],
       [
         'calls'     => 'attributes/categories',
-        'datatypes' => ['list' => ['application/json']],
+        'dataTypes' => ['list' => ['application/json']],
         'methods'   => ['list' => ['GET']],
         'versions'  => ['list' => ['1.3']],
       ],
       [
         'calls'     => 'maps',
-        'datatypes' => ['list' => ['application/json']],
+        'dataTypes' => ['list' => ['application/json']],
         'methods'   => ['list' => ['GET']],
         'versions'  => ['list' => ['1.3']],
       ],
       [
         'calls'     => 'markerprofiles',
-        'datatypes' => ['list' => ['application/json']],
+        'dataTypes' => ['list' => ['application/json']],
         'methods'   => ['list' => ['GET']],
         'versions'  => ['list' => ['1.3']],
       ],
       [
         'calls'     => 'markers',
-        'datatypes' => ['list' => ['application/json']],
+        'dataTypes' => ['list' => ['application/json']],
         'methods'   => ['list' => ['GET']],
         'versions'  => ['list' => ['1.3']],
       ],
       [
         'calls'     => 'markers-search',
-        'datatypes' => ['list' => ['application/json']],
+        'dataTypes' => ['list' => ['application/json']],
         'methods'   => ['list' => ['GET', 'POST']],
         'versions'  => ['list' => ['1.3']],
       ],
       [
         'calls'     => 'methods',
-        'datatypes' => ['list' => ['application/json']],
+        'dataTypes' => ['list' => ['application/json']],
         'methods'   => ['list' => ['GET']],
         'versions'  => ['list' => ['1.3']],
       ],
       [
         'calls'     => 'observationtables-search',
-        'datatypes' => ['list' => ['application/json']],
+        'dataTypes' => ['list' => ['application/json']],
         'methods'   => ['list' => ['GET', 'POST']],
         'versions'  => ['list' => ['1.3']],
       ],
       [
         'calls'     => 'ontologies',
-        'datatypes' => ['list' => ['application/json']],
+        'dataTypes' => ['list' => ['application/json']],
         'methods'   => ['list' => ['GET']],
         'versions'  => ['list' => ['1.3']],
       ],
       [
         'calls'     => 'samples',
-        'datatypes' => ['list' => ['application/json']],
+        'dataTypes' => ['list' => ['application/json']],
         'methods'   => ['list' => ['GET']],
         'versions'  => ['list' => ['1.3']],
       ],
       [
         'calls'     => 'scales',
-        'datatypes' => ['list' => ['application/json']],
+        'dataTypes' => ['list' => ['application/json']],
         'methods'   => ['list' => ['GET']],
         'versions'  => ['list' => ['1.3']],
       ],
       [
         'calls'     => 'traits',
-        'datatypes' => ['list' => ['application/json']],
+        'dataTypes' => ['list' => ['application/json']],
         'methods'   => ['list' => ['GET']],
         'versions'  => ['list' => ['1.3']],
       ],
     ];
 
-    return $calls;
+    $call_asset = $this->call_asset;
+    // Holds new subset or full set of the calls defined above.
+    $call_items = [];
+
+    if (isset($call_asset['parameter']['dataType'])) {
+      // Select items that match dataType parameter when provided.
+      // Otherwise, use orignal array.
+
+      // BrAPI sets dataTypes to application/json while example in parameter value is just json.
+      // Set it to match so as something gets found.
+      $call_asset['parameter']['dataType'] = ($call_asset['parameter']['dataType'] == 'json')
+        ? 'application/json' : $call_asset['parameter']['dataType'];
+
+      foreach($calls as $item) {
+        // Take all calls with the dataType requested.
+        if (in_array($call_asset['parameter']['dataType'], $item['dataTypes']['list'])) {
+          $call_items[] = $item;
+        }
+      }
+    }
+    else {
+      // Fullset requested.
+      $call_items = $calls;
+    }
+
+    // Determine number of items returned.
+    $call_items_count = count($call_items);
+
+    // Update response to include count.
+    for ($i = 0; $i < $call_items_count; $i++) {
+      $call_items[ $i ]['full_count'] = $call_items_count;
+    }
+
+    // Paging requirements:
+    // Based on parameters defined above.
+    // page and pageSize
+    $tmp_page_size = isset($call_asset['parameter']['pageSize'])
+      ? $call_asset['parameter']['pageSize'] : $call_asset['configuration']['resultset_limit'];
+
+    // When pageSize requested is more than the items, set it to items count instead.
+    // Use resultset limit configuration value when pageSize is not requested.
+    $page_size = ($tmp_page_size > $call_items_count) ? $call_items_count : $tmp_page_size;
+
+    // Page, set to index 0 - first page when not requested.
+    $page = isset($call_asset['parameter']['page']) ? $call_asset['parameter']['page'] : 0;
+    // Start showing items starting at this index.
+    $offset = $page * $page_size;
+
+    return array_slice($call_items, $offset, $page_size);
   }
 }

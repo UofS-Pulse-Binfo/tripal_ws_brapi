@@ -681,7 +681,7 @@ class TripalWebServiceCall {
       $resultset_limit = $this->getResultsetLimit();
       $current_page = (isset($parameter['page'])) ? $parameter['page'] : 0;
 
-      $start_at = $current_page * $resultset_limit;
+      $start_at = 0;
       $stop_at  = $start_at + $resultset_limit - 1;
 
       $response_subset_ctr = 0;
