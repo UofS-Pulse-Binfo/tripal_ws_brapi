@@ -46,7 +46,7 @@ class markerProfilesCallTest extends GenericHttpTestCase {
     // 1. NO PARAMETERS.
     $response = NULL;
     $this->assertWithNoParameters($response);
-    // $numOfResults = sizeof($response->result->data);
+    $numOfResults = sizeof($response->result->data);
 
     //---------------------------------
     // 2. WITH PARAMETERS: pageSize
@@ -61,22 +61,37 @@ class markerProfilesCallTest extends GenericHttpTestCase {
 
     //---------------------------------
     // 4. WITH PARAMETERS: germplasmDbId
-    // $response = NULL;
-    // $this->assertWithGermplasmDbId($response);
+    // NOTE: id number cannot be predetermined since
+    //       RDBMS generate different id number. Set
+    //       parameter value to empty string and set pick
+    //       one id from response and use as parameter value.
+    $response = NULL;
+    $this->assertWithParameter($response, [
+      'name' => 'germplasmDbId', // Parameter name.
+      'key'   => 'germplasmDbId', // The response key the parameter name will match.
+      'value'  =>  '',             // Pick one.
+    ], TRUE);
 
     //---------------------------------
     // 5. WITH PARAMETERS: studyDbId
-    // $response = NULL;
-    // $this->assertWithStudyDbId($response);
+    // NOT IN RESPONSE FIELD brapi.docs.apiary.io
 
     //---------------------------------
     // 6. WITH PARAMETERS: sampleDbId
-    // $response = NULL;
-    // $this->assertWithSampleDbId($response);
+    $response = NULL;
+    $this->assertWithParameter($response, [
+      'name' => 'sampleDbId', // Parameter name.
+      'key'   => 'sampleDbId', // The response key the parameter name will match.
+      'value'  =>  '',          // Pick one.
+    ], TRUE);
 
     //---------------------------------
     // 7. WITH PARAMETERS: extractDbId
-    // $response = NULL;
-    // $this->assertWithExtractDbId($response);
+    $response = NULL;
+    $this->assertWithParameter($response, [
+      'name' => 'extractDbId', // Parameter name.
+      'key'   => 'extractDbId', // The response key the parameter name will match.
+      'value'  =>  '',           // Pick one.
+    ], TRUE);
   }
 }

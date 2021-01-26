@@ -1,0 +1,14 @@
+translate_value:subject_id, translate_value:object_id, translate_term:type_id, value, rank
+lola, stella, is_extracted_from, stock_rel_value, 1
+stella, luna, is_extracted_from, stock_rel_value, 1
+luna, nala, is_extracted_from, stock_rel_value, 1
+izzy, layla, is_extracted_from, stock_rel_value, 1
+layla, lulu, is_extracted_from, stock_rel_value, 1
+lulu, ellie, is_extracted_from, stock_rel_value, 1
+ellie, piper, is_extracted_from, stock_rel_value, 1
+piper, olivia, is_extracted_from, stock_rel_value, 1
+olivia, king, is_extracted_from, stock_rel_value, 1
+king, max, is_extracted_from, stock_rel_value, 1
+max, owen, is_extracted_from, stock_rel_value, 1
+owen, ray, is_extracted_from, stock_rel_value, 1
+ray, rex, is_extracted_from, stock_rel_value, 1

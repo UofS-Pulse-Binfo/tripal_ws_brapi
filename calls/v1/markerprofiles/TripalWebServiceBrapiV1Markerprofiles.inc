@@ -24,8 +24,11 @@ class TripalWebServiceBrapiV1Markerprofiles extends TripalWebServiceDatabaseCall
   // Example: page => int, searchResultDbId => hash-code.
   public $call_parameter = [
     // Key : Expected value for this key.
-    'page'          => 'int', // Which result page is requested.
-    'pageSize'      => 'int'  // The size of the pages to be returned.
+    'germplasmDbId' => 'text', // The server's internal ids for the Germplasm IDs.
+    'sampleDbId'    => 'text', // The server's internal id for the SampleDbId.
+    'extractDbId'   => 'text', // The server's internal id for the ExtractDbId.
+    'page'          => 'int',  // Which result page is requested.
+    'pageSize'      => 'int'   // The size of the pages to be returned.
   ];
 
   // Keyword used to identify result items.
@@ -68,13 +71,16 @@ class TripalWebServiceBrapiV1Markerprofiles extends TripalWebServiceDatabaseCall
     // Inspect genotype_call table (prepared by ND_Genotypes module).
     $exists = db_field_exists('chado.genotype_call', 'genotype_call_id');
 
+    $filter = [];
+    $args   = [];
+
     if ($exists) {
       $call_asset = $this->call_asset;
 
       // Terms used in this query.
       $arr_terms = [];
       $req_terms = [
-        'schema'   => 'additionalType',
+        'MAIN' => 'marker_type',
         'stock_relationship' => 'is_extracted_from'
       ];
 
@@ -97,6 +103,35 @@ class TripalWebServiceBrapiV1Markerprofiles extends TripalWebServiceDatabaseCall
       // page.
       $offset = $call_asset['parameter']['page'] * $page_size;
 
+      // germplasmDbId.
+      if (isset($call_asset['parameter']['germplasmDbId'])
+          && !empty($call_asset['parameter']['germplasmDbId'])) {
+
+        $filter[] = 'germ.stock_id = :germplasmDbId';
+        $args[':germplasmDbId'] = $call_asset['parameter']['germplasmDbId'];
+      }
+
+      // sampleDbId.
+      if (isset($call_asset['parameter']['sampleDbId'])
+          && !empty($call_asset['parameter']['sampleDbId'])) {
+
+        $filter[] = 'profile.stock_id = :sampleDbId';
+        $args[':sampleDbId'] = $call_asset['parameter']['sampleDbId'];
+      }
+
+      // extractDbId.
+      if (isset($call_asset['parameter']['extractDbId'])
+          && !empty($call_asset['parameter']['extractDbId'])) {
+
+        $filter[] = 'profile.stock_id = :extractDbId';
+        $args[':extractDbId'] = $call_asset['parameter']['extractDbId'];
+      }
+
+      // Transform parameters into a string, as where clause in the query.
+      $where = '';
+      if (isset($filter) && count($filter) > 0) {
+        $where = 'WHERE ' . implode(' AND ', $filter);
+      }
 
       // No duplicate count of genotypes.
       $row_count = chado_query("SELECT reltuples::bigint FROM pg_class WHERE relname = :table",
@@ -121,13 +156,15 @@ class TripalWebServiceBrapiV1Markerprofiles extends TripalWebServiceDatabaseCall
             LEFT JOIN {stock}_relationship AS stockrel ON stock.stock_id = stockrel.subject_id AND stockrel.type_id = %d
             LEFT JOIN {stock} AS germ ON stockrel.object_id = germ.stock_id
           LEFT JOIN {project} AS prj USING (project_id)
+        %s
         LIMIT %d OFFSET %d
       ";
 
       $query = sprintf($sql, $row_count, $this->class_name::$chado_table,
-        $arr_terms['additionalType'], $arr_terms['is_extracted_from'],
-        $page_size, $offset);
-      $result = chado_query($query);
+        $arr_terms['marker_type'], $arr_terms['is_extracted_from'],
+        $where, $page_size, $offset);
+
+      $result = chado_query($query, $args);
 
       $profiles = [];
 
@@ -152,7 +189,7 @@ class TripalWebServiceBrapiV1Markerprofiles extends TripalWebServiceDatabaseCall
             $resultcount  = ($count_result) ? $count_result->fetchField() : 0;
 
             // Replace 'n/a' default in the query with the count.
-            $profile->resultcount = $resultcount;
+            $profile->resultcount = (int) $resultcount;
           }
 
           array_push($profiles, $profile);

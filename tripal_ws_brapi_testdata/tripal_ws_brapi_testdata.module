@@ -44,7 +44,7 @@ if (!function_exists('tripal_ws_brapi_generate_data')) {
       'project'    => ['main' => 'project-csv', 'prop' => 'projectprop-csv'],
       'project_relationship' => ['main' => 'project_relationship-csv'],
       'organism'   => ['main' => 'organism-csv'],
-      'stock'      => ['main' => 'stock-csv', 'prop' => 'stockprop-csv'],
+      'stock'      => ['main' => 'stock-csv', 'prop' => 'stockprop-csv', 'stock_relationship' => 'stock_relationship-csv'],
       'phenotype'  => ['main' => 'phenotype-csv' , 'prop' => 'phenotypeprop-csv', 'cvtermprop' => 'cvtermprop-csv'],
       'contact'    => ['main' => 'contact-csv', 'prop' => 'contactprop-csv'],
       'genotype'   => ['main' => 'genotype-csv'],
