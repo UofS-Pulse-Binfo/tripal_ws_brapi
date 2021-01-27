@@ -25,8 +25,13 @@ class commonCropNamesCallTest extends GenericHttpTestCase {
    * The structure of the data result.
    * Each entry should be key => valuetype | array.
    * Valid valuetypes are: string, integer, object, array.
+   *
+   * temp_field is a temporary key (a placeholder) for this call.
+   * Since this call has no defined response field, this key is used
+   * instead. Response class will transpose and sanitize final response.
    */
   public $data_structure = [
+    'temp_field' => 'string'
   ];
 
   /**
