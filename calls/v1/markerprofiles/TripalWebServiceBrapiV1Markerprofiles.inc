@@ -134,8 +134,8 @@ class TripalWebServiceBrapiV1Markerprofiles extends TripalWebServiceDatabaseCall
       }
 
       // No duplicate count of genotypes.
-      $row_count = chado_query("SELECT reltuples::bigint FROM pg_class WHERE relname = :table",
-        [':table' => $this->class_name::$chado_table])
+      $sql_count = sprintf("SELECT COUNT(genotype_call_id) FROM {%s}", $this->class_name::$chado_table);
+      $row_count = chado_query($sql_count)
         ->fetchField();
 
       $sql = "
