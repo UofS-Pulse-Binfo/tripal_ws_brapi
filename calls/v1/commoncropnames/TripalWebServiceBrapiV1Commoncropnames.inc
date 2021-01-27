@@ -16,16 +16,24 @@ class TripalWebServiceBrapiV1Commoncropnames extends TripalWebServiceDatabaseCal
   // Example: page => int, searchResultDbId => hash-code.
   public $call_parameter = [
     // Key : Expected value for this key.
+    'page'     => 'int', // Which result page is requested.
+    'pageSize' => 'int'  // The size of the pages to be returned.
   ];
 
   // Keyword used to identify result items.
   protected $call_payload_key = 'data';
 
   // Unit of response for this call.
+  // key temp_field is used as temporary response field since
+  // this call does not have a response field. This way,
+  // this call would behave like any database type calls
+  // with defined response field.
+
+  // Values will be transposed in the the response class.
   public $response_field = [
     '1.2' => [],
-    '1.3' => [],
-    '2.0' => [],
+    '1.3' => ['temp_field'],
+    '2.0' => ['temp_field'],
   ];
 
   // Call parameters as provided in the request url.
@@ -49,9 +57,25 @@ class TripalWebServiceBrapiV1Commoncropnames extends TripalWebServiceDatabaseCal
    */
   public function getResult() {
     $result = '';
+    $call_asset = $this->call_asset;
 
-    $result = chado_select_record($this->class_name::$chado_table, ['common_name'], []);
-    return ($result) ? $result : '';
+    // pageSize.
+    $page_size = isset($call_asset['parameter']['pageSize'])
+      ? $call_asset['parameter']['pageSize'] : $call_asset['configuration']['resultset_limit'];
+
+    // page.
+    $offset = $call_asset['parameter']['page'] * $page_size;
+
+    $sql = "
+      SELECT common_name, COUNT(organism_id) OVER() AS full_count FROM {%s}
+      ORDER BY common_name ASC
+      LIMIT %d OFFSET %d
+    ";
+
+    $query = sprintf($sql, $this->class_name::$chado_table, $page_size, $offset);
+    $result = chado_query($query);
+
+    return ($result->rowCount() > 0) ? $result->fetchAll() : '';
   }
 
   /**

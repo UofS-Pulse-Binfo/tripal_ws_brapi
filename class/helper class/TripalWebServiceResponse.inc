@@ -95,9 +95,18 @@ final class TripalWebServiceResponse {
     $metadata_response[ $metadata_response_key ] = $metadata;
 
     $payload_response_key = array_keys($payload_response)[0];
-    $payload = self::removeCommentColumn($payload);
-    $payload_response[ $payload_response_key ] = $payload;
 
+    // Sanitize response from comments and placeholder response field
+    // before sending to end user.
+
+    // Remove response field prefixed with # sign. ie full_count.
+    $payload = self::removeCommentColumn($payload);
+
+    // See if response uses a temp_field - transpose values and omit
+    // temp_field keyword. ie. in crops, commoncropnames.
+    $payload = self::transposeColumn($payload);
+
+    $payload_response[ $payload_response_key ] = $payload;
     $response = $metadata_response + $payload_response;
 
     $status = '200 OK';
@@ -145,7 +154,6 @@ final class TripalWebServiceResponse {
 
      if (is_array($payload[ $payload_response_key ])) {
        foreach($payload[ $payload_response_key ] as $i => $item) {
-
          if (is_array($item)) {
            foreach($item as $key => $value) {
              if (strpos($key, '#') !== FALSE) {
@@ -154,6 +162,40 @@ final class TripalWebServiceResponse {
            }
          }
        }
+     }
+
+     return $payload;
+   }
+
+   /**
+    * Remove temp_field - used when call does not have a defined response field.
+    * This temp_field key will indicate response will be merged into an array.
+    *
+    * @param $payload
+    *   Array, response result items.
+    * @return array
+    *   Array, all values of key temp_field, merged.
+    */
+   public static function transposeColumn($payload) {
+     $temp_field_key = 'temp_field';
+     $payload_response_key = array_keys($payload)[0];
+     $new_payload = [];
+
+     if (is_array($payload[ $payload_response_key ])) {
+       foreach($payload[ $payload_response_key ] as $i => $item) {
+         if (is_array($item)) {
+           foreach($item as $key => $value) {
+             if ($key === $temp_field_key) {
+               $new_payload[] = $value;
+             }
+           }
+         }
+       }
+     }
+
+     if (count($new_payload) > 0) {
+       unset($payload[ $payload_response_key ]);
+       $payload[ $payload_response_key ] = $new_payload;
      }
 
      return $payload;
