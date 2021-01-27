@@ -5,5 +5,5 @@
 $terms = [
   'MAIN' => ['marker_locus'],
   'sequence' => ['linkage_group', 'genetic_marker'],
-  'relationship' => ['instance_of']
+  'relationship' => ['instance_of'],
 ];

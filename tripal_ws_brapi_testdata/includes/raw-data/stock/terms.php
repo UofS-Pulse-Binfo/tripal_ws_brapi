@@ -4,4 +4,5 @@
 // CV = [term1, term2, ...]
 $terms = [
   'germplasm_ontology' => ['accession', 'generated germplasm', 'cultivar', '414 inbred line'],
+  'stock_relationship' => ['is_extracted_from']
 ];
