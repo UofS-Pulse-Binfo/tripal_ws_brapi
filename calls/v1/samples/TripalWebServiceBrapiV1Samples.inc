@@ -25,6 +25,9 @@ class TripalWebServiceBrapiV1Samples extends TripalWebServiceDatabaseCall {
   // Example: page => int, searchResultDbId => hash-code.
   public $call_parameter = [
     // Key : Expected value for this key.
+    'sampleDbId'    => 'text', // The internal DB id for a sample.
+    'observationUnitDbId' => 'text', // The internal DB id for an observation unit where a sample was taken from.
+    //'plateDbId'   => 'text', // The internal DB id for a plate of samples
     'germplasmDbId' => 'int', // Filter by location.
     'page'          => 'int', // Which result page is requested.
     'pageSize'      => 'int', // The size of the pages to be returned.
@@ -107,6 +110,33 @@ class TripalWebServiceBrapiV1Samples extends TripalWebServiceDatabaseCall {
     // page.
     $offset = $call_asset['parameter']['page'] * $page_size;
 
+
+    // sampleDbId.
+    if (isset($call_asset['parameter']['sampleDbId'])
+        && !empty($call_asset['parameter']['sampleDbId'])) {
+
+      $filter[] = 'sample.uniquename = :sampleDbId';
+      $args[':sampleDbId'] = $call_asset['parameter']['sampleDbId'];
+    }
+
+    // observationUnitDbId.
+    if (isset($call_asset['parameter']['observationUnitDbId'])
+        && !empty($call_asset['parameter']['observationUnitDbId'])) {
+
+      $filter[] = "CONCAT(cv.name, ':', accession.accession) = :observationUnitDbId";
+      $args[':observationUnitDbId'] = $call_asset['parameter']['observationUnitDbId'];
+    }
+
+    // plateDbId.
+    /*
+    if (isset($call_asset['parameter']['plateDbId'])
+        && !empty($call_asset['parameter']['plateDbId'])) {
+
+      $filter[] = 'PLATE DB ID = :observationUnitDbId';
+      $args[':plateDbId'] = $call_asset['parameter']['plateDbId'];
+    }
+    */
+
     // germplasmDbId
     if (isset($call_asset['parameter']['germplasmDbId'])
         && !empty($call_asset['parameter']['germplasmDbId'])) {
@@ -162,6 +192,8 @@ class TripalWebServiceBrapiV1Samples extends TripalWebServiceDatabaseCall {
     // Additional steps to apply to response field.
     if ($result->rowCount() > 0) {
       foreach($result as $sample) {
+        $sample->plateindex = (int) 0;
+        
         array_push($samples, $sample);
       }
     }
