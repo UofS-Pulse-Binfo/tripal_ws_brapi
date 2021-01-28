@@ -24,8 +24,13 @@ class TripalWebServiceBrapiV1Observationunits extends TripalWebServiceDatabaseCa
   public $call_parameter = [
     // Key : Expected value for this key.
     'germplasmDbId'  => 'int', // The unique ID of a germplasm (accession) to filter on.
-    'page'           => 'int', // Which result page is requested.
-    'pageSize'       => 'int', // The size of the pages to be returned.
+    'observationVariableDbId' => 'text', // The unique ID of an observation variable.
+    'studyDbId'      => 'text', // The unique ID of a studies to filter on.
+    'locationDbId'   => 'text', // The unique ID of a location where these observations were collected.
+     // Unclear definition, not implemented.
+     // trialDbId, programDbId, seasonDbId, observationLevel, observationTimeStampRangeStart, observationTimeStampRangeEnd
+    'page'           => 'int',  // Which result page is requested.
+    'pageSize'       => 'int',  // The size of the pages to be returned.
   ];
 
   // Keyword used to identify result items.
@@ -146,6 +151,38 @@ class TripalWebServiceBrapiV1Observationunits extends TripalWebServiceDatabaseCa
       $args[':germplasmDbId'] = $call_asset['parameter']['germplasmDbId'];
     }
 
+    // observationVariableDbId.
+    if (isset($call_asset['parameter']['observationVariableDbId'])
+        && !empty($call_asset['parameter']['observationVariableDbId'])) {
+
+      $filter[] = 'obs.observationvariabledbid = :observationVariableDbId';
+      $args[':observationVariableDbId'] = $call_asset['parameter']['observationVariableDbId'];
+    }
+
+    // studyDbId.
+    if (isset($call_asset['parameter']['studyDbId'])
+        && !empty($call_asset['parameter']['studyDbId'])) {
+
+      $filter[] = 'prg.project_id = :studyDbId';
+      $args[':studyDbId'] = $call_asset['parameter']['studyDbId'];
+    }
+
+    // locationDbId.
+    if (isset($call_asset['parameter']['locationDbId'])
+        && !empty($call_asset['parameter']['locationDbId'])) {
+
+      $filter[] = "CONCAT(year.value, '-', loc.value, '-', rep.value, '-', germ.name, '-', unit.name) = :locationDbId";
+      $args[':locationDbId'] = $call_asset['parameter']['locationDbId'];
+    }
+
+    // trialDbId.
+    if (isset($call_asset['parameter']['trialDbId'])
+        && !empty($call_asset['parameter']['trialDbId'])) {
+
+      $filter[] = "CONCAT(year.value, '-', loc.value, '-', rep.value, '-', germ.name, '-', unit.name) = :locationDbId";
+      $args[':trialDbId'] = $call_asset['parameter']['trialDbId'];
+    }
+
     // Transform parameters into a string, as where clause in the query.
     $where = '';
     if (isset($filter) && count($filter) > 0) {
@@ -177,7 +214,7 @@ class TripalWebServiceBrapiV1Observationunits extends TripalWebServiceDatabaseCa
         rep.value AS replicate,
         prg.project_id AS studydbid,
         loc.value AS studylocation,
-        CONCAT(year.value, '-', loc.value, '-', rep.value, '-', germ.name, '-', unit.name) studylocationdbid,
+        CONCAT(year.value, '-', loc.value, '-', rep.value, '-', germ.name, '-', unit.name) AS studylocationdbid,
         CONCAT(year.value, '-', loc.value) AS studyname,
         ARRAY_TO_JSON(ARRAY['n/a', 'n/a']) AS treatments,
         COUNT(germ.stock_id) OVER() AS full_count
