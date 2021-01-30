@@ -136,7 +136,7 @@ class TripalWebServiceBrapiV1Trials extends TripalWebServiceDatabaseCall {
     if (isset($call_asset['parameter']['programDbId'])
         && !empty($call_asset['parameter']['programDbId'])) {
 
-      $filter[] = 'category.projectprop_id = :programDbId';
+      $filter[] = 'program.project_id = :programDbId';
       $args[':programDbId'] = $call_asset['parameter']['programDbId'];
     }
 
@@ -181,8 +181,10 @@ class TripalWebServiceBrapiV1Trials extends TripalWebServiceDatabaseCall {
 
         LEFT JOIN {project_relationship} AS category ON project.project_id = category.subject_project_id AND category.type_id = %d
           LEFT JOIN {project} AS program ON category.object_project_id = program.project_id
-      WHERE is_research_area.value::int = 0 OR is_research_area.value IS NULL %s
-      %s
+      WHERE
+        project.project_id IN (SELECT project_id FROM {phenotype} GROUP BY project_id) AND
+        is_research_area.value::int = 0 OR is_research_area.value IS NULL %s
+        %s
       LIMIT %d OFFSET %d
     ";
 
@@ -233,7 +235,7 @@ class TripalWebServiceBrapiV1Trials extends TripalWebServiceDatabaseCall {
           }
         }
 
-        $project->studies = [ $all_studies ];
+        $project->studies = (array) ['set' => $all_studies];
 
         // Dates (year range).
         if (preg_match('/^[0-9]{4}-{1}[0-9]{4}$/', $project->startdate)) {
