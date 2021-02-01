@@ -175,14 +175,6 @@ class TripalWebServiceBrapiV1Observationunits extends TripalWebServiceDatabaseCa
       $args[':locationDbId'] = $call_asset['parameter']['locationDbId'];
     }
 
-    // trialDbId.
-    if (isset($call_asset['parameter']['trialDbId'])
-        && !empty($call_asset['parameter']['trialDbId'])) {
-
-      $filter[] = "CONCAT(year.value, '-', loc.value, '-', rep.value, '-', germ.name, '-', unit.name) = :locationDbId";
-      $args[':trialDbId'] = $call_asset['parameter']['trialDbId'];
-    }
-
     // Transform parameters into a string, as where clause in the query.
     $where = '';
     if (isset($filter) && count($filter) > 0) {
