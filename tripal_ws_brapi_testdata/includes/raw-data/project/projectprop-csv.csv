@@ -50,7 +50,7 @@ translate_value:name, local:research area, taxonomic_rank:genus, efo:funder, SIO
 "Project 23",, Brapus, "Funder A", "Research Area - Pathology", "Oliver Milo", "Dr. Bella M.", 2011-2015
 "Project 24",, Brapus, "Funder B", "Research Area - Physiology", "Liam Declan & Abigail Sadie", "Dr. Bella M.", 2011-2015
 "Project 25",, Brapus, "Funder A", "Research Area - Tissue Culture", "Oliver Milo", "Dr. Bella M.", 2011-2019
-"Research Area - Pathology",  1, Tripalus, "Funder B", "Research Area - Pathology", "Abigail Sadie", "Dr. Olivia William", 2011-2019
-"Research Area - Physiology", 1, Tripalus, "Funder B", "Research Area - Physiology", "Charlotte Amelia", "Dr. Isabella T.", 2011-2019
-"Research Area - Tissue Culture", 1, Tripalus, "Funder B", "Research Area - Tissue Culture", "Oliver Milo", "Dr. William Ava", 2011-2019
-"Research Area - Breeding & Gentics", 1, Tripalus, "Funder B", "Research Area - Breeding & Gentics", "Charlotte Amelia", "Dr. Bella M.", 2011-2019
+"Research Area - Pathology",  1, Tripalus, "Funder B", "Research Program", "Abigail Sadie", "Dr. Olivia William", 2011-2019
+"Research Area - Physiology", 1, Tripalus, "Funder B", "Research Program", "Charlotte Amelia", "Dr. Isabella T.", 2011-2019
+"Research Area - Tissue Culture", 1, Tripalus, "Funder B", "Research Program", "Oliver Milo", "Dr. William Ava", 2011-2019
+"Research Area - Breeding & Gentics", 1, Tripalus, "Funder B", "Research Program", "Charlotte Amelia", "Dr. Bella M.", 2011-2019
