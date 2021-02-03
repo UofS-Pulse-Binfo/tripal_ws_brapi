@@ -19,6 +19,7 @@ class TripalWebServiceBrapiV1Observationunits extends TripalWebServiceDatabaseCa
   // asc/desc - Ascending and descending order.
   // year - 4 digit year YYYY, ie: 2020.
   // boolean - true or false.
+  // datetime - date and time in YYYY-MM-DD HH:MM format.
   //
   // Example: page => int, searchResultDbId => hash-code.
   public $call_parameter = [
@@ -27,8 +28,12 @@ class TripalWebServiceBrapiV1Observationunits extends TripalWebServiceDatabaseCa
     'observationVariableDbId' => 'text', // The unique ID of an observation variable.
     'studyDbId'      => 'text', // The unique ID of a studies to filter on.
     'locationDbId'   => 'text', // The unique ID of a location where these observations were collected.
-     // Unclear definition, not implemented.
-     // trialDbId, programDbId, seasonDbId, observationLevel, observationTimeStampRangeStart, observationTimeStampRangeEnd
+    'trialDbId'      => 'int',  // The unique ID of a trial to filter on.
+    'programDbId'    => 'int',  // The unique ID of a program to filter on.
+    'seasonDbId'     => 'int',  // The year or Phenotyping campaign of a multi-annual study (trees, grape, ...).
+    'observationLevel' => 'text', // The type of the observationUnit. Returns only the observation unit of the specified type; the parent levels ID can be accessed through observationUnitStructure.
+    'observationTimeStampRangeStart' => 'datetime', // Timestamp range start.
+    'observationTimeStampRangeEnd'   => 'datetime', // Timestamp range end.
     'page'           => 'int',  // Which result page is requested.
     'pageSize'       => 'int',  // The size of the pages to be returned.
   ];
@@ -84,7 +89,7 @@ class TripalWebServiceBrapiV1Observationunits extends TripalWebServiceDatabaseCa
   public $call_asset;
 
   // Chado table, source data.
-  public static $chado_table = 'phenotype';
+  public static $chado_table = 'project';
 
   // Class name.
   public $class_name;
@@ -92,7 +97,6 @@ class TripalWebServiceBrapiV1Observationunits extends TripalWebServiceDatabaseCa
 
   // PREPARE QUERY:
   // Callback to fetch data from source table.
-
 
   /**
    * No configuration (default) set, this method will be used to fetch data.
@@ -109,30 +113,33 @@ class TripalWebServiceBrapiV1Observationunits extends TripalWebServiceDatabaseCa
     // Terms used to query:
     $arr_terms = [];
     $req_terms = [
-      'tripal_pub' => 'Year',  // Year.
-      'ncit' => 'location',    // Location.
-      'SIO'  => 'category',    // Program/category.
-
-      1 => 'replicate',        // Replicate.
-      2 => 'Collected By'      // Collected By.
+      'NCIT'   => ['Block', 'Entry', 'Entry Type', 'Performed Observation',
+                   'Observation Levels', 'X-Coordinate', 'Position coordinate X type',
+                   'Y-Coordinate', 'Position coordinate Y type', 'Computer Time Stamp',
+                   'replicate', 'Collected By', 'Season'],
+      'CO_324' => ['Plant Number', 'Plot Number'],
+      'ncit'   => ['location'],
+      'SIO'    => ['category'],
+      'local'  => ['research area'],
+      'tripal_pub' => ['Year']
     ];
 
-    foreach($req_terms as $cv => $term) {
-      // All term are in this cv.
-      if ($cv == 1 || $cv == 2) {
-        $cv = 'NCIT';
-      }
+    // Fetch cvterm id of each term and make it available in the query using
+    // [cv][cvterm name] combination.
+    foreach($req_terms as $cv => $terms) {
+      foreach($terms as $term) {
+        $cv_id = chado_get_cv(array('name' => $cv))
+          ->cv_id;
 
-      $cv_id = chado_get_cv(array('name' => $cv))
-        ->cv_id;
+        $cvterm_id = chado_get_cvterm(['name' => $term, 'cv_id' => $cv_id])
+          ->cvterm_id;
 
-      $cvterm_id = chado_get_cvterm(['name' => $term, 'cv_id' => $cv_id])
-        ->cvterm_id;
-
-      if ($cvterm_id) {
-        $arr_terms[ $term ] = $cvterm_id;
+        if ($cvterm_id) {
+          $arr_terms[ $cv ][ $term ] = $cvterm_id;
+        }
       }
     }
+
 
     // Based on parameters defined above.
 
@@ -147,7 +154,7 @@ class TripalWebServiceBrapiV1Observationunits extends TripalWebServiceDatabaseCa
     if (isset($call_asset['parameter']['germplasmDbId'])
         && !empty($call_asset['parameter']['germplasmDbId'])) {
 
-      $filter[] = 'germ.stock_id = :germplasmDbId';
+      $filter[] = 'germplasm.stock_id = :germplasmDbId';
       $args[':germplasmDbId'] = $call_asset['parameter']['germplasmDbId'];
     }
 
@@ -163,16 +170,60 @@ class TripalWebServiceBrapiV1Observationunits extends TripalWebServiceDatabaseCa
     if (isset($call_asset['parameter']['studyDbId'])
         && !empty($call_asset['parameter']['studyDbId'])) {
 
-      $filter[] = 'prg.project_id = :studyDbId';
+      $filter[] = 'project.project_id = :studyDbId';
       $args[':studyDbId'] = $call_asset['parameter']['studyDbId'];
     }
 
-    // locationDbId.
+    // locationDbId
     if (isset($call_asset['parameter']['locationDbId'])
         && !empty($call_asset['parameter']['locationDbId'])) {
 
-      $filter[] = "CONCAT(year.value, '-', loc.value, '-', rep.value, '-', germ.name, '-', unit.name) = :locationDbId";
+      $filter[] = "CONCAT(year.value, '-', loc.value, '-', rep.value, '-', germplasm.name, '-', unit.name) = :locationDbId";
       $args[':locationDbId'] = $call_asset['parameter']['locationDbId'];
+    }
+
+    // trialDbId.
+    if (isset($call_asset['parameter']['trialDbId'])
+        && !empty($call_asset['parameter']['trialDbId'])) {
+
+      $filter[] = 'project.project_id = :trialDbId';
+      $args[':trialDbId'] = $call_asset['parameter']['trialDbId'];
+    }
+
+    // programDbId.
+    if (isset($call_asset['parameter']['programDbId'])
+        && !empty($call_asset['parameter']['programDbId'])) {
+
+      $filter[] = 'program.project_id = :programDbId';
+      $args[':programDbId'] = $call_asset['parameter']['programDbId'];
+    }
+
+    // seasonDbId.
+    if (isset($call_asset['parameter']['seasonDbId'])
+        && !empty($call_asset['parameter']['seasonDbId'])) {
+
+      $filter[] = 'obs.seasondbid = :seasonDbId';
+      $args[':seasonDbId'] = $call_asset['parameter']['seasonDbId'];
+    }
+
+    // observationLevel.
+    if (isset($call_asset['parameter']['observationLevel'])
+        && !empty($call_asset['parameter']['observationLevel'])) {
+
+      $filter[] = 'obv.value = :observationLevel';
+      $args[':observationLevel'] = $call_asset['parameter']['observationLevel'];
+    }
+
+    // Datetime range.
+    if ((isset($call_asset['parameter']['observationTimeStampRangeStart'])
+        && !empty($call_asset['parameter']['observationTimeStampRangeStart'])) &&
+        (isset($call_asset['parameter']['observationTimeStampRangeEnd'])
+        && !empty($call_asset['parameter']['observationTimeStampRangeEnd']))
+       ) {
+
+        $filter[] = 'obs.observationtimestamp BETWEEN :observationTimeStampRangeStart AND :observationTimeStampRangeEnd';
+        $args[':observationTimeStampRangeStart'] = $call_asset['parameter']['observationTimeStampRangeStart'];
+        $args[':observationTimeStampRangeEnd'] = $call_asset['parameter']['observationTimeStampRangeEnd'];
     }
 
     // Transform parameters into a string, as where clause in the query.
@@ -183,69 +234,99 @@ class TripalWebServiceBrapiV1Observationunits extends TripalWebServiceDatabaseCa
 
     $sql = "
       SELECT
-        'n/a' AS blocknumber,
-        'n/a' AS entrynumber,
-        'n/a' AS entrytype,
-        germ.stock_id AS germplasmdbid,
-        CONCAT(germ.name, ':', germ.uniquename) AS germplasmname,
-        'plant' AS observationlevel,
-        'n/a' AS observationlevels,
+        blk.value AS blocknumber,
+        ent.value AS entrynumber,
+        ett.value AS entrytype,
+        germplasm.stock_id AS germplasmdbid,
+        CONCAT(germplasm.name, ':', germplasm.uniquename) AS germplasmname,
+        obv.value AS observationlevel,
+        obl.value AS observationlevels,
         CONCAT(cv.cv_id, ':', unit.name) AS observationunitdbid,
         unit.name AS observationunitname,
         ARRAY_TO_JSON(ARRAY[unit.dbxref_id::varchar, 'source']) AS observationunitxref,
-        ARRAY_TO_JSON(ARRAY_AGG(ARRAY[obs.collector, obs.observationdbid::varchar,
-          obs.observationtimestamp::varchar, obs.observationvariabledbid::varchar, obs.observationvariablename,
-          obs.season::varchar, obs.value])) AS observations,
-        'n/a' AS plantnumber,
-        'n/a' AS plotnumber,
-        'n/a' AS positioncoordinatex,
-        'n/a' AS positioncoordinatextype,
-        'n/a' AS positioncoordinatey,
-        'n/a' AS positioncoordinateytype,
-        prg.value AS programname,
+        ARRAY_TO_JSON(ARRAY_AGG(ARRAY[
+          obs.collector,
+          obs.observationdbid::varchar,
+          obs.observationtimestamp,
+          obs.observationvariabledbid,
+          obs.observationvariablename,
+          obs.season,
+          obs.value
+        ])) AS observations,
+        pln.value AS plantnumber,
+        ptn.value AS plotnumber,
+        cox.value AS positioncoordinatex,
+        cxt.value AS positioncoordinatextype,
+        coy.value AS positioncoordinatey,
+        cyt.value AS positioncoordinateytype,
+        program.name AS programname,
         rep.value AS replicate,
-        prg.project_id AS studydbid,
+        project.project_id AS studydbid,
         loc.value AS studylocation,
-        CONCAT(year.value, '-', loc.value, '-', rep.value, '-', germ.name, '-', unit.name) AS studylocationdbid,
-        CONCAT(year.value, '-', loc.value) AS studyname,
+        CONCAT(year.value, '-', loc.value, '-', rep.value, '-', germplasm.name, '-', unit.name) AS studylocationdbid,
+        CONCAT(project.name, '-', year.value, '-', loc.value) AS studyname,
         ARRAY_TO_JSON(ARRAY['n/a', 'n/a']) AS treatments,
-        COUNT(germ.stock_id) OVER() AS full_count
-      FROM {%s} AS pheno
-        LEFT JOIN {stock} AS germ USING (stock_id)
-        LEFT JOIN {project} AS prj USING (project_id)
-          LEFT JOIN {projectprop} AS prg ON prj.project_id = prg.project_id AND prg.type_id = %d
-        LEFT JOIN {cvterm} AS unit ON pheno.unit_id = unit.cvterm_id
-          LEFT JOIN {cv} AS cv ON unit.cv_id = cv.cv_id
-        LEFT JOIN {phenotypeprop} AS rep ON pheno.phenotype_id = rep.phenotype_id AND rep.type_id = %d
-        LEFT JOIN {phenotypeprop} AS loc ON pheno.phenotype_id = loc.phenotype_id AND loc.type_id = %d
-        LEFT JOIN {phenotypeprop} AS year ON pheno.phenotype_id = year.phenotype_id AND year.type_id = %d
-
-      LEFT JOIN (
-        SELECT c.value AS collector, p.phenotype_id AS observationdbid, 'n/a' AS observationtimestamp,
-          CONCAT(o.name, ':', t.name) AS observationvariabledbid, t.name AS observationvariablename,
-          'n/a' AS season, p.value AS value
-
-        FROM {%s} AS p
-          LEFT JOIN {phenotypeprop} AS c ON p.phenotype_id = c.phenotype_id AND c.type_id = %d
-          LEFT JOIN {cvterm} AS t ON p.attr_id = t.cvterm_id
-            LEFT JOIN {cv} AS o ON t.cv_id = o.cv_id
-      ) AS obs ON pheno.phenotype_id = obs.observationdbid
-
+        COUNT(project.project_id) OVER() AS full_count
+      FROM {%s} AS project
+        RIGHT JOIN {phenotype} AS phenotype ON project.project_id = phenotype.project_id
+        LEFT JOIN {phenotypeprop} AS blk  ON phenotype.phenotype_id = blk.phenotype_id AND blk.type_id = %d
+        LEFT JOIN {phenotypeprop} AS ent  ON phenotype.phenotype_id = ent.phenotype_id AND ent.type_id = %d
+        LEFT JOIN {phenotypeprop} AS ett  ON phenotype.phenotype_id = ett.phenotype_id AND ett.type_id = %d
+        LEFT JOIN {phenotypeprop} AS obv  ON phenotype.phenotype_id = obv.phenotype_id AND obv.type_id = %d
+        LEFT JOIN {phenotypeprop} AS obl  ON phenotype.phenotype_id = obl.phenotype_id AND obl.type_id = %d
+        LEFT JOIN {phenotypeprop} AS pln  ON phenotype.phenotype_id = pln.phenotype_id AND pln.type_id = %d
+        LEFT JOIN {phenotypeprop} AS ptn  ON phenotype.phenotype_id = ptn.phenotype_id AND ptn.type_id = %d
+        LEFT JOIN {phenotypeprop} AS cox  ON phenotype.phenotype_id = cox.phenotype_id AND cox.type_id = %d
+        LEFT JOIN {phenotypeprop} AS cxt  ON phenotype.phenotype_id = cxt.phenotype_id AND cxt.type_id = %d
+        LEFT JOIN {phenotypeprop} AS coy  ON phenotype.phenotype_id = coy.phenotype_id AND coy.type_id = %d
+        LEFT JOIN {phenotypeprop} AS cyt  ON phenotype.phenotype_id = cyt.phenotype_id AND cyt.type_id = %d
+        LEFT JOIN {phenotypeprop} AS year ON phenotype.phenotype_id = year.phenotype_id AND year.type_id = %d
+        LEFT JOIN {phenotypeprop} AS rep  ON phenotype.phenotype_id = rep.phenotype_id AND rep.type_id = %d
+        LEFT JOIN {phenotypeprop} AS loc  ON phenotype.phenotype_id = loc.phenotype_id AND loc.type_id = %d
+        LEFT JOIN (
+          SELECT
+            collector.value AS collector,
+            p.phenotype_id AS observationdbid,
+            timestamp.value AS observationtimestamp,
+            CONCAT(cv.name, ':', trait.name) AS observationvariabledbid,
+            trait.name AS observationvariablename,
+            season.value AS season,
+            season.phenotypeprop_id AS seasondbid,
+            p.value AS value
+          FROM {phenotype} AS p
+            LEFT JOIN {phenotypeprop} AS collector ON p.phenotype_id = collector.phenotype_id AND collector.type_id = %d
+            LEFT JOIN {phenotypeprop} AS timestamp ON p.phenotype_id = timestamp.phenotype_id AND timestamp.type_id = %d
+            LEFT JOIN {phenotypeprop} AS season    ON p.phenotype_id = season.phenotype_id AND season.type_id = %d
+            LEFT JOIN {cvterm} AS trait ON p.attr_id = trait.cvterm_id
+            LEFT JOIN {cv} AS cv ON trait.cv_id = cv.cv_id
+        ) AS obs ON phenotype.phenotype_id = obs.observationdbid
+        LEFT JOIN {stock} AS germplasm ON phenotype.stock_id = germplasm.stock_id
+        LEFT JOIN {cvterm} AS unit ON phenotype.unit_id = unit.cvterm_id
+        LEFT JOIN {cv} AS cv ON unit.cv_id = cv.cv_id
+        LEFT JOIN {projectprop} AS prop ON project.project_id = prop.project_id AND prop.type_id = %d
+        LEFT JOIN {project} AS program ON prop.value = program.name
+        LEFT JOIN {projectprop} AS prop2 ON program.project_id = prop2.project_id AND prop2.type_id = %s AND prop2.value = '1'
       %s
-
-      GROUP BY prg.project_id, prg.value, unit.name, germ.name, germ.uniquename, germ.stock_id,
-               unit.dbxref_id, cv.cv_id, rep.value, loc.value, year.value
+      GROUP BY
+        blk.value, ent.value, ett.value, germplasm.stock_id, germplasm.name, germplasm.uniquename,
+        obv.value, obl.value, cv.cv_id, unit.name, unit.dbxref_id, pln.value, ptn.value, cox.value,
+        cxt.value, coy.value, cyt.value, program.name, rep.value, project.project_id, loc.value, year.value
       LIMIT %d OFFSET %d
     ";
 
-    $query = sprintf($sql, $this->class_name::$chado_table,
-      $arr_terms['category'], $arr_terms['replicate'], $arr_terms['location'], $arr_terms['Year'],
-      $this->class_name::$chado_table, $arr_terms['Collected By'],
-      $where, $page_size, $offset);
+    $query = sprintf($sql, $this->class_name::$chado_table, $arr_terms['NCIT']['Block'], $arr_terms['NCIT']['Entry'],
+                     $arr_terms['NCIT']['Entry Type'], $arr_terms['NCIT']['Performed Observation'],
+                     $arr_terms['NCIT']['Observation Levels'], $arr_terms['CO_324']['Plant Number'],
+                     $arr_terms['CO_324']['Plot Number'], $arr_terms['NCIT']['X-Coordinate'],
+                     $arr_terms['NCIT']['Position coordinate X type'], $arr_terms['NCIT']['Y-Coordinate'],
+                     $arr_terms['NCIT']['Position coordinate Y type'], $arr_terms['tripal_pub']['Year'],
+                     $arr_terms['NCIT']['replicate'], $arr_terms['ncit']['location'], $arr_terms['NCIT']['Collected By'],
+                     $arr_terms['NCIT']['Computer Time Stamp'], $arr_terms['NCIT']['Season'], $arr_terms['SIO']['category'],
+                     $arr_terms['local']['research area'], $where, $page_size, $offset);
+
     $result = chado_query($query, $args);
 
     $observations = [];
-
     if ($result->rowCount() > 0) {
       foreach($result as $observation) {
         // Source information.

@@ -81,7 +81,7 @@ class observationUnitsCallTest extends GenericHttpTestCase {
     $this->assertWithParameter($response, [
       'name' => 'germplasmDbId', // Parameter name.
       'key'   => 'germplasmDbId', // The response key the parameter name will match.
-      'value'  =>  '',             // Pick one.
+      'value'  =>  '',          // Pick one.
     ], TRUE);
 
     //---------------------------------
@@ -94,12 +94,45 @@ class observationUnitsCallTest extends GenericHttpTestCase {
     ], TRUE);
 
     //---------------------------------
-    // 5. WITH PARAMETERS: locationDbId
+    // 6. WITH PARAMETERS: locationDbId
     $response = NULL;
     $this->assertWithParameter($response, [
       'name' => 'locationDbId', // Parameter name.
       'key'   => 'studyLocationDbId', // The response key the parameter name will match.
-      'value'  =>  '2015-Location A, Canada-1-lola-Unit A', // Parameter value.
+      'value'   =>  '2015-Location A, Canada-1-lola-Unit A', // Parameter value.
     ]);
+
+    //---------------------------------
+    // 7. WITH PARAMETERS: trialDbId
+    $trial = $this->translateValue('project', 'project_id', ['name' => 'Project A']);
+    $response = NULL;
+    $this->assertWithParameter($response, [
+      'name' => 'trialDbId', // Parameter name.
+      'key'   => 'studyDbId', // The response key the parameter name will match.
+      'value'   =>  $trial, // Parameter value.
+    ]);
+
+    //---------------------------------
+    // 8. WITH PARAMETERS: programDbId
+    $program_name = 'Research Area - Tissue Culture';
+    $program_id = $this->translateValue('project', 'project_id', ['name' => $program_name]);
+    $response = NULL;
+    $this->assertWithParameter($response, [
+      'name' => 'programDbId', // Parameter name.
+      'key'   => 'programName', // The response key the parameter name will match.
+      'altvalue' => $program_name, // Override the parameter value, use this instead to test.
+      'value'    => $program_id, // Parameter value.
+    ]);
+
+    //---------------------------------
+    // 9. WITH PARAMETERS: observationLevel
+    $response = NULL;
+    $this->assertWithParameter($response, [
+      'name' => 'observationLevel', // Parameter name.
+      'key'   => 'observationLevel', // The response key the parameter name will match.
+      'value'    => 'Plant', // Parameter value.
+    ]);
+    //
+
   }
 }

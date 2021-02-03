@@ -1,52 +1,58 @@
-translate_value:uniquename, tripal_pub:Year, ncit:location, NCIT:Collected By, NCIT:replicate
-uniquename1_2019-03-26T17:11:26-06:00_1, 2015, "Location A, Canada", "Person A, Person B and Person C", 1
-uniquename2_2019-03-26T17:11:26-06:00_2, 2015, "Location A, Canada", "Person A, Person B and Person C", 1
-uniquename3_2019-03-26T17:11:26-06:00_3, 2015, "Location A, Canada", "Person A, Person B and Person C", 1
-uniquename4_2019-03-26T17:11:26-06:00_4, 2015, "Location A, Canada", "Person A, Person B and Person C", 1
-uniquename5_2019-03-26T17:11:26-06:00_5, 2015, "Location A, Canada", "Person A, Person B and Person C", 1
-uniquename6_2019-03-26T17:11:26-06:00_6, 2015, "Location A, Canada", "Person A, Person B and Person C", 1
-uniquename7_2019-03-26T17:11:26-06:00_7, 2015, "Location A, Canada", "Person A, Person B and Person C", 1
-uniquename8_2019-03-26T17:11:26-06:00_8, 2015, "Location A, Canada", "Person A, Person B and Person C", 1
-uniquename9_2019-03-26T17:11:26-06:00_9, 2015, "Location A, Canada", "Person A, Person B and Person C", 1
-uniquename10_2019-03-26T17:11:26-06:00_10, 2015, "Location A, Canada", "Person A, Person B and Person C", 1
-uniquename11_2019-03-26T17:11:26-06:00_11, 2016, "Location B, Nepal", "Person B and Person C", 1
-uniquename12_2019-03-26T17:11:26-06:00_12, 2016, "Location B, Nepal", "Person B and Person C", 1
-uniquename13_2019-03-26T17:11:26-06:00_13, 2016, "Location B, Nepal", "Person B and Person C", 1
-uniquename14_2019-03-26T17:11:26-06:00_14, 2016, "Location B, Nepal", "Person B and Person C", 1
-uniquename15_2019-03-26T17:11:26-06:00_15, 2016, "Location B, Nepal", "Person B and Person C", 1
-uniquename16_2019-03-26T17:11:26-06:00_16, 2016, "Location B, Nepal", "Person B and Person C", 1
-uniquename17_2019-03-26T17:11:26-06:00_17, 2016, "Location B, Nepal", "Person B and Person C", 1
-uniquename18_2019-03-26T17:11:26-06:00_18, 2016, "Location B, Nepal", "Person B and Person C", 1
-uniquename19_2019-03-26T17:11:26-06:00_19, 2016, "Location B, Nepal", "Person B and Person C", 1
-uniquename20_2019-03-26T17:11:26-06:00_20, 2016, "Location B, Nepal", "Person B and Person C", 1
-uniquename21_2019-03-26T17:11:26-06:00_21, 2017, "Location B, Nepal", "Person B and Person C", 2
-uniquename22_2019-03-26T17:11:26-06:00_22, 2017, "Location B, Nepal", "Person B and Person C", 2
-uniquename23_2019-03-26T17:11:26-06:00_23, 2017, "Location B, Nepal", "Person B and Person C", 2
-uniquename24_2019-03-26T17:11:26-06:00_24, 2017, "Location B, Nepal", "Person B and Person C", 2
-uniquename25_2019-03-26T17:11:26-06:00_25, 2017, "Location B, Nepal", "Person B and Person C", 2
-uniquename26_2019-03-26T17:11:26-06:00_26, 2017, "Location B, Nepal", "Person B and Person C", 2
-uniquename27_2019-03-26T17:11:26-06:00_27, 2017, "Location B, Nepal", "Person B and Person C", 2
-uniquename28_2019-03-26T17:11:26-06:00_28, 2017, "Location B, Nepal", "Person B and Person C", 2
-uniquename29_2019-03-26T17:11:26-06:00_29, 2017, "Location B, Nepal", "Person B and Person C", 2
-uniquename30_2019-03-26T17:11:26-06:00_30, 2017, "Location B, Nepal", "Person B and Person C", 2
-uniquename31_2019-03-26T17:11:26-06:00_31, 2015, "Location C, Dublin, Ireland", "Person Y and Person X", 1
-uniquename32_2019-03-26T17:11:26-06:00_32, 2015, "Location C, Dublin, Ireland", "Person Y and Person X", 1
-uniquename33_2019-03-26T17:11:26-06:00_33, 2015, "Location C, Dublin, Ireland", "Person Y and Person X", 1
-uniquename34_2019-03-26T17:11:26-06:00_34, 2016, "Location D, Morocco", "Person Y", 1
-uniquename35_2019-03-26T17:11:26-06:00_35, 2016, "Location D, Morocco", "Person Y", 1
-uniquename36_2019-03-26T17:11:26-06:00_36, 2016, "Location D, Morocco", "Person Y", 1
-uniquename37_2019-03-26T17:11:26-06:00_37, 2015, "Location E, New Zealand", "Person X", 1
-uniquename38_2019-03-26T17:11:26-06:00_38, 2015, "Location E, New Zealand", "Person X", 1
-uniquename39_2019-03-26T17:11:26-06:00_39, 2015, "Location E, New Zealand", "Person X", 1
-uniquename40_2019-03-26T17:11:26-06:00_40, 2015, "Location F, Spain", "Person Z", 1
-uniquename41_2019-03-26T17:11:26-06:00_41, 2015, "Location F, Spain", "Person Z", 1
-uniquename42_2019-03-26T17:11:26-06:00_42, 2015, "Location F, Spain", "Person Z", 1
-uniquename43_2019-03-26T17:11:26-06:00_43, 2017, "Location C", "Person Y and Person X", 2
-uniquename44_2019-03-26T17:11:26-06:00_44, 2017, "Location C", "Person Y and Person X", 2
-uniquename45_2019-03-26T17:11:26-06:00_45, 2017, "Location C", "Person Y and Person X", 2
-uniquename46_2019-03-26T17:11:26-06:00_46, 2015, "Location D, Dublin, Ireland", "Person Y and Person X", 2
-uniquename47_2019-03-26T17:11:26-06:00_47, 2015, "Location D, Dublin, Ireland", "Person Y and Person X", 2
-uniquename48_2019-03-26T17:11:26-06:00_48, 2015, "Location D, Dublin, Ireland", "Person Y and Person X", 2
-uniquename49_2019-03-26T17:11:26-06:00_49, 2015, "Location Z, Turkey", "Person XYZ", 1
-uniquename50_2019-03-26T17:11:26-06:00_50, 2015, "Location Z, Turkey", "Person XYZ", 1
-uniquename51_2019-03-26T17:11:26-06:00_51, 2015, "Location Z, Turkey", "Person XYZ", 1
+translate_value:uniquename, tripal_pub:Year, ncit:location, NCIT:Collected By, NCIT:replicate, NCIT:Block, CO_324:Plant Number, CO_324:Plot Number, NCIT:Entry, NCIT:Entry Type, NCIT:Performed Observation, NCIT:Observation Levels, NCIT:X-Coordinate, NCIT:Position coordinate X type, NCIT:Y-Coordinate, NCIT:Position coordinate Y type, NCIT:Computer Time Stamp, NCIT:Season
+uniquename1_2019-03-26T17:11:26-06:00_1, 2015, "Location A, Canada", "Person A, Person B and Person C", 1, 5, 2634, 2, 1, TEST, Plot, block:1;plot:2, 1, x-coordinate, 1, y-coordinate, 2011-06-14 22:06, Fall 2011
+uniquename2_2019-03-26T17:11:26-06:00_2, 2015, "Location A, Canada", "Person A, Person B and Person C", 1, 5, 2634, 2, 1, TEST, Plot, block:1;plot:2, 1, x-coordinate, 1, y-coordinate, 2011-06-14 22:06, Fall 2011
+uniquename3_2019-03-26T17:11:26-06:00_3, 2015, "Location A, Canada", "Person A, Person B and Person C", 1, 5, 2634, 2, 1, TEST, Plot, block:1;plot:2, 1, x-coordinate, 1, y-coordinate, 2011-06-14 22:06, Fall 2011
+uniquename4_2019-03-26T17:11:26-06:00_4, 2015, "Location A, Canada", "Person A, Person B and Person C", 1, 5, 2634, 2, 1, TEST, Plot, block:1;plot:2, 1, x-coordinate, 1, y-coordinate, 2011-06-14 22:06, Fall 2011
+uniquename5_2019-03-26T17:11:26-06:00_5, 2015, "Location A, Canada", "Person A, Person B and Person C", 1, 5, 621, 2, 1, TEST, Plot, block:1;plot:2, 1, x-coordinate, 1, y-coordinate, 2011-07-14 22:06, Fall 2011
+uniquename6_2019-03-26T17:11:26-06:00_6, 2015, "Location A, Canada", "Person A, Person B and Person C", 1, 5, 621, 2, 1, TEST, Plot, block:1;plot:2, 1, x-coordinate, 1, y-coordinate, 2011-07-14 22:06, Fall 2011
+uniquename7_2019-03-26T17:11:26-06:00_7, 2015, "Location A, Canada", "Person A, Person B and Person C", 1, 5, 621, 2, 1, TEST, Plot, block:1;plot:2, 1, x-coordinate, 1, y-coordinate, 2011-07-14 22:06, Fall 2011
+uniquename8_2019-03-26T17:11:26-06:00_8, 2015, "Location A, Canada", "Person A, Person B and Person C", 1, 5, 621, 2, 1, TEST, Plot, block:1;plot:2, 1, x-coordinate, 1, y-coordinate, 2011-08-14 22:06, Fall 2011
+uniquename9_2019-03-26T17:11:26-06:00_9, 2015, "Location A, Canada", "Person A, Person B and Person C", 1, 5, 621, 2, 1, TEST, Plot, block:1;plot:2, 1, x-coordinate, 1, y-coordinate, 2011-08-14 22:06, Fall 2011
+uniquename10_2019-03-26T17:11:26-06:00_10, 2015, "Location A, Canada", "Person A, Person B and Person C", 1, 5, 621, 2, 1, TEST, Plot, block:1;plot:2, 1, x-coordinate, 1, y-coordinate, 2011-06-14 22:06, Fall 2011
+uniquename11_2019-03-26T17:11:26-06:00_11, 2016, "Location B, Nepal", "Person B and Person C", 1, 110, 1111, 11, 2, TEST, Plot, block:110;plot:11, 1, x-coordinate, 1, y-coordinate, 2010-06-14 22:06, Summer 2010
+uniquename12_2019-03-26T17:11:26-06:00_12, 2016, "Location B, Nepal", "Person B and Person C", 1, 110, 1111, 11, 2, TEST, Plot, block:110;plot:11, 1, x-coordinate, 1, y-coordinate, 2010-06-14 22:06, Summer 2010
+uniquename13_2019-03-26T17:11:26-06:00_13, 2016, "Location B, Nepal", "Person B and Person C", 1, 110, 1111, 11, 2, TEST, Plot, block:110;plot:11, 1, x-coordinate, 1, y-coordinate, 2010-06-14 22:06, Summer 2010
+uniquename14_2019-03-26T17:11:26-06:00_14, 2016, "Location B, Nepal", "Person B and Person C", 1, 110, 1111, 11, 2, TEST, Plot, block:110;plot:11, 1, x-coordinate, 1, y-coordinate, 2010-06-14 22:06, Summer 2010
+uniquename15_2019-03-26T17:11:26-06:00_15, 2016, "Location B, Nepal", "Person B and Person C", 1, 110, 1111, 11, 2, TEST, Plot, block:110;plot:11, 1, x-coordinate, 1, y-coordinate, 2010-06-14 22:06, Summer 2010
+uniquename16_2019-03-26T17:11:26-06:00_16, 2016, "Location B, Nepal", "Person B and Person C", 1, 110, 1111, 11, 2, TEST, Plot, block:110;plot:11, 1, x-coordinate, 1, y-coordinate, 2010-06-14 22:06, Summer 2010
+uniquename17_2019-03-26T17:11:26-06:00_17, 2016, "Location B, Nepal", "Person B and Person C", 1, 110, 771, 12, 3, TEST, Plot, block:110;plot:12, 1, x-coordinate, 1, y-coordinate, 2010-05-14 22:06, Summer 2010
+uniquename18_2019-03-26T17:11:26-06:00_18, 2016, "Location B, Nepal", "Person B and Person C", 1, 110, 771, 12, 3, TEST, Plot, block:110;plot:12, 1, x-coordinate, 1, y-coordinate, 2010-05-14 22:06, Summer 2010
+uniquename19_2019-03-26T17:11:26-06:00_19, 2016, "Location B, Nepal", "Person B and Person C", 1, 110, 771, 12, 3, TEST, Plot, block:110;plot:12, 1, x-coordinate, 1, y-coordinate, 2010-05-14 22:06, Summer 2010
+uniquename20_2019-03-26T17:11:26-06:00_20, 2016, "Location B, Nepal", "Person B and Person C", 1, 110, 771, 12, 3, TEST, Plot, block:110;plot:12, 1, x-coordinate, 1, y-coordinate, 2010-05-14 22:06, Summer 2010
+uniquename21_2019-03-26T17:11:26-06:00_21, 2017, "Location B, Nepal", "Person B and Person C", 2, 110, 9726, 13, 4, TEST, Plot, block:110;plot:13, 1, x-coordinate, 1, y-coordinate, 2010-05-14 22:06, Summer 2010
+uniquename22_2019-03-26T17:11:26-06:00_22, 2017, "Location B, Nepal", "Person B and Person C", 2, 110, 9726, 13, 4, TEST, Plot, block:110;plot:13, 1, x-coordinate, 1, y-coordinate, 2010-04-14 22:06, Summer 2010
+uniquename23_2019-03-26T17:11:26-06:00_23, 2017, "Location B, Nepal", "Person B and Person C", 2, 110, 9726, 13, 4, TEST, Plot, block:110;plot:13, 1, x-coordinate, 1, y-coordinate, 2010-04-14 22:06, Summer 2010
+uniquename24_2019-03-26T17:11:26-06:00_24, 2017, "Location B, Nepal", "Person B and Person C", 2, 110, 9726, 13, 4, TEST, Plot, block:110;plot:13, 1, x-coordinate, 1, y-coordinate, 2010-04-14 22:06, Summer 2010
+uniquename25_2019-03-26T17:11:26-06:00_25, 2017, "Location B, Nepal", "Person B and Person C", 2, 110, 9726, 13, 4, TEST, Plot, block:110;plot:13, 1, x-coordinate, 1, y-coordinate, 2010-04-14 22:06, Summer 2010
+uniquename26_2019-03-26T17:11:26-06:00_26, 2017, "Location B, Nepal", "Person B and Person C", 2, 110, 9726, 13, 4, TEST, Plot, block:110;plot:13, 1, x-coordinate, 1, y-coordinate, 2010-04-14 22:06, Summer 2010
+uniquename27_2019-03-26T17:11:26-06:00_27, 2017, "Location B, Nepal", "Person B and Person C", 2, 110, 9726, 13, 4, TEST, Plot, block:110;plot:13, 1, x-coordinate, 1, y-coordinate, 2010-03-14 22:06, Summer 2010
+uniquename28_2019-03-26T17:11:26-06:00_28, 2017, "Location B, Nepal", "Person B and Person C", 2, 110, 9726, 13, 4, TEST, Plot, block:110;plot:13, 1, x-coordinate, 1, y-coordinate, 2010-03-14 22:06, Summer 2010
+uniquename29_2019-03-26T17:11:26-06:00_29, 2017, "Location B, Nepal", "Person B and Person C", 2, 110, 9726, 13, 4, TEST, Plot, block:110;plot:13, 1, x-coordinate, 1, y-coordinate, 2010-03-14 22:06, Summer 2010
+uniquename30_2019-03-26T17:11:26-06:00_30, 2017, "Location B, Nepal", "Person B and Person C", 2, 110, 9726, 13, 4, TEST, Plot, block:110;plot:13, 1, x-coordinate, 1, y-coordinate, 2010-03-14 22:06, Summer 2010
+uniquename31_2019-03-26T17:11:26-06:00_31, 2015, "Location C, Dublin, Ireland", "Person Y and Person X", 1, 2, 211, 34, 1, TEST, Plot, block:2;plot:34, 1, x-coordinate, 1, y-coordinate, 2010-06-14 22:06, Summer 2010
+uniquename32_2019-03-26T17:11:26-06:00_32, 2015, "Location C, Dublin, Ireland", "Person Y and Person X", 1, 2, 211, 34, 1, TEST, Plot, block:2;plot:34, 1, x-coordinate, 1, y-coordinate, 2010-06-14 22:06, Summer 2010
+uniquename33_2019-03-26T17:11:26-06:00_33, 2015, "Location C, Dublin, Ireland", "Person Y and Person X", 1, 2, 211, 34, 1, TEST, Plot, block:2;plot:34, 1, x-coordinate, 1, y-coordinate, 2010-06-14 22:06, Summer 2010
+uniquename34_2019-03-26T17:11:26-06:00_34, 2016, "Location D, Morocco", "Person Y", 1, 75, 45, 55, 2, FILLER, Plant, block:75;plot:55, 1, x-coordinate, 1, y-coordinate, 2010-06-14 22:06, Summer 2010
+uniquename35_2019-03-26T17:11:26-06:00_35, 2016, "Location D, Morocco", "Person Y", 1, 75, 45, 55, 2, FILLER, Plant, block:75;plot:55, 1, x-coordinate, 1, y-coordinate, 2010-06-14 22:06, Summer 2010
+uniquename36_2019-03-26T17:11:26-06:00_36, 2016, "Location D, Morocco", "Person Y", 1, 75, 33, 55, 2, FILLER, Plant, block:75;plot:55, 1, x-coordinate, 1, y-coordinate, 2010-06-14 22:06, Summer 2010
+uniquename37_2019-03-26T17:11:26-06:00_37, 2015, "Location E, New Zealand", "Person X", 1, 101, 33, 6, 3, TEST, Plot, block:101;plot:6, 1, x-coordinate, 1, y-coordinate, 2010-06-14 22:06, Summer 2010
+uniquename38_2019-03-26T17:11:26-06:00_38, 2015, "Location E, New Zealand", "Person X", 1, 101, 45, 6, 3, TEST, Plot, block:101;plot:6, 1, x-coordinate, 1, y-coordinate, 2010-06-14 22:06, Summer 2010
+uniquename39_2019-03-26T17:11:26-06:00_39, 2015, "Location E, New Zealand", "Person X", 1, 101, 33, 6, 3, TEST, Plot, block:101;plot:6, 1, x-coordinate, 1, y-coordinate, 2010-06-14 22:06, Summer 2010
+uniquename40_2019-03-26T17:11:26-06:00_40, 2015, "Location F, Spain", "Person Z", 1, 7, 7, 12, 1, TEST, Plot, block:7;plot:12, 1, x-coordinate, 1, y-coordinate, 2010-06-14 22:06, Fall 2010
+uniquename41_2019-03-26T17:11:26-06:00_41, 2015, "Location F, Spain", "Person Z", 1, 7, 6, 12, 1, TEST, Plot, block:7;plot:12, 1, x-coordinate, 1, y-coordinate, 2010-06-14 22:06, Fall 2010
+uniquename42_2019-03-26T17:11:26-06:00_42, 2015, "Location F, Spain", "Person Z", 1, 7, 2, 12, 1, TEST, Plot, block:7;plot:12, 1, x-coordinate, 1, y-coordinate, 2010-06-14 22:06, Fall 2010
+uniquename43_2019-03-26T17:11:26-06:00_43, 2017, "Location C", "Person Y and Person X", 2, 88, 87564, 9, 2, FILLER, Plant, block:88;plot:9, 1, x-coordinate, 1, y-coordinate, 2010-06-14 22:06, Fall 2010
+uniquename44_2019-03-26T17:11:26-06:00_44, 2017, "Location C", "Person Y and Person X", 2, 88, 87564, 9, 2, FILLER, Plant, block:88;plot:9, 1, x-coordinate, 1, y-coordinate, 2010-06-14 22:06, Fall 2010
+uniquename45_2019-03-26T17:11:26-06:00_45, 2017, "Location C", "Person Y and Person X", 2, 88, 87564, 9, 2, FILLER, Plant, block:88;plot:9, 1, x-coordinate, 1, y-coordinate, 2010-06-14 22:06, Fall 2010
+uniquename46_2019-03-26T17:11:26-06:00_46, 2015, "Location D, Dublin, Ireland", "Person Y and Person X", 2, 4, 7621, 8, 3, TEST, Plot, block:4;plot:8, 1, x-coordinate, 1, y-coordinate, 2010-06-14 22:06, Fall 2010
+uniquename47_2019-03-26T17:11:26-06:00_47, 2015, "Location D, Dublin, Ireland", "Person Y and Person X", 2, 4, 7621, 8, 3, TEST, Plot, block:4;plot:8, 1, x-coordinate, 1, y-coordinate, 2010-06-14 22:06, Fall 2010
+uniquename48_2019-03-26T17:11:26-06:00_48, 2015, "Location D, Dublin, Ireland", "Person Y and Person X", 2, 4, 7621, 8, 3, TEST, Plot, block:4;plot:8, 1, x-coordinate, 1, y-coordinate, 2010-06-14 22:06, Fall 2010
+uniquename49_2019-03-26T17:11:26-06:00_49, 2015, "Location Z, Turkey", "Person XYZ", 1, 1, 1111, 16, 4, TEST, Plot, block:1;plot:16, 1, x-coordinate, 1, y-coordinate, 2010-06-14 22:06, Fall 2010
+uniquename50_2019-03-26T17:11:26-06:00_50, 2015, "Location Z, Turkey", "Person XYZ", 1, 1, 1111, 16, 4, TEST, Plot, block:1;plot:16, 1, x-coordinate, 1, y-coordinate, 2010-06-14 22:06, Fall 2010
+uniquename51_2019-03-26T17:11:26-06:00_51, 2015, "Location Z, Turkey", "Person XYZ", 1, 1, 1111, 16, 4, TEST, Plot, block:1;plot:16, 1, x-coordinate, 1, y-coordinate, 2010-06-14 22:06, Fall 2010
+uniquename52_2019-03-26T17:11:26-06:00_52, 2015, "Location R, USA", "Person A1", 1, 123, 1, 1, 1, TEST, Plot, block:123;plot:1, 1, x-coordinate, 1, y-coordinate, 2010-06-14 22:06, Fall 2010
+uniquename53_2019-03-26T17:11:26-06:00_53, 2015, "Location R, USA", "Person A1", 1, 123, 1, 1, 1, TEST, Plot, block:123;plot:1, 1, x-coordinate, 1, y-coordinate, 2010-06-14 22:06, Fall 2010
+uniquename54_2019-03-26T17:11:26-06:00_54, 2015, "Location R, USA", "Person A1", 1, 123, 1, 1, 1, TEST, Plot, block:123;plot:1, 1, x-coordinate, 1, y-coordinate, 2010-06-14 22:06, Fall 2010
+uniquename55_2019-03-26T17:11:26-06:00_55, 2015, "Location V, Saskatoon", "Person Mx", 1, 27, 3, 2, 1, TEST, Plot, block:27;plot:2, 1, x-coordinate, 1, y-coordinate, 2010-06-14 22:06, Fall 2010
+uniquename56_2019-03-26T17:11:26-06:00_56, 2015, "Location V, Saskatoon", "Person Mx", 1, 27, 3, 2, 1, TEST, Plot, block:27;plot:2, 1, x-coordinate, 1, y-coordinate, 2010-06-14 22:06, Fall 2010
+uniquename57_2019-03-26T17:11:26-06:00_57, 2015, "Location V, Saskatoon", "Person Mx", 1, 27, 3, 2, 1, TEST, Plot, block:27;plot:2, 1, x-coordinate, 1, y-coordinate, 2010-06-14 22:06, Fall 2010

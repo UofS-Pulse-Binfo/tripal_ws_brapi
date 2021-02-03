@@ -276,6 +276,14 @@ class TripalWebServiceCall {
         }
 
         break;
+
+      case 'datetime':
+        // Value must be a date and time YYYY-MM-DD 00:00
+        if (preg_match('/^([0-9]{4})-([0-9]{2})-([0-9]{2}) ([0-9]{2}):([0-9]{2})$/', $value, $x)) {
+          $match = TRUE;
+        }
+
+       break;
     }
 
     return $match;

@@ -362,18 +362,42 @@ class GenericHttpTestCase extends TripalTestCase {
     $this->assertResultFormat($response, " . $this->callname . ");
 
     // Test each response item (base on key) to match the parameter value.
+
+    // Which parameter value to use in the test below: when alternate
+    // value is provided, use it over the default referenced by the key value.
+    $value_key = (isset($parameter['altvalue'])) ? 'altvalue' : 'value';
+
     foreach($response->result->data as $i => $item) {
       $key = $parameter['key'];
+
       if (is_array($item->{$key})) {
         // If it has the value.
-        $this->assertContains($parameter['value'], $item->{$key},
+        $this->assertContains($parameter[ $value_key ], $item->{$key},
           'Response contains items that do not match the parameter requested');
       }
       else {
         // If key value matches the parameter value.
-        $this->assertEquals($item->{$key}, $parameter['value'],
+        $this->assertEquals($item->{$key}, $parameter[ $value_key ],
           'Response contains items that do not match the parameter requested');
       }
     }
+  }
+
+  /**
+   * Translate or transform a value based on field/value in chado.
+   *
+   * @param $source
+   *   Source table to search for a value.
+   * @param $field
+   *   Field value to return when match found.
+   * @param $key
+   *   Key and value to search in the source table.
+   *
+   * @return
+   *   Field value specied by $field parameter.
+   */
+  public function translateValue($source, $field, $key) {
+    $result = chado_select_record($source, [$field], $key);
+    return ($result) ? $result[0]->{$field} : '';
   }
 }
