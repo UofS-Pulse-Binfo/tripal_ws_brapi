@@ -220,7 +220,8 @@ class TripalWebServiceTestData {
             ->rowCount();
         }
 
-        if ($has_data) {
+        if ($has_data && $section != 'cv') {
+          // Cv is prepopulated with rows, ignore and continue.
           drupal_set_message('Could not install test data, please delete records in CHADO '. $section . ' and try again', 'error', FALSE);
           return 0;
         }
@@ -250,6 +251,34 @@ class TripalWebServiceTestData {
               $data = array_map('trim', $data);
 
               if (!empty($data) && strlen($row) > 0) {
+                // Since chado.cv is prepopulated with cv records,
+                // this block will handle cv test data separate from other table.
+                if ($section == 'cv' && $table== 'cv' && $i > 0) {
+                  // i > 0 past the header row.
+                  $id = tripal_get_cv(['name' => $data[0]])
+                     ->cv_id;
+
+                  $cv_ids = [];
+                  if ($id) {
+                    // Previously installed, update definition.
+                    $cv_id = $id;
+                    chado_update_record('cv', ['cv_id' => $cv_id], ['definition' => $data[1]]);
+                  }
+                  else {
+                    // New term - add as new.
+                    $cv_id = tripal_insert_cv($data[0], $data[1])
+                      ->cv_id;
+                  }
+
+                  // Save ids.
+                  $property_id['cv'][ $data[0] ] = $cv_id;
+
+                  $i++;
+                  // Stay in this section until there is more.
+                  continue;
+                }
+                ///
+
                 if ($section == 'cvterm' && $i > 0) {
                   // Insert terms only - cv and cvterms.
                   // Name, definition, Controlled Vocabulary.
@@ -324,7 +353,17 @@ class TripalWebServiceTestData {
                         ];
 
                         // Insert property.
-                        chado_insert_record($section . 'prop', $line);
+                        // Make sure that in cv, since cv persists after insert,
+                        // we also need to keep any property inserted thereafter.
+                        $has_prop = 0;
+                        if ($section == 'cv' && $table == 'prop') {
+                          $prop = chado_select_record('cvprop', [ 'cvprop_id' ], $line);
+                          $has_prop = ($prop) ? 1 : 0;
+                        }
+
+                        if ($has_prop == 0) {
+                          chado_insert_record($section . 'prop', $line);
+                        }
                       }
                     }
                   }
@@ -404,6 +443,9 @@ class TripalWebServiceTestData {
     $dir    = $this->testdata_source_dir;
 
     foreach($source as $section => $items) {
+      // Not removing any rows from chado.cv.
+      if ($section == 'cv') continue;
+
       foreach($items as $table => $datafile) {
         if ($table == 'main' || $table == 'cvtermprop') {
           $handle = fopen($dir . $section . '/' . $datafile . '.csv', 'r');
@@ -443,7 +485,7 @@ class TripalWebServiceTestData {
               else {
                 $sql = "DELETE FROM {%s} WHERE %s = :field_value";
               }
-              
+
               $section = ($table == 'cvtermprop') ? 'cvtermprop' : $section;
               $query = sprintf($sql, $section, $field);
 

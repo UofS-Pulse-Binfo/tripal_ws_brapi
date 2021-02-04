@@ -108,6 +108,9 @@ class TripalWebServiceBrapiV1Traits extends TripalWebServiceDatabaseCall {
 
         // Description
         $trait->description = trim(html_entity_decode(strip_tags($trait->description)));
+        // Observationvariables.
+        $trait->observationvariables = ($trait->observationvariables)
+          ? [] : $trait->observationvariables;
 
         array_push($traits, $trait);
       }

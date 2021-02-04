@@ -163,6 +163,7 @@ class TripalWebServiceBrapiV1Scales extends TripalWebServiceDatabaseCall {
         $val[0] = trim(html_entity_decode(strip_tags($val[0])));
         $scale->validvalues = [['list' => [$val[0]]], $val[1], $val[2]];
 
+        $scale->decimalplaces = (int) 0;
         array_push($scales, $scale);
       }
     }
