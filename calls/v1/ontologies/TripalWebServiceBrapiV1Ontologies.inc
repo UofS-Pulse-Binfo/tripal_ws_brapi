@@ -19,12 +19,13 @@ class TripalWebServiceBrapiV1Ontologies extends TripalWebServiceDatabaseCall {
   // asc/desc - Ascending and descending order.
   // year - 4 digit year YYYY, ie: 2020.
   // boolean - true or false.
+  // datetime - date and time in YYYY-MM-DD HH:MM format.
   //
   // Example: page => int, searchResultDbId => hash-code.
   public $call_parameter = [
     // Key : Expected value for this key.
-    'page'         => 'int',     // Which result page is requested.
-    'pageSize'     => 'int',     // The size of the pages to be returned.
+    'page'     => 'int',  // Which result page is requested.
+    'pageSize' => 'int',  // The size of the pages to be returned.
   ];
 
   // Keyword used to identify result items.
@@ -48,7 +49,7 @@ class TripalWebServiceBrapiV1Ontologies extends TripalWebServiceDatabaseCall {
   public $call_asset;
 
   // Chado table, source data.
-  public static $chado_table = 'cvterm';
+  public static $chado_table = 'cv';
 
   // Class name.
   public $class_name;
@@ -69,22 +70,29 @@ class TripalWebServiceBrapiV1Ontologies extends TripalWebServiceDatabaseCall {
     $result = '';
     $args   = [];
 
-    // Only controlled vocabulary terms in the following CVs.
-    // Include other CV by adding desired cv name.
+    // Terms used to query:
     $arr_terms = [];
     $req_terms = [
-      'KP Trait Methods: Lentil',
-      'KP Trait Units: Lentil',
+      'NCIT' => ['Author', 'Copyright', 'Written Documentation',
+                  'License', 'Version']
     ];
 
-    foreach($req_terms as $cv) {
-      $cv_id = chado_get_cv(array('name' => $cv))
-        ->cv_id;
+    // Fetch cvterm id of each term and make it available in the query using
+    // [cv][cvterm name] combination.
+    foreach($req_terms as $cv => $terms) {
+      foreach($terms as $term) {
+        $cv_id = chado_get_cv(array('name' => $cv))
+          ->cv_id;
 
-      if ($cv_id) {
-        $arr_terms[ $cv ] = $cv_id;
+        $cvterm_id = chado_get_cvterm(['name' => $term, 'cv_id' => $cv_id])
+          ->cvterm_id;
+
+        if ($cvterm_id) {
+          $arr_terms[ $cv ][ $term ] = $cvterm_id;
+        }
       }
     }
+
 
     // Based on parameters defined above.
 
@@ -97,47 +105,45 @@ class TripalWebServiceBrapiV1Ontologies extends TripalWebServiceDatabaseCall {
 
     $sql = "
       SELECT
-        'n/a' AS authors,
-        'n/a' AS copyright,
-        term.definition AS description,
-        db.url AS documentationurl,
-        'n/a' AS licence,
-        CONCAT(cv.name, ':', accession.accession) AS ontologydbid,
-        term.name AS ontologyname,
-        'n/a' AS version,
-        COUNT(term.cvterm_id) OVER() AS full_count,
-        cv.name AS cv_name
-      FROM {%s} AS term
-        INNER JOIN {cv} AS cv USING (cv_id)
-        INNER JOIN {dbxref} AS accession USING (dbxref_id)
-          INNER JOIN {db} AS db ON accession.db_id = db.db_id
-      WHERE term.cv_id IN (:cv)
-      ORDER BY cv.cv_id ASC, term.name ASC
+        atr.value AS authors,
+        cpy.value AS copyright,
+        ontology.definition AS description,
+        doc.value AS documentationurl,
+        lic.value AS licence,
+        ontology.cv_id AS ontologydbid,
+        ontology.name AS ontologyname,
+        ver.value AS version,
+        COUNT(ontology.cv_id) OVER() AS full_count
+      FROM {%s} AS ontology
+        LEFT JOIN {cvprop} AS atr ON ontology.cv_id = atr.cv_id AND atr.type_id = %s
+        LEFT JOIN {cvprop} AS cpy ON ontology.cv_id = cpy.cv_id AND cpy.type_id = %s
+        LEFT JOIN {cvprop} AS doc ON ontology.cv_id = doc.cv_id AND doc.type_id = %s
+        LEFT JOIN {cvprop} AS lic ON ontology.cv_id = lic.cv_id AND lic.type_id = %s
+        LEFT JOIN {cvprop} AS ver ON ontology.cv_id = ver.cv_id AND ver.type_id = %s
+      WHERE ontology.cv_id IN (
+        SELECT term.cv_id FROM {cvterm} term WHERE term.cvterm_id IN (
+          SELECT DISTINCT phenotype.attr_id FROM {phenotype} UNION
+          SELECT DISTINCT phenotype.unit_id  FROM {phenotype} UNION
+          SELECT DISTINCT phenotype.assay_id  FROM {phenotype} UNION
+          SELECT DISTINCT phenotype.cvalue_id  FROM {phenotype} UNION
+          SELECT DISTINCT phenotype.observable_id FROM {phenotype}
+        )
+        GROUP BY term.cv_id
+      )
+      ORDER BY ontology.name ASC
       LIMIT %d OFFSET %d
     ";
 
-    $args[':cv'] = $arr_terms;
-    $query = sprintf($sql, $this->class_name::$chado_table, $page_size, $offset);
+    $query = sprintf($sql, $this->class_name::$chado_table,
+      $arr_terms['NCIT']['Author'], $arr_terms['NCIT']['Copyright'],
+      $arr_terms['NCIT']['Written Documentation'], $arr_terms['NCIT']['License'],
+      $arr_terms['NCIT']['Version'], $page_size, $offset);
     $result = chado_query($query, $args);
 
     $ontologies = [];
-
-    // Additional step: provide a documentation url - when available in
-    // chado.db.url as in the query return it, otherwise, use the tripal
-    // cvterm browser @ host/admin/tripal/loaders/chado_vocabs/chado_cvterms?cv=cv name.
-
     // Strip any markup from definition.
     if ($result->rowCount() > 0) {
-      $cv_browser = $GLOBALS['base_url'] . '/admin/tripal/loaders/chado_vocabs/chado_cvterms?cv=%s';
       foreach($result as $ontology) {
-        // Documentation.
-        if (empty($ontology->documentationurl)) {
-          $ontology->documentationurl = sprintf($cv_browser, urlencode($ontology->cv_name));
-        }
-
-        // Any markup in definition.
-        $ontology->description = trim(html_entity_decode(strip_tags($ontology->description)));
-
         array_push($ontologies, $ontology);
       }
     }

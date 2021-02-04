@@ -18,7 +18,7 @@ $source = [
 	'genotype'   => ['main' => 'genotype-csv'],
 	'feature'    => ['main' => 'feature-csv', 'prop' => 'featureprop-csv', 'feature_relationship' => 'feature_relationship-csv', 'genotype_call' => 'genotype_call-csv'],
 	'featuremap' => ['main' => 'featuremap-csv', 'prop' => 'featuremapprop-csv', 'featuremap_organism' => 'featuremap_organism-csv', 'featurepos' => 'featurepos-csv'],
-	'cvterm'     => ['main' => 'cvterm-csv'],
+	'cv'         => ['cv' => 'cv-csv', 'prop' => 'cvprop-csv']
 ];
 $testdata = new TripalWebServiceTestData($source);
 $testdata->doRequest('load');
