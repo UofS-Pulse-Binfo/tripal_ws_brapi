@@ -1,0 +1,6 @@
+translate_value:cv_id, NCIT:Author, NCIT:Copyright, NCIT:Written Documentation, NCIT:License, NCIT:Version
+"KP Traits: Lentil", "Person A, Person B", "2020 University of XYZ", https://ontology.org, EMBL-EBI, 1.2
+"KP Trait Methods: Lentil", "Person A, University of XYZ", "2019 Ontology", https://ontology.org, EMBL-EBI, 3.0
+"KP Trait Units: Lentil", "Person X, Person Y and Person D", "2005 Pulse Ontology", https://ontology.org, EMBL-EBI, 2.4
+"KP Observable", "Person M", "1970 Pulse Ontology", https://ontology.org, EMBL-EBI, 1
+"KP CVALUE", "Person F", "2011 Pulse Ontology", https://ontology.org, EMBL-EBI, 1.0
