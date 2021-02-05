@@ -84,7 +84,16 @@ class samplesCallTest extends GenericHttpTestCase {
     ], TRUE);
 
     //---------------------------------
-    // 6. WITH PARAMETERS: germplasmDbId
+    // 6. WITH PARAMETERS: plateDbId
+    $response = NULL;
+    $this->assertWithParameter($response, [
+      'name' => 'plateDbId', // Parameter name.
+      'key'   => 'plateDbId', // The response key the parameter name will match.
+      'value'  =>  'PL1',   // Parameter value.
+    ]);
+
+    //---------------------------------
+    // 7. WITH PARAMETERS: germplasmDbId
     $response = NULL;
     $this->assertWithParameter($response, [
       'name' => 'germplasmDbId', // Parameter name.

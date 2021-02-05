@@ -27,7 +27,7 @@ class TripalWebServiceBrapiV1Samples extends TripalWebServiceDatabaseCall {
     // Key : Expected value for this key.
     'sampleDbId'    => 'text', // The internal DB id for a sample.
     'observationUnitDbId' => 'text', // The internal DB id for an observation unit where a sample was taken from.
-    //'plateDbId'   => 'text', // The internal DB id for a plate of samples
+    'plateDbId'     => 'text', // The internal DB id for a plate of samples
     'germplasmDbId' => 'int', // Filter by location.
     'page'          => 'int', // Which result page is requested.
     'pageSize'      => 'int', // The size of the pages to be returned.
@@ -81,23 +81,27 @@ class TripalWebServiceBrapiV1Samples extends TripalWebServiceDatabaseCall {
     $filter = [];
     $args   = [];
 
-    // Terms used in stockprop.
+    // Terms used to query:
     $arr_terms = [];
     $req_terms = [
-      'source_institute',
-      'comment',
+      'stock_property' => ['comment'],
+      'CO_324'   => ['Plant Number', 'Plot Number'],
+      'NCIT' => ['Plate Device', 'Tissue', 'Index Value', 'Computer Time Stamp', 'Collected By']
     ];
 
-    $cv_name = 'stock_property';
-    $cv_id = chado_get_cv(array('name' => $cv_name))
-      ->cv_id;
+    // Fetch cvterm id of each term and make it available in the query using
+    // [cv][cvterm name] combination.
+    foreach($req_terms as $cv => $terms) {
+      foreach($terms as $term) {
+        $cv_id = chado_get_cv(array('name' => $cv))
+          ->cv_id;
 
-    foreach($req_terms as $term) {
-      $cvterm_id = chado_get_cvterm(['name' => $term, 'cv_id' => $cv_id])
-        ->cvterm_id;
+        $cvterm_id = chado_get_cvterm(['name' => $term, 'cv_id' => $cv_id])
+          ->cvterm_id;
 
-      if ($cvterm_id) {
-        $arr_terms[ $term ] = $cvterm_id;
+        if ($cvterm_id) {
+          $arr_terms[ $cv ][ $term ] = $cvterm_id;
+        }
       }
     }
 
@@ -115,7 +119,7 @@ class TripalWebServiceBrapiV1Samples extends TripalWebServiceDatabaseCall {
     if (isset($call_asset['parameter']['sampleDbId'])
         && !empty($call_asset['parameter']['sampleDbId'])) {
 
-      $filter[] = 'sample.uniquename = :sampleDbId';
+      $filter[] = 'germplasm.uniquename = :sampleDbId';
       $args[':sampleDbId'] = $call_asset['parameter']['sampleDbId'];
     }
 
@@ -123,68 +127,73 @@ class TripalWebServiceBrapiV1Samples extends TripalWebServiceDatabaseCall {
     if (isset($call_asset['parameter']['observationUnitDbId'])
         && !empty($call_asset['parameter']['observationUnitDbId'])) {
 
-      $filter[] = "CONCAT(cv.name, ':', accession.accession) = :observationUnitDbId";
+      $filter[] = 'pheno.unit_id = :observationUnitDbId';
       $args[':observationUnitDbId'] = $call_asset['parameter']['observationUnitDbId'];
     }
 
     // plateDbId.
-    /*
     if (isset($call_asset['parameter']['plateDbId'])
         && !empty($call_asset['parameter']['plateDbId'])) {
 
-      $filter[] = 'PLATE DB ID = :observationUnitDbId';
+      $filter[] = 'plt.value = :plateDbId';
       $args[':plateDbId'] = $call_asset['parameter']['plateDbId'];
     }
-    */
 
     // germplasmDbId
     if (isset($call_asset['parameter']['germplasmDbId'])
         && !empty($call_asset['parameter']['germplasmDbId'])) {
 
-      $filter[] = 'sample.stock_id = :germplasmDbId';
+      $filter[] = 'germplasm.stock_id = :germplasmDbId';
       $args[':germplasmDbId'] = $call_asset['parameter']['germplasmDbId'];
     }
 
     // Transform parameters into a string, as where clause in the query.
     $where = '';
     if (isset($filter) && count($filter) > 0) {
-      $where = ' WHERE ' . implode(' AND ', $filter);
+      $where = ' AND ' . implode(' AND ', $filter);
     }
 
-
-    // Build query.
-    $sql = "
+    $sql1 = "
       SELECT
-        sample.stock_id AS germplasmdbid,
-        notes.value AS notes,
-        CONCAT(cv.name, ':', accession.accession) AS observationunitdbid,
-        'n/a' AS plantdbid,
-        'n/a' AS platedbid,
-        'n/a' AS plateindex,
-        'n/a' AS plotdbid,
-        sample.uniquename AS sampledbid,
-        'n/a' AS sampletimestamp,
+        germplasm.stock_id AS germplasmdbid,
+        nts.value AS notes,
+        pheno.unit_id AS observationunitdbid,
+        plant.value AS plantdbid,
+        plt.value AS platedbid,
+        ind.value AS plateindex,
+        plot.value AS plotdbid,
+        germplasm.uniquename AS sampledbid,
+        time.value AS sampletimestamp,
         type.name AS sampletype,
-        'n/a' AS studydbid,
-        takenby.value AS takenby,
-        'n/a' AS tissuetype,
-        COUNT(sample.stock_id) OVER() AS full_count
-      FROM {%s} AS sample
-        LEFT JOIN {cvterm} AS type ON sample.type_id = type.cvterm_id
-        LEFT JOIN {stockprop} AS takenby ON sample.stock_id = takenby.stock_id AND takenby.type_id = %d
-        LEFT JOIN {stockprop} AS notes ON sample.stock_id = notes.stock_id AND notes.type_id = %d
-        RIGHT JOIN {phenotype} AS pheno ON sample.stock_id = pheno.stock_id
-        LEFT JOIN {cvterm} AS unit ON pheno.unit_id = unit.cvterm_id
-        LEFT JOIN {cv} AS cv ON unit.cv_id = cv.cv_id
-        LEFT JOIN {dbxref} AS accession ON unit.dbxref_id = accession.dbxref_id
-      %s
-      ORDER BY sample.name ASC
+        study.project_id AS studydbid,
+        take.value AS takenby,
+        tis.value AS tissuetype,
+        COUNT(germplasm.stock_id) OVER() AS full_count
+      FROM {%s} AS germplasm
+        LEFT JOIN {cvterm} AS type ON germplasm.type_id = type.cvterm_id
+        LEFT JOIN {stockprop} AS nts ON germplasm.stock_id = nts.stock_id AND nts.type_id = %d
+        LEFT JOIN {stockprop} AS plt ON germplasm.stock_id = plt.stock_id AND plt.type_id = %d
+        LEFT JOIN {stockprop} AS ind ON germplasm.stock_id = ind.stock_id AND ind.type_id = %d
+        LEFT JOIN {stockprop} AS tis ON germplasm.stock_id = tis.stock_id AND tis.type_id = %d
+        RIGHT JOIN {phenotype} AS pheno ON germplasm.stock_id = pheno.stock_id
+        LEFT JOIN {phenotypeprop} AS plant ON pheno.phenotype_id = plant.phenotype_id AND plant.type_id = %d
+        LEFT JOIN {phenotypeprop} AS plot  ON pheno.phenotype_id = plot.phenotype_id AND plot.type_id = %d
+        LEFT JOIN {phenotypeprop} AS time  ON pheno.phenotype_id = time.phenotype_id AND time.type_id = %d
+        LEFT JOIN {phenotypeprop} AS take  ON pheno.phenotype_id = take.phenotype_id AND take.type_id = %d
+        LEFT JOIN {project} AS study ON pheno.project_id = study.project_id
+      WHERE type.name = 'DNA' %s
+      GROUP BY
+        germplasm.stock_id, type.name, nts.value, plt.value, ind.value, tis.value, pheno.unit_id,
+        germplasm.uniquename, plant.value, plot.value, study.project_id, time.value, take.value
       LIMIT %d OFFSET %d
     ";
 
-    $query = sprintf($sql, $this->class_name::$chado_table,
-      $arr_terms['source_institute'], $arr_terms['comment'],
-      $where, $page_size, $offset);
+    $query = sprintf($sql1, $this->class_name::$chado_table, $arr_terms['stock_property']['comment'],
+      $arr_terms['NCIT']['Plate Device'], $arr_terms['NCIT']['Index Value'],
+      $arr_terms['NCIT']['Tissue'], $arr_terms['CO_324']['Plant Number'],
+      $arr_terms['CO_324']['Plot Number'], $arr_terms['NCIT']['Computer Time Stamp'],
+      $arr_terms['NCIT']['Collected By'], $where, $page_size, $offset);
+
     $result = chado_query($query, $args);
 
     $samples = [];
@@ -192,8 +201,7 @@ class TripalWebServiceBrapiV1Samples extends TripalWebServiceDatabaseCall {
     // Additional steps to apply to response field.
     if ($result->rowCount() > 0) {
       foreach($result as $sample) {
-        $sample->plateindex = (int) 0;
-        
+        $sample->plateindex = (int) $sample->plateindex;
         array_push($samples, $sample);
       }
     }
