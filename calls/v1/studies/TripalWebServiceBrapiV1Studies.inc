@@ -29,6 +29,7 @@ class TripalWebServiceBrapiV1Studies extends TripalWebServiceDatabaseCall {
     'programDbId'    => 'int',     // Program filter to only return studies associated with given program id.
     'locationDbId'   => 'int',     // Filter by location.
     'trialDbId'      => 'int',     // Filter by trial.
+    'studyDbId'      => 'int',     // Filter by study DbId.
     'sortBy'         => ['commonCropName', 'name', 'studyName'],
     'sortOrder'      => 'asc/desc',
     'page'           => 'int',     // Which result page is requested.
@@ -163,6 +164,14 @@ class TripalWebServiceBrapiV1Studies extends TripalWebServiceDatabaseCall {
       $args[':trialDbId'] = $call_asset['parameter']['trialDbId'];
     }
 
+    // studyDbId.
+    if (isset($call_asset['parameter']['studyDbId'])
+        && !empty($call_asset['parameter']['studyDbId'])) {
+
+      $filter[] = 'prj.project_id = :studyDbId';
+      $args[':studyDbId'] = $call_asset['parameter']['studyDbId'];
+    }
+
     // Transform parameters into a string, as where clause in the query.
     $where = '';
     if (isset($filter) && count($filter) > 0) {
@@ -218,7 +227,7 @@ class TripalWebServiceBrapiV1Studies extends TripalWebServiceDatabaseCall {
           category.value AS programname,
           ARRAY_TO_JSON(ARRAY['n/a', 'n/a', year.value]) AS seasons,
           'n/a' AS startdate,
-          'n/a' AS studydbid,
+          prj.project_id AS studydbid,
           CONCAT(year.value, ' - ', loc.value) AS studyname,
           'n/a' AS studytype,
           'n/a' AS studytypedbid,
