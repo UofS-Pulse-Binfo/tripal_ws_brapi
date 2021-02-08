@@ -1,57 +1,57 @@
-translate_value:name, null:prop stock, stock_property:source_institute, stock_property:comment, stock_property:country_of_origin, stock_property:synonym
-lola, awesome, "Institute A", "Lorem ipsum dolor sit amet, consectetur adipiscing elit.", Canada, syn-lola
-stella, awesome, "Person ABC", "Duis fringilla ante tortor. Aenean ut ex eu orci commodo pretium.", Canada, syn-stella
-luna, awesome, "Person ABC", "Duis fringilla ante tortor. Aenean ut ex eu orci commodo pretium.", Canada, syn-luna
-nala, awesome, "Person ABC", "Duis fringilla ante tortor. Aenean ut ex eu orci commodo pretium.", Canada, syn-nala
-izzy, awesome, "Person ABC", "Duis fringilla ante tortor. Aenean ut ex eu orci commodo pretium.", Canada, syn-izzy
-layla, awesome, "Person ABC", "Duis fringilla ante tortor. Aenean ut ex eu orci commodo pretium.", Canada, syn-layla
-lulu, awesome, "Institute A", "Lorem ipsum dolor sit amet, consectetur adipiscing elit.", Canada, syn-lulu
-ellie, awesome, "Person XYZ", "In hac habitasse platea dictumst. Donec blandit sodales venenatis.", Canada, syn-ellie
-piper, awesome, "University Z", "Quisque semper, arcu in ultricies vehicula, velit turpis gravida est.", USA, syn-piper
-olivia, awesome, "Institute A", "Lorem ipsum dolor sit amet, consectetur adipiscing elit.", USA, syn-olivia
-king, awesome, "University Z", "Quisque semper, arcu in ultricies vehicula, velit turpis gravida est.", USA, syn-king
-max, awesome, "University Z", "Quisque semper, arcu in ultricies vehicula, velit turpis gravida est.", USA, syn-max
-owen, awesome, "Institute A", "Lorem ipsum dolor sit amet, consectetur adipiscing elit.", USA, syn-owen
-ray, awesome, "University Z", "Quisque semper, arcu in ultricies vehicula, velit turpis gravida est.", USA, syn-ray
-ralph, awesome, "University Z", "Quisque semper, arcu in ultricies vehicula, velit turpis gravida est.", USA, syn-ralph
-rex, not awesome, "Person ABC", "Duis fringilla ante tortor. Aenean ut ex eu orci commodo pretium.", USA, syn-rex
-scout, not awesome, "University Z", "Quisque semper, arcu in ultricies vehicula, velit turpis gravida est.", Turkey, syn-scout
-tesla, not awesome, "Institute Y", "liquam id mauris eros. Mauris sit amet elit eu ex.", Turkey, syn-tesla
-wyatt, not awesome, "Institute A", "Lorem ipsum dolor sit amet, consectetur adipiscing elit.", Turkey, syn-wyatt
-ace, not awesome, "Institute Y", "liquam id mauris eros. Mauris sit amet elit eu ex.", Turkey, syn-ace
-bailey, not awesome, "Person ABC", "Duis fringilla ante tortor. Aenean ut ex eu orci commodo pretium.", Turkey, syn-bailey
-bennet, not awesome, "Person ABC", "Duis fringilla ante tortor. Aenean ut ex eu orci commodo pretium.", Turkey, syn-bennet
-chase, not awesome, "Institute Y", "liquam id mauris eros. Mauris sit amet elit eu ex.", Turkey, syn-chase
-dexter, not awesome, "Person XYZ", "In hac habitasse platea dictumst. Donec blandit sodales venenatis.", Spain, syn-dexter
-emmet, not awesome, "University Z", "Quisque semper, arcu in ultricies vehicula, velit turpis gravida est.", Spain, syn-emmet
-felix, not awesome, "Institute Y", "liquam id mauris eros. Mauris sit amet elit eu ex.", Spain, syn-felix
-forrest, not awesome, "Institute A", "Lorem ipsum dolor sit amet, consectetur adipiscing elit.", Spain, syn-forrest
-hudson, not awesome, "Institute Y", "liquam id mauris eros. Mauris sit amet elit eu ex.", Spain, syn-hudson
-jack, not awesome, "Person ABC", "Duis fringilla ante tortor. Aenean ut ex eu orci commodo pretium.", Spain, syn-jack
-emma, not awesome, "Institute Y", "liquam id mauris eros. Mauris sit amet elit eu ex.", Spain, syn-emma
-aria, not awesome, "Person XYZ", "In hac habitasse platea dictumst. Donec blandit sodales venenatis.", Spain, syn-aria
-ava, not awesome, "Institute Y", "liquam id mauris eros. Mauris sit amet elit eu ex.", Italy, syn-ava
-mia, not awesome, "Institute Y", "liquam id mauris eros. Mauris sit amet elit eu ex.", Italy, syn-mia
-mila, pretty, "Institute A", "Lorem ipsum dolor sit amet, consectetur adipiscing elit.", Italy, syn-mila
-chloe, pretty, "Institute Y", "liquam id mauris eros. Mauris sit amet elit eu ex.", Italy, syn-chloe
-zoe, pretty, "University Z", "Quisque semper, arcu in ultricies vehicula, velit turpis gravida est.", Italy, syn-zoe
-abigail, pretty, "University Z", "Quisque semper, arcu in ultricies vehicula, velit turpis gravida est.", Nepal, syn-abigail
-ariana, pretty, "Institute Y", "liquam id mauris eros. Mauris sit amet elit eu ex.", Nepal, syn-ariana
-elena, pretty, "Person ABC", "Duis fringilla ante tortor. Aenean ut ex eu orci commodo pretium.", Nepal, syn-elena
-eva, pretty, "Institute Y", "liquam id mauris eros. Mauris sit amet elit eu ex.", Nepal, syn-eva
-sarah, pretty, "Institute Y", "liquam id mauris eros. Mauris sit amet elit eu ex.", Nepal, syn-sarah
-naomi, pretty, "University Z", "Quisque semper, arcu in ultricies vehicula, velit turpis gravida est.", India, syn-naomi
-sadie, pretty, "Institute Y", "liquam id mauris eros. Mauris sit amet elit eu ex.", India, syn-sadie
-liam, pretty, "Institute A", "Lorem ipsum dolor sit amet, consectetur adipiscing elit.", India, syn-liam
-noah, pretty, "Institute Y", "liquam id mauris eros. Mauris sit amet elit eu ex.", "New Zealand", syn-noah
-lucas, pretty, "Person XYZ", "In hac habitasse platea dictumst. Donec blandit sodales venenatis.", "New Zealand", syn-lucas
-leo, pretty, "Person XYZ", "In hac habitasse platea dictumst. Donec blandit sodales venenatis.", "New Zealand", syn-leo
-jake, pretty, "Institute Y", "liquam id mauris eros. Mauris sit amet elit eu ex.", "New Zealand", syn-jake
-dylan, pretty, "Institute Y", "liquam id mauris eros. Mauris sit amet elit eu ex.", Iran, syn-dylan
-landon, pretty, "Person XYZ", "In hac habitasse platea dictumst. Donec blandit sodales venenatis.", Iran, syn-landon
-marcus, pretty, "University Z", "Quisque semper, arcu in ultricies vehicula, velit turpis gravida est.", Iran, syn-marcus
-david, pretty, "Institute Y", "liquam id mauris eros. Mauris sit amet elit eu ex.", Iran, syn-david
-rowan, pretty, "Institute A", "Lorem ipsum dolor sit amet, consectetur adipiscing elit.", Morocco, syn-rowan
-cooper, pretty, "Institute A", "Lorem ipsum dolor sit amet, consectetur adipiscing elit.", Morocco, syn-cooper
-gunner, pretty, "Institute Y", "liquam id mauris eros. Mauris sit amet elit eu ex.", Morocco, syn-gunner
-tank, pretty, "Institute A", "Lorem ipsum dolor sit amet, consectetur adipiscing elit.", Morocco, syn-tank
+translate_value:name, null:prop stock, stock_property:source_institute, stock_property:comment, stock_property:country_of_origin, stock_property:synonym, NCIT:Plate Device, NCIT:Tissue, NCIT:Index Value
+lola, awesome, "Institute A", "Lorem ipsum dolor sit amet, consectetur adipiscing elit.", Canada, syn-lola, PL2, Leaf, 0
+stella, awesome, "Person ABC", "Duis fringilla ante tortor. Aenean ut ex eu orci commodo pretium.", Canada, syn-stella, PL2, Leaf, 1
+luna, awesome, "Person ABC", "Duis fringilla ante tortor. Aenean ut ex eu orci commodo pretium.", Canada, syn-luna, PL2, Leaf, 2
+nala, awesome, "Person ABC", "Duis fringilla ante tortor. Aenean ut ex eu orci commodo pretium.", Canada, syn-nala, PL2, Leaf, 3
+izzy, awesome, "Person ABC", "Duis fringilla ante tortor. Aenean ut ex eu orci commodo pretium.", Canada, syn-izzy, PL2, Leaf, 4
+layla, awesome, "Person ABC", "Duis fringilla ante tortor. Aenean ut ex eu orci commodo pretium.", Canada, syn-layla, PL2, Leaf, 5
+lulu, awesome, "Institute A", "Lorem ipsum dolor sit amet, consectetur adipiscing elit.", Canada, syn-lulu, PL1, Leaf, 0
+ellie, awesome, "Person XYZ", "In hac habitasse platea dictumst. Donec blandit sodales venenatis.", Canada, syn-ellie, PL1, Leaf, 0
+piper, awesome, "University Z", "Quisque semper, arcu in ultricies vehicula, velit turpis gravida est.", USA, syn-piper, PL1, Leaf, 0
+olivia, awesome, "Institute A", "Lorem ipsum dolor sit amet, consectetur adipiscing elit.", USA, syn-olivia, PL1, Leaf, 0
+king, awesome, "University Z", "Quisque semper, arcu in ultricies vehicula, velit turpis gravida est.", USA, syn-king, PL1, Leaf, 0
+max, awesome, "University Z", "Quisque semper, arcu in ultricies vehicula, velit turpis gravida est.", USA, syn-max, PL1, Leaf, 0
+owen, awesome, "Institute A", "Lorem ipsum dolor sit amet, consectetur adipiscing elit.", USA, syn-owen, PL1, Leaf, 0
+ray, awesome, "University Z", "Quisque semper, arcu in ultricies vehicula, velit turpis gravida est.", USA, syn-ray, PL1, Leaf, 0
+ralph, awesome, "University Z", "Quisque semper, arcu in ultricies vehicula, velit turpis gravida est.", USA, syn-ralph, PL1, Leaf, 0
+rex, not awesome, "Person ABC", "Duis fringilla ante tortor. Aenean ut ex eu orci commodo pretium.", USA, syn-rex, PL1, Leaf, 0
+scout, not awesome, "University Z", "Quisque semper, arcu in ultricies vehicula, velit turpis gravida est.", Turkey, syn-scout, PL1, Leaf, 0
+tesla, not awesome, "Institute Y", "liquam id mauris eros. Mauris sit amet elit eu ex.", Turkey, syn-tesla, PL1, Leaf, 0
+wyatt, not awesome, "Institute A", "Lorem ipsum dolor sit amet, consectetur adipiscing elit.", Turkey, syn-wyatt, PL1, Leaf, 0
+ace, not awesome, "Institute Y", "liquam id mauris eros. Mauris sit amet elit eu ex.", Turkey, syn-ace, PL1, Leaf, 0
+bailey, not awesome, "Person ABC", "Duis fringilla ante tortor. Aenean ut ex eu orci commodo pretium.", Turkey, syn-bailey, PL1, Leaf, 0
+bennet, not awesome, "Person ABC", "Duis fringilla ante tortor. Aenean ut ex eu orci commodo pretium.", Turkey, syn-bennet, PL1, Leaf, 0
+chase, not awesome, "Institute Y", "liquam id mauris eros. Mauris sit amet elit eu ex.", Turkey, syn-chase, PL1, Leaf, 0
+dexter, not awesome, "Person XYZ", "In hac habitasse platea dictumst. Donec blandit sodales venenatis.", Spain, syn-dexter, PL1, Leaf, 0
+emmet, not awesome, "University Z", "Quisque semper, arcu in ultricies vehicula, velit turpis gravida est.", Spain, syn-emmet, PL1, Leaf, 0
+felix, not awesome, "Institute Y", "liquam id mauris eros. Mauris sit amet elit eu ex.", Spain, syn-felix, PL1, Leaf, 0
+forrest, not awesome, "Institute A", "Lorem ipsum dolor sit amet, consectetur adipiscing elit.", Spain, syn-forrest, PL1, Leaf, 0
+hudson, not awesome, "Institute Y", "liquam id mauris eros. Mauris sit amet elit eu ex.", Spain, syn-hudson, PL1, Leaf, 0
+jack, not awesome, "Person ABC", "Duis fringilla ante tortor. Aenean ut ex eu orci commodo pretium.", Spain, syn-jack, PL1, Leaf, 0
+emma, not awesome, "Institute Y", "liquam id mauris eros. Mauris sit amet elit eu ex.", Spain, syn-emma, PL1, Leaf, 0
+aria, not awesome, "Person XYZ", "In hac habitasse platea dictumst. Donec blandit sodales venenatis.", Spain, syn-aria, PL1, Leaf, 0
+ava, not awesome, "Institute Y", "liquam id mauris eros. Mauris sit amet elit eu ex.", Italy, syn-ava, PL1, Leaf, 0
+mia, not awesome, "Institute Y", "liquam id mauris eros. Mauris sit amet elit eu ex.", Italy, syn-mia, PL1, Leaf, 0
+mila, pretty, "Institute A", "Lorem ipsum dolor sit amet, consectetur adipiscing elit.", Italy, syn-mila, PL1, Leaf, 0
+chloe, pretty, "Institute Y", "liquam id mauris eros. Mauris sit amet elit eu ex.", Italy, syn-chloe, PL1, Leaf, 0
+zoe, pretty, "University Z", "Quisque semper, arcu in ultricies vehicula, velit turpis gravida est.", Italy, syn-zoe, PL1, Leaf, 0
+abigail, pretty, "University Z", "Quisque semper, arcu in ultricies vehicula, velit turpis gravida est.", Nepal, syn-abigail, PL1, Leaf, 0
+ariana, pretty, "Institute Y", "liquam id mauris eros. Mauris sit amet elit eu ex.", Nepal, syn-ariana, PL1, Leaf, 0
+elena, pretty, "Person ABC", "Duis fringilla ante tortor. Aenean ut ex eu orci commodo pretium.", Nepal, syn-elena, PL1, Leaf, 0
+eva, pretty, "Institute Y", "liquam id mauris eros. Mauris sit amet elit eu ex.", Nepal, syn-eva, PL1, Leaf, 0
+sarah, pretty, "Institute Y", "liquam id mauris eros. Mauris sit amet elit eu ex.", Nepal, syn-sarah, PL1, Leaf, 0
+naomi, pretty, "University Z", "Quisque semper, arcu in ultricies vehicula, velit turpis gravida est.", India, syn-naomi, PL1, Leaf, 0
+sadie, pretty, "Institute Y", "liquam id mauris eros. Mauris sit amet elit eu ex.", India, syn-sadie, PL1, Leaf, 0
+liam, pretty, "Institute A", "Lorem ipsum dolor sit amet, consectetur adipiscing elit.", India, syn-liam, PL1, Leaf, 0
+noah, pretty, "Institute Y", "liquam id mauris eros. Mauris sit amet elit eu ex.", "New Zealand", syn-noah, PL1, Leaf, 0
+lucas, pretty, "Person XYZ", "In hac habitasse platea dictumst. Donec blandit sodales venenatis.", "New Zealand", syn-lucas, PL1, Leaf, 0
+leo, pretty, "Person XYZ", "In hac habitasse platea dictumst. Donec blandit sodales venenatis.", "New Zealand", syn-leo, PL1, Leaf, 0
+jake, pretty, "Institute Y", "liquam id mauris eros. Mauris sit amet elit eu ex.", "New Zealand", syn-jake, PL1, Leaf, 0
+dylan, pretty, "Institute Y", "liquam id mauris eros. Mauris sit amet elit eu ex.", Iran, syn-dylan, PL1, Leaf, 0
+landon, pretty, "Person XYZ", "In hac habitasse platea dictumst. Donec blandit sodales venenatis.", Iran, syn-landon, PL1, Leaf, 0
+marcus, pretty, "University Z", "Quisque semper, arcu in ultricies vehicula, velit turpis gravida est.", Iran, syn-marcus, PL1, Leaf, 0
+david, pretty, "Institute Y", "liquam id mauris eros. Mauris sit amet elit eu ex.", Iran, syn-david, PL1, Leaf, 0
+rowan, pretty, "Institute A", "Lorem ipsum dolor sit amet, consectetur adipiscing elit.", Morocco, syn-rowan, PL1, Leaf, 0
+cooper, pretty, "Institute A", "Lorem ipsum dolor sit amet, consectetur adipiscing elit.", Morocco, syn-cooper, PL1, Leaf, 0
+gunner, pretty, "Institute Y", "liquam id mauris eros. Mauris sit amet elit eu ex.", Morocco, syn-gunner, PL1, Leaf, 0
+tank, pretty, "Institute A", "Lorem ipsum dolor sit amet, consectetur adipiscing elit.", Morocco, syn-tank, PL1, Leaf, 0
