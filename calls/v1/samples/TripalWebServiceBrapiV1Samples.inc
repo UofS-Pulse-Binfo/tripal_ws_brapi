@@ -127,7 +127,7 @@ class TripalWebServiceBrapiV1Samples extends TripalWebServiceDatabaseCall {
     if (isset($call_asset['parameter']['observationUnitDbId'])
         && !empty($call_asset['parameter']['observationUnitDbId'])) {
 
-      $filter[] = 'pheno.unit_id = :observationUnitDbId';
+      $filter[] = 'phenotypes.unit_id::varchar = :observationUnitDbId';
       $args[':observationUnitDbId'] = $call_asset['parameter']['observationUnitDbId'];
     }
 
@@ -150,23 +150,26 @@ class TripalWebServiceBrapiV1Samples extends TripalWebServiceDatabaseCall {
     // Transform parameters into a string, as where clause in the query.
     $where = '';
     if (isset($filter) && count($filter) > 0) {
-      $where = ' AND ' . implode(' AND ', $filter);
+      $where = ' WHERE ' . implode(' AND ', $filter);
     }
 
-    $sql1 = "
+    // Phenotypes specific fields may retrun null
+    // when not applicable (samples not of type DNA).
+    // In this case, n/a instead of null is set as the value.
+    $sql = "
       SELECT
         germplasm.stock_id AS germplasmdbid,
         nts.value AS notes,
-        pheno.unit_id AS observationunitdbid,
-        plant.value AS plantdbid,
+        COALESCE(phenotypes.unit_id::varchar, 'n/a') AS observationunitdbid,
+        COALESCE(phenotypes.plantdbid::varchar, 'n/a') AS plantdbid,
         plt.value AS platedbid,
         ind.value AS plateindex,
-        plot.value AS plotdbid,
+        COALESCE(phenotypes.plotdbid::varchar, 'n/a') AS plotdbid,
         germplasm.uniquename AS sampledbid,
-        time.value AS sampletimestamp,
+        COALESCE(phenotypes.sampletimestamp, 'n/a') AS sampletimestamp,
         type.name AS sampletype,
-        study.project_id AS studydbid,
-        take.value AS takenby,
+        COALESCE(phenotypes.studydbid::varchar, 'n/a') AS studydbid,
+        COALESCE(phenotypes.takenby, 'n/a') AS takenby,
         tis.value AS tissuetype,
         COUNT(germplasm.stock_id) OVER() AS full_count
       FROM {%s} AS germplasm
@@ -175,20 +178,39 @@ class TripalWebServiceBrapiV1Samples extends TripalWebServiceDatabaseCall {
         LEFT JOIN {stockprop} AS plt ON germplasm.stock_id = plt.stock_id AND plt.type_id = %d
         LEFT JOIN {stockprop} AS ind ON germplasm.stock_id = ind.stock_id AND ind.type_id = %d
         LEFT JOIN {stockprop} AS tis ON germplasm.stock_id = tis.stock_id AND tis.type_id = %d
-        RIGHT JOIN {phenotype} AS pheno ON germplasm.stock_id = pheno.stock_id
-        LEFT JOIN {phenotypeprop} AS plant ON pheno.phenotype_id = plant.phenotype_id AND plant.type_id = %d
-        LEFT JOIN {phenotypeprop} AS plot  ON pheno.phenotype_id = plot.phenotype_id AND plot.type_id = %d
-        LEFT JOIN {phenotypeprop} AS time  ON pheno.phenotype_id = time.phenotype_id AND time.type_id = %d
-        LEFT JOIN {phenotypeprop} AS take  ON pheno.phenotype_id = take.phenotype_id AND take.type_id = %d
-        LEFT JOIN {project} AS study ON pheno.project_id = study.project_id
-      WHERE type.name = 'DNA' %s
+        LEFT JOIN (
+          SELECT
+            pheno.stock_id,
+            pheno.unit_id AS unit_id,
+            plant.value AS plantdbid,
+            plot.value AS plotdbid,
+            time.value AS sampletimestamp,
+            take.value AS takenby,
+            study.project_id AS studydbid
+          FROM
+            {phenotype} AS pheno
+            LEFT JOIN {phenotypeprop} AS plant ON pheno.phenotype_id = plant.phenotype_id AND plant.type_id = %d
+            LEFT JOIN {phenotypeprop} AS plot  ON pheno.phenotype_id = plot.phenotype_id AND plot.type_id = %d
+            LEFT JOIN {phenotypeprop} AS time  ON pheno.phenotype_id = time.phenotype_id AND time.type_id = %d
+            LEFT JOIN {phenotypeprop} AS take  ON pheno.phenotype_id = take.phenotype_id AND take.type_id = %d
+            LEFT JOIN {project} AS study ON pheno.project_id = study.project_id
+          WHERE
+            pheno.stock_id IN (
+              SELECT stock_id
+              FROM {stock} AS s INNER JOIN {cvterm} AS c ON s.type_id = c.cvterm_id
+              WHERE c.name = 'DNA'
+            )
+       ) AS phenotypes ON phenotypes.stock_id = germplasm.stock_id
+      %s
       GROUP BY
-        germplasm.stock_id, type.name, nts.value, plt.value, ind.value, tis.value, pheno.unit_id,
-        germplasm.uniquename, plant.value, plot.value, study.project_id, time.value, take.value
+        germplasm.stock_id, type.name, nts.value, plt.value, ind.value, tis.value, phenotypes.unit_id,
+        germplasm.uniquename, phenotypes.plantdbid, phenotypes.plotdbid, phenotypes.studydbid,
+        phenotypes.sampletimestamp, phenotypes.takenby
+      ORDER BY type.name ASC, germplasm.name ASC
       LIMIT %d OFFSET %d
     ";
 
-    $query = sprintf($sql1, $this->class_name::$chado_table, $arr_terms['stock_property']['comment'],
+    $query = sprintf($sql, $this->class_name::$chado_table, $arr_terms['stock_property']['comment'],
       $arr_terms['NCIT']['Plate Device'], $arr_terms['NCIT']['Index Value'],
       $arr_terms['NCIT']['Tissue'], $arr_terms['CO_324']['Plant Number'],
       $arr_terms['CO_324']['Plot Number'], $arr_terms['NCIT']['Computer Time Stamp'],
@@ -202,6 +224,7 @@ class TripalWebServiceBrapiV1Samples extends TripalWebServiceDatabaseCall {
     if ($result->rowCount() > 0) {
       foreach($result as $sample) {
         $sample->plateindex = (int) $sample->plateindex;
+
         array_push($samples, $sample);
       }
     }

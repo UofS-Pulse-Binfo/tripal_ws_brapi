@@ -76,12 +76,13 @@ class samplesCallTest extends GenericHttpTestCase {
 
     //---------------------------------
     // 5. WITH PARAMETERS: observationUnitDbId
+    $unit = $this->translateValue('cvterm', 'cvterm_id', ['name' => 'Unit C']);
     $response = NULL;
     $this->assertWithParameter($response, [
       'name' => 'observationUnitDbId', // Parameter name.
       'key'   => 'observationUnitDbId', // The response key the parameter name will match.
-      'value'  =>  '',   // Pick one.
-    ], TRUE);
+      'value'  =>  $unit,   // Parameter value.
+    ]);
 
     //---------------------------------
     // 6. WITH PARAMETERS: plateDbId
