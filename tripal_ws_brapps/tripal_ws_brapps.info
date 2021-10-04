@@ -1,0 +1,8 @@
+name = Tripal WS BRAPPS
+description = BrAPI Applications Showcase BRAPPS Implementations
+
+package = Tripal Extensions
+core = 7.x
+dependencies[] = tripal
+dependencies[] = tripal_ws
+dependencies[] = tripal_ws_brapi

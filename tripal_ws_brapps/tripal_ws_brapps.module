@@ -1,0 +1,165 @@
+<?php
+
+module_load_include('inc', 'tripal_ws_brapps', 'api/brapps-api');
+
+/**
+ * Implements hook_menu().
+ */
+function tripal_ws_brapps_menu() {
+  // BRAPPS: Graphical Filtering.
+  $items['brapps/graphical-filtering'] = [
+    'title' => 'Graphical Filtering',
+    'description' => t('Search and Filter Observational Data'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => ['tripal_ws_brapps_graphical_filtering'],
+    'access arguments' => ['access brapps'],
+    'type' => MENU_NORMAL_ITEM,
+    'file' => 'includes/graphical-filtering/brapps-form.inc'
+  ];
+
+  // BRAPPS: Study Comparison.
+  $items['brapps/study-comparison'] = [
+    'title' => 'Study Comparison',
+    'description' => t('Compare Studies'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => ['tripal_ws_brapps_study_comparison'],
+    'access arguments' => ['access brapps'],
+    'type' => MENU_NORMAL_ITEM,
+    'file' => 'includes/study-comparison/brapps-form.inc'
+  ];
+
+  return $items;
+}
+
+
+/**
+ * Implements hook_preprocess_HOOK().
+ * BRAPPS specific variables.
+ */
+function tripal_ws_brapps_preprocess_tripal_ws_brapps_graphical_filtering(&$variables, $hook) {
+  $variables['source'] = 'BREEDBASE';
+  $variables['source_url'] = 'https://github.com/solgenomics/BrAPI-Graphical-Filtering';
+  $variables['module_path'] = $GLOBALS['base_url'] . '/' . drupal_get_path('module', 'tripal_ws_brapps');
+}
+
+function tripal_ws_brapps_preprocess_tripal_ws_brapps_study_comparison(&$variables, $hook) {
+  $variables['source'] = 'BREEDBASE';
+  $variables['source_url'] = 'https://github.com/solgenomics/BrAPI-Study-Comparison';
+  $variables['module_path'] = $GLOBALS['base_url'] . '/' . drupal_get_path('module', 'tripal_ws_brapps');
+}
+ //
+
+
+/**
+ * Implements hook_permission().
+ */
+function tripal_ws_brapps_permission() {
+  return [
+    'access brapps' => [
+      'title' => t('Access Tripal WS BrAPI Applications (BRAPPS).')
+    ]
+  ];
+}
+
+/**
+ * Implements hook_theme().
+ */
+function tripal_ws_brapps_theme($existing, $type, $theme, $path) {
+  // Main template.
+  // This template will expand the entire page screen for optimal
+  // user experience and to allow BRAPPS to expand when required.
+  $items['tripal_ws_brapps_graphical_filtering'] = [
+    'render element' => 'form',
+    'template' => 'tripal_ws_brapps_page',
+    'path' => $path . '/theme'
+  ];
+
+  $items['tripal_ws_brapps_study_comparison'] = [
+    'render element' => 'form',
+    'template' => 'tripal_ws_brapps_page',
+    'path' => $path . '/theme'
+  ];
+
+  return $items;
+}
+
+/**
+ * Implements hook_libraries_info().
+ */
+function tripal_ws_brapps_libraries_info() {
+  // BOOTSTRAP JS.
+  $name = 'bootstrap_3_3';
+  $lib = $GLOBALS['base_url'] . '/' . libraries_get_path($name);
+  $libraries[ $name ] = [
+    'name' => 'BOOTSTRAP',
+    'vendor url' => 'https://github.com/twbs/bootstrap',
+    'download url' => 'https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js',
+    'library path' => $lib . '/bootstrap_3_3/',
+    'path' => $lib . '/bootstrap_3_3/',
+    'files' => [
+      'js' => 'bootstrap.min.js'
+    ],
+  ];
+  
+  // D3 JS (v4).
+  $name = 'd3_4';
+  $lib = $GLOBALS['base_url'] . '/' . libraries_get_path($name);
+  $libraries[ $name ] = [
+    'name' => 'D3 v4',
+    'vendor url' => 'https://github.com/d3/d3',
+    'download url' => 'https://cdnjs.cloudflare.com/ajax/libs/d3/4.12.0/d3.js',
+    'library path' => $lib . '/d3_4/',
+    'path' => $lib . '/d3_4/',
+    'files' => [
+      'js' => 'd3.4.js'
+    ],
+  ];
+
+  // Data Tables JS v1.
+  $name = 'datatables_1';
+  $lib = $GLOBALS['base_url'] . '/' . libraries_get_path($name);
+  $libraries[ $name ] = [
+    'name' => 'Data Table JS',
+    'vendor url' => 'https://github.com/DataTables/DataTables',
+    'download url' => 'https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js',
+    'library path' => $lib . '/datatables_1/',
+    'path' => $lib . '/datatables_1/',
+    'files' => [
+      'js' => 'jquery.dataTables.min.js',
+    ],
+  ];
+
+    // JQUERY v3
+    $name = 'jquery_3_2';
+    $lib = $GLOBALS['base_url'] . '/' . libraries_get_path($name);
+    $libraries[ $name ] = [
+      'name' => 'JQuery',
+      'vendor url' => 'https://github.com/jquery/jquery',
+      'download url' => 'https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.js',
+      'library path' => $lib . '/jquery_3_2/',
+      'path' => $lib . '/jquery_3_2/',
+      'files' => [
+        'js' => 'jquery.3.2.js'
+      ],
+    ];
+}
+
+/**
+ * Implements template_preprocess_page().
+ */
+function tripal_ws_brapps_preprocess_page(&$variables) {
+  $args = arg();
+  $brapps_page = $args[0];
+
+  if ($brapps_page == 'brapps') {
+    // Exclude any navigation blocks to allow the app to use
+    // the maximum space available.
+    if (isset($variables['page']['sidebar_first'])) {
+      $variables['page']['sidebar_first'] = null;
+    }
+
+    $path = drupal_get_path('module', 'tripal_ws_brapps');
+    drupal_add_css($path . '/theme/css/tripal-ws-brapps-page.css', ['group' => CSS_THEME, 'weight' => 100]);
+    drupal_add_js($path . '/theme/js/tripal-ws-brapps-script.js', ['type' => 'file', 'scope' => 'footer']);
+  }
+}

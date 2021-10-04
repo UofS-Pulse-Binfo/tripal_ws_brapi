@@ -4,7 +4,7 @@
  */
 class TripalWebServiceDatabaseCall extends TripalWebServiceCall {
   // This type of call (custom call) only supports GET request method.
-  private $db_call_method = ['GET'];
+  private $db_call_method = ['GET', 'POST'];
 
 
   /**
@@ -72,7 +72,7 @@ class TripalWebServiceDatabaseCall extends TripalWebServiceCall {
     $metadata = $this->resolveMetaDataItem($map_data, $metadata, $this->call_asset);
 
     // See if call alias wants to override the payload key.
-    $payload_key = ($this->call_asset['payload_key'])
+    $payload_key = (isset($this->call_asset['payload_key']))
       ? $this->call_asset['payload_key'] : $this->call_payload_key;
 
     // Payload information.

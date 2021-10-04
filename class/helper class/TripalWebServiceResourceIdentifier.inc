@@ -412,7 +412,7 @@ class TripalWebServiceResourceIdentifier {
     // Handling POST request.
 
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-      if ($_SERVER["CONTENT_TYPE"] == 'application/json') {
+      if ($_SERVER["CONTENT_TYPE"] == 'application/json' || $_SERVER["CONTENT_TYPE"] == 'application/json;charset=utf-8') {
         // Only when request is in JSON object.
         $raw_json = file_get_contents('php://input');
         // Inspect if it is well-formed JSON.

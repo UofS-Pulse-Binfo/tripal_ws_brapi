@@ -65,8 +65,9 @@ final class TripalWebServiceResponse {
    *   Array, contain elements such as status code and error message.
    */
   public static function errorResponse($response) {
+    $message = $response['message'];
     $metadata_response = self::$metadata_response;
-    $response['code'] = isset($response['code']) ? $response['code'] : 400;
+    $response_code = isset($response['code']) ? $response['code'] : 400;
 
     // Attach response to define metatdata format defined above.
     $metadata_response['metadata']['status'] = $response;
@@ -74,7 +75,8 @@ final class TripalWebServiceResponse {
     $metadata_response['metadata']['status']['messageType'] = $error_code_description;
 
     $response = $metadata_response;
-    $status = $response['code'] . ' ' . $error_code_description;
+    
+    $status = $response_code . ' ' . $error_code_description . $message;
     self::encodeResponse(self::$response_content_type, $status, $response);
   }
 
