@@ -268,13 +268,13 @@ class TripalWebServiceBrapiV1Phenotypes_Search extends TripalWebServiceDatabaseC
         ARRAY_TO_JSON(ARRAY['n/a', 'n/a']) AS treatments,
         ARRAY_TO_JSON(ARRAY[unit.dbxref_id::varchar, 'source']) AS observationunitxref,
         ARRAY_TO_JSON(ARRAY_AGG(ARRAY[
-          obs.collector,
+          obs.collector::varchar,
           obs.observationdbid::varchar,
-          obs.observationtimestamp,
-          obs.observationvariabledbid,
-          obs.observationvariablename,
-          obs.season,
-          obs.value
+          obs.observationtimestamp::varchar,
+          obs.observationvariabledbid::varchar,
+          obs.observationvariablename::varchar,
+          obs.season::varchar,
+          obs.value::varchar
         ])) AS observations,      
         COUNT(project.project_id) OVER() AS full_count
       FROM {%s} AS project
