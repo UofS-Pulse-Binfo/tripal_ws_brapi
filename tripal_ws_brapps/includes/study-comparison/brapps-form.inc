@@ -8,7 +8,7 @@ function tripal_ws_brapps_study_comparison($form, &$form_state) {
   // Select field: Select study field.
   $form['options'] = [];
 
-  $options = tripal_ws_brapps_get_fields('phenotypes-search', ['studyDbId', 'studyName']);
+  $options = tripal_ws_brapps_get_studies();
   $form['options']['field_select_study'] = [
     '#type' => 'checkboxes',
     '#options' => $options,
@@ -43,7 +43,7 @@ function tripal_ws_brapps_study_comparison($form, &$form_state) {
   $form['div'] = [
     '#markup' => '<div id="graph_div" style="margin:1em;float:left;"></div>
       <div id="hist_div" style="margin:1em;float:left;"></div>
-      <div id="hist_div" style="clear:both"></div>'
+      <div style="clear:both"></div>'
   ];
 
   // Add JS Libraries and BRAPPS specific JS and CSS.
@@ -60,11 +60,9 @@ function tripal_ws_brapps_study_comparison($form, &$form_state) {
   drupal_add_js($path . 'js/StudyComparisonMain.js', $scope);
   
   // BRAPPS CSS.
-  /*
   $form['#attached']['css'] = [
-    $path . 'css/****.css',
+    $path . 'css/StudyComparison.css',
   ];
-  */
 
   // Location of BrAPI call.
   $brapi_path = [

@@ -1,5 +1,8 @@
 <?php
-
+  /**
+   * Main template used by each BRAPPS implemented.
+   * BRAPPS generated elements will be appended in #tripal-ws-brapps container.
+   */
 ?>
 
 <div id="tripal-ws-brapps-container">

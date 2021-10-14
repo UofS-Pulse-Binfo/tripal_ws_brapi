@@ -8,7 +8,7 @@ function tripal_ws_brapps_graphical_filtering($form, &$form_state) {
   // Select field: Select study field.
   $form['options'] = [];
 
-  $options = tripal_ws_brapps_get_fields('phenotypes-search', ['studyDbId', 'studyName']);
+  $options = tripal_ws_brapps_get_studies();
   $form['options']['field_select_study'] = [
     '#type' => 'checkboxes',
     '#options' => $options,

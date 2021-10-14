@@ -2,8 +2,8 @@
  (function($) {
     Drupal.behaviors.brappsGraphicalFiltering = {
       attach: function (context, settings) {
-        var btnLoad = $('#tripal-ws-brapps-checkbox-dropmenu > input');     
-        
+        var btnLoad = $('#tripal-ws-brapps-checkbox-dropmenu > input');             
+
         // Enable when authetication is required.
         // auth = {'username':, 'password':};
         var auth = null;
@@ -12,7 +12,7 @@
         // Table needs to be deleted before creating a new one.
         // This variable indicates that table has been previously generated.
         var run = false;
-        checkboxDropmenu();
+        checkboxDropmenu(limitStudy = 1, minStudy = 1);
 
         btnLoad.click(function(e) {
           if (myparams.studyDbIds) {
@@ -44,8 +44,9 @@
                 return traits;
               },
               function(d) {
+                var shortTitle = shortenText(d.studyName, 30);
                 return {
-                  'Study': d.studyName,
+                  'Study': shortTitle,
                   'Unit': d.observationUnitName,
                   'Accession': d.germplasmName,
                 }
@@ -56,10 +57,8 @@
               }
             );
             
-            $.when( render.draw('#filter_div','#filtered_results') )
-            .done(function() {
-              removePanelEffect();  
-            });
+            render.draw('#filter_div','#filtered_results');
+            complete = setInterval(checkComplete, 500);
           }
         });
 

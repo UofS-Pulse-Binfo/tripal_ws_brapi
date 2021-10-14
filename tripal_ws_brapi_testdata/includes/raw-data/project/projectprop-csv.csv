@@ -1,4 +1,8 @@
 translate_value:name, local:research area, taxonomic_rank:genus, efo:funder, SIO:category, GCP germplasm ontology:collaborator, NCIT:lead, NCI Thesaurus OBO Edition:Year
+"Evaluation of Drought and Disease Resistance",, Tripalus, "Funder ABCDEFG", "Research Area - Breeding & Gentics", "Oliver Milo & Charlotte Amelia", "Dr. KE B.", 2020-2021
+"Tracing Domestication Traits",, Tripalus, "Funder ABCDEFG", "Research Area - Breeding & Gentics", "Oliver Milo & Charlotte Amelia", "Dr. KE B.", 2020-2021
+"Field Experiment to Assess 15 Rhizobium Strains",, Tripalus, "Funder ABCDEFG", "Research Area - Breeding & Gentics", "Oliver Milo & Charlotte Amelia", "Dr. KE B.", 2020-2021
+"Protein Characterization in Lentils",, Tripalus, "Funder ABCDEFG", "Research Area - Breeding & Gentics", "Oliver Milo & Charlotte Amelia", "Dr. KE B.", 2020-2021
 "Project A",, Tripalus, "Funder A", "Research Area - Pathology", "Oliver Milo & Charlotte Amelia", "Dr. William Ava", 2015-2017
 "Project B",, Tripalus, "Funder B", "Research Area - Pathology", "Liam Declan", "Dr. William Ava", 2015-2017
 "Project C",, Tripalus, "Funder B", "Research Area - Pathology", "Charlotte Amelia & Liam Declan", "Dr. James William", 2015-2017

@@ -11,7 +11,7 @@
 
         var brapiPath = Drupal.settings.tripal_ws_brapps.brapi_path;
         var scomp;
-        checkboxDropmenu();
+        checkboxDropmenu(limitStudy = 10, minStudy = 2);
  
         // Load variables based on selected projects.
         btnLoad.click(function(e) {
@@ -29,8 +29,8 @@
         btnCompare.click(function(e) {
           e.preventDefault();
           var fldVariableVal = fldVariable.val();
-        
-          if (fldVariableVal != '0') {
+
+          if (fldVariableVal && fldVariableVal != '0') {
             $('#graph_div, #hist_div').html('');
             restorePanelEffect();
             animatePanelEffect();
@@ -38,7 +38,27 @@
             scomp.setVariable(fldVariableVal);
             scomp.graphGrid("#graph_div");
             scomp.multiHist("#hist_div");
-            removePanelEffect();  
+
+            if (myparams.studyDbIds.length > 2) {
+              shortenAxisText();
+            }
+            
+            complete = setInterval(checkComplete, 500); 
+
+            // Add listener to chart elements.
+            // Shorten back the titles.
+            d3.selectAll('.grapgr-cell-bg').on('click', function() {
+              var transform = d3.select('.grapgr-main').attr('transform');
+            
+              if (transform !== 'translate(0, 0) scale(1,1)') {
+                // Matrix of plot charts is restored, shorten
+                // axis to make it readable in case titles were long.
+                inspect = setInterval(shortenAxisText, 100);
+              }
+            });
+          }
+          else {
+            alert('Please select study and variable.')
           }
         });         
 
@@ -64,7 +84,9 @@
          */    
         function createSComp(data) {
           scomp = StudyComparison().links(function(dbId){
-            return brapiPath.base + 'stock/' + dbId + '/view';
+            // Change this to location of germplasm page.
+            // return brapiPath.base + 'stock/' + dbId + '/view';
+            return '';
           });
 
           var sharedVars = scomp.loadData(data);

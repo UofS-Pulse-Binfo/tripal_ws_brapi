@@ -87,6 +87,7 @@ class TripalWebServiceTestData {
             $cvterm_id = $id2;
           }
           else {
+            dpm($cv . '---' . $term);
             $id2 = tripal_insert_cvterm([
               'id' => $cv . ':' . $term,
               'name' => $term,
@@ -94,7 +95,11 @@ class TripalWebServiceTestData {
               'definition' => $term . ' definition',
             ])
               ->cvterm_id;
+
+              dpm($id2);
           }
+
+          
 
           $ids[ $cv ]['term'][ $term ] = $id2;
         }
@@ -425,6 +430,7 @@ class TripalWebServiceTestData {
       }
     }
     catch (Exception $e) {
+      echo $e->getMessage();
       $TRANSACTION->rollback();
       exit();
     }

@@ -28,6 +28,8 @@ function tripal_ws_brapps_menu() {
     'file' => 'includes/study-comparison/brapps-form.inc'
   ];
 
+  // Define menu item here for a brapps.
+
   return $items;
 }
 

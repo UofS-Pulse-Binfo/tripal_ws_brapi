@@ -7,7 +7,7 @@
   Drupal.behaviors.tripalWSTabs = {
     attach: function (context, settings) {
       // Initialize JQuery Tabs.
-      $('#tabs').tabs({delay:0});
+      //$('#tabs').tabs({delay:0});
 
       var btn = $('#tripal-ws-brapi-request-button');
       var label = btn.val();

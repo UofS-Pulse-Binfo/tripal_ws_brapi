@@ -1,0 +1,7 @@
+@charset "UTF-8";
+
+/* Adjust font size and type of the legend in histogram */
+.mulhst-legend-main text {
+  font-size: 11px !important;
+  font-family: Arial, Helvetica, sans-serif !important;
+}

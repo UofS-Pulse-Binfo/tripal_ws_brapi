@@ -4,13 +4,39 @@
  * Phenotypes-search
  * 
  * This module is mainly v1.3 - this call is v1.2.
- * This call is used by BRAPPS - Graphical Filtering too.
+ * This call is used by BRAPPS - Graphical Filtering and Study Comparison built into this module.
  * @see tripal_ws_brapps directory in this module.
  *
  * Returns a list of observationUnit with the observed Phenotypes.
  * https://brapiarchive12.docs.apiary.io/#reference/phenotypes/phenotype-search/phenotype-search-(post)
  */
 class TripalWebServiceBrapiV1Phenotypes_Search extends TripalWebServiceDatabaseCall {
+  // IMPORTANT NOTE:
+  // This call phenotypes-search implementation, is specifically made to work with Tripal
+  // web portal and analyzed phenotypes module to import data to chado tables - phenotypes
+  // and phenotypesprop table. 
+  //
+  // Response fields - other than listed below are based on these two tables
+  // and controlled vocabularies defined by AP module (ie. Location - ncit:location, replicate - NCIT:replicate etc).
+  //
+  // The Following response fields are set to n/a or '' in this implementation but can
+  // be set when desired if your site carries values these fields.
+  private $temp_values = [
+    'observationlevel'  => 'Plot',
+    'observationlevels' => 'n/a',
+    'plotnumber'        => 'n/a',
+    'plantnumber'       => 'n/a',
+    'blocknumber'       => 'n/a',
+    'x'                 => 'n/a',
+    'y'                 => 'n/a',
+    'entrytype'         => 'n/a',
+    'entrynumber'       => 'n/a',
+    'factor'            => 'n/a',
+    'modality'          => 'n/a',
+    'season'            => 'n/a',
+    'observationtimestamp' => 'n/a'      
+  ];
+
   // This call expects parameters below.
   // Available data types:
   //
@@ -28,19 +54,24 @@ class TripalWebServiceBrapiV1Phenotypes_Search extends TripalWebServiceDatabaseC
   // Example: page => int, searchResultDbId => hash-code.
   public $call_parameter = [
     // Key : Expected value for this key.
-    'germplasmDbId'  => 'int', // The unique ID of a germplasm (accession) to filter on.
-    'observationVariableDbId' => 'text', // The unique ID of an observation variable.
-    'studyDbId'      => 'int', // The unique ID of a studies to filter on.
-    'studyDbIds'     => 'array-int', // Study db ids.
-    'locationDbId'   => 'text', // The unique ID of a location where these observations were collected.
-    'trialDbId'      => 'int',  // The unique ID of a trial to filter on.
-    'programDbId'    => 'int',  // The unique ID of a program to filter on.
-    'seasonDbId'     => 'int',  // The year or Phenotyping campaign of a multi-annual study (trees, grape, ...).
-    'observationLevel' => 'text', // The type of the observationUnit. Returns only the observation unit of the specified type; the parent levels ID can be accessed through observationUnitStructure.
-    'observationTimeStampRangeStart' => 'datetime', // Timestamp range start.
-    'observationTimeStampRangeEnd'   => 'datetime', // Timestamp range end.
-    'page'           => 'int',  // Which result page is requested.
-    'pageSize'       => 'int',  // The size of the pages to be returned.
+    'germplasmDbIds'   => 'array-int',  // The unique ID of a germplasm (accession) to filter on.
+    'studyDbIds'       => 'array-int',  // Study db ids.
+    'page'             => 'int',        // Which result page is requested.
+    'pageSize'         => 'int',        // The size of the pages to be returned.
+    'observationVariableDbIds' => 'array-text', // The unique ID of an observation variable.
+    
+    // This value is always plot.
+    'observationLevel' => 'text',       // The type of the observationUnit. Returns only the observation unit of the specified type; the parent levels ID can be accessed through observationUnitStructure.
+
+    // Implementation unclear - not field not in response.
+    // 'locationDbIds' => 'array-text', // The unique ID of a location where these observations were collected.
+    // 'trialDbIds'    => 'array-int',  // The unique ID of a trial to filter on.
+    // 'programDbIds'  => 'array-int',  // The unique ID of a program to filter on.
+
+    // Not implemented - n/a
+    // 'seasonDbIds'   => 'array-int',  // The year or Phenotyping campaign of a multi-annual study (trees, grape, ...).
+    // 'observationTimeStampRangeStart' => 'datetime', // Timestamp range start.
+    // 'observationTimeStampRangeEnd'   => 'datetime', // Timestamp range end.
   ];
 
   // Keyword used to identify result items.
@@ -107,6 +138,7 @@ class TripalWebServiceBrapiV1Phenotypes_Search extends TripalWebServiceDatabaseC
    * Get unfiltered resultset.
    */
   public function getResult() {
+    $temp_values = $this->temp_values;
     $call_asset = $this->call_asset;
 
     $result = '';
@@ -116,10 +148,7 @@ class TripalWebServiceBrapiV1Phenotypes_Search extends TripalWebServiceDatabaseC
     // Terms used to query:
     $arr_terms = [];
     $req_terms = [
-      'NCIT'   => ['Block', 'Entry', 'Entry Type', 'Performed Observation',
-                   'Observation Levels', 'X-Coordinate', 'Position coordinate X type',
-                   'Y-Coordinate', 'Position coordinate Y type', 'Computer Time Stamp',
-                   'replicate', 'Collected By', 'Season'],
+      'NCIT'   => ['replicate', 'Collected By'],
       'CO_324' => ['Plant Number', 'Plot Number'],
       'ncit'   => ['location'],
       'SIO'    => ['category'],
@@ -143,7 +172,6 @@ class TripalWebServiceBrapiV1Phenotypes_Search extends TripalWebServiceDatabaseC
       }
     }
 
-
     // Based on parameters defined above.
 
     // pageSize.
@@ -154,28 +182,12 @@ class TripalWebServiceBrapiV1Phenotypes_Search extends TripalWebServiceDatabaseC
     $p = (isset($call_asset['parameter']['page'])) ? $call_asset['parameter']['page'] : 0;
     $offset = $p * $page_size;
 
-    // germplasmDbId.
-    if (isset($call_asset['parameter']['germplasmDbId'])
-        && !empty($call_asset['parameter']['germplasmDbId'])) {
+    // germplasmDbIds.
+    if (isset($call_asset['parameter']['germplasmDbIds'])
+        && !empty($call_asset['parameter']['germplasmDbIds'])) {
 
-      $filter[] = 'germplasm.stock_id = :germplasmDbId';
-      $args[':germplasmDbId'] = $call_asset['parameter']['germplasmDbId'];
-    }
-
-    // observationVariableDbId.
-    if (isset($call_asset['parameter']['observationVariableDbId'])
-        && !empty($call_asset['parameter']['observationVariableDbId'])) {
-
-      $filter[] = 'obs.observationvariabledbid = :observationVariableDbId';
-      $args[':observationVariableDbId'] = $call_asset['parameter']['observationVariableDbId'];
-    }
-
-    // studyDbId.
-    if (isset($call_asset['parameter']['studyDbId'])
-        && !empty($call_asset['parameter']['studyDbId'])) {
-
-      $filter[] = 'project.project_id = :studyDbId';
-      $args[':studyDbId'] = $call_asset['parameter']['studyDbId'];
+      $filter[] = 'germplasm.stock_id IN (:germplasmDbIds)';
+      $args[':germplasmDbIds'] = $call_asset['parameter']['germplasmDbIds'];
     }
 
     // studyDbIds.
@@ -186,56 +198,15 @@ class TripalWebServiceBrapiV1Phenotypes_Search extends TripalWebServiceDatabaseC
       $args[':studyDbIds'] = $call_asset['parameter']['studyDbIds'];
     }
 
-    // locationDbId
-    if (isset($call_asset['parameter']['locationDbId'])
-        && !empty($call_asset['parameter']['locationDbId'])) {
-
-      $filter[] = "CONCAT(year.value, '-', loc.value, '-', rep.value, '-', germplasm.name, '-', unit.name) = :locationDbId";
-      $args[':locationDbId'] = $call_asset['parameter']['locationDbId'];
-    }
-
-    // trialDbId.
-    if (isset($call_asset['parameter']['trialDbId'])
-        && !empty($call_asset['parameter']['trialDbId'])) {
-
-      $filter[] = 'project.project_id = :trialDbId';
-      $args[':trialDbId'] = $call_asset['parameter']['trialDbId'];
-    }
-
-    // programDbId.
-    if (isset($call_asset['parameter']['programDbId'])
-        && !empty($call_asset['parameter']['programDbId'])) {
-
-      $filter[] = 'program.project_id = :programDbId';
-      $args[':programDbId'] = $call_asset['parameter']['programDbId'];
-    }
-
-    // seasonDbId.
-    if (isset($call_asset['parameter']['seasonDbId'])
-        && !empty($call_asset['parameter']['seasonDbId'])) {
-
-      $filter[] = 'obs.seasondbid = :seasonDbId';
-      $args[':seasonDbId'] = $call_asset['parameter']['seasonDbId'];
-    }
-
     // observationLevel.
-    if (isset($call_asset['parameter']['observationLevel'])
-        && !empty($call_asset['parameter']['observationLevel'])) {
+    // Not implemented, this field is always plot
 
-      $filter[] = 'obv.value = :observationLevel';
-      $args[':observationLevel'] = $call_asset['parameter']['observationLevel'];
-    }
+    // observationVariableDbIds.
+    if (isset($call_asset['parameter']['observationVariableDbIds'])
+        && !empty($call_asset['parameter']['observationVariableDbIds'])) {
 
-    // Datetime range.
-    if ((isset($call_asset['parameter']['observationTimeStampRangeStart'])
-        && !empty($call_asset['parameter']['observationTimeStampRangeStart'])) &&
-        (isset($call_asset['parameter']['observationTimeStampRangeEnd'])
-        && !empty($call_asset['parameter']['observationTimeStampRangeEnd']))
-       ) {
-
-        $filter[] = 'obs.observationtimestamp BETWEEN :observationTimeStampRangeStart AND :observationTimeStampRangeEnd';
-        $args[':observationTimeStampRangeStart'] = $call_asset['parameter']['observationTimeStampRangeStart'];
-        $args[':observationTimeStampRangeEnd'] = $call_asset['parameter']['observationTimeStampRangeEnd'];
+      $filter[] = 'obs.observationvariabledbid IN (:observationVariableDbIds)';
+      $args[':observationVariableDbIds'] = $call_asset['parameter']['observationVariableDbIds'];
     }
 
     // Transform parameters into a string, as where clause in the query.
@@ -247,11 +218,11 @@ class TripalWebServiceBrapiV1Phenotypes_Search extends TripalWebServiceDatabaseC
     $sql = "
       SELECT
         CONCAT(cv.cv_id, ':', unit.name) AS observationunitdbid,
-        obv.value AS observationlevel,
-        obl.value AS observationlevels,
-        ptn.value AS plotnumber,
-        pln.value AS plantnumber,
-        blk.value AS blocknumber,
+        '%s' AS observationlevel,
+        '%s' AS observationlevels,
+        '%s' AS plotnumber,
+        '%s' AS plantnumber,
+        '%s' AS blocknumber,
         rep.value AS replicate,
         unit.name AS observationunitname,
         germplasm.stock_id AS germplasmdbid,
@@ -261,33 +232,24 @@ class TripalWebServiceBrapiV1Phenotypes_Search extends TripalWebServiceDatabaseC
         CONCAT(year.value, '-', loc.value, '-', rep.value, '-', germplasm.name, '-', unit.name) AS studylocationdbid,
         loc.value AS studylocation,
         program.name AS programname,
-        cox.value AS x,
-        coy.value AS y,
-        ett.value AS entrytype,
-        ent.value AS entrynumber,
-        ARRAY_TO_JSON(ARRAY['n/a', 'n/a']) AS treatments,
+        '%s' AS x,
+        '%s' AS y,
+        '%s' AS entrytype,
+        '%s' AS entrynumber,
+        ARRAY_TO_JSON(ARRAY['%s', '%s']) AS treatments,
         ARRAY_TO_JSON(ARRAY[unit.dbxref_id::varchar, 'source']) AS observationunitxref,
-        ARRAY_TO_JSON(ARRAY_AGG(ARRAY[
-          obs.collector::varchar,
-          obs.observationdbid::varchar,
-          obs.observationtimestamp::varchar,
-          obs.observationvariabledbid::varchar,
-          obs.observationvariablename::varchar,
-          obs.season::varchar,
-          obs.value::varchar
-        ])) AS observations,      
+        ARRAY_TO_JSON(ARRAY_AGG(CONCAT_WS('#', 
+          obs.collector,
+          obs.observationdbid,
+          obs.observationtimestamp,
+          obs.observationvariabledbid,
+          obs.observationvariablename,
+          obs.season,
+          obs.value
+        ))) AS observations,      
         COUNT(project.project_id) OVER() AS full_count
       FROM {%s} AS project
         RIGHT JOIN {phenotype} AS phenotype ON project.project_id = phenotype.project_id
-        LEFT JOIN {phenotypeprop} AS blk  ON phenotype.phenotype_id = blk.phenotype_id AND blk.type_id = %d
-        LEFT JOIN {phenotypeprop} AS ent  ON phenotype.phenotype_id = ent.phenotype_id AND ent.type_id = %d
-        LEFT JOIN {phenotypeprop} AS ett  ON phenotype.phenotype_id = ett.phenotype_id AND ett.type_id = %d
-        LEFT JOIN {phenotypeprop} AS obv  ON phenotype.phenotype_id = obv.phenotype_id AND obv.type_id = %d
-        LEFT JOIN {phenotypeprop} AS obl  ON phenotype.phenotype_id = obl.phenotype_id AND obl.type_id = %d
-        LEFT JOIN {phenotypeprop} AS pln  ON phenotype.phenotype_id = pln.phenotype_id AND pln.type_id = %d
-        LEFT JOIN {phenotypeprop} AS ptn  ON phenotype.phenotype_id = ptn.phenotype_id AND ptn.type_id = %d
-        LEFT JOIN {phenotypeprop} AS cox  ON phenotype.phenotype_id = cox.phenotype_id AND cox.type_id = %d        
-        LEFT JOIN {phenotypeprop} AS coy  ON phenotype.phenotype_id = coy.phenotype_id AND coy.type_id = %d
         LEFT JOIN {phenotypeprop} AS year ON phenotype.phenotype_id = year.phenotype_id AND year.type_id = %d
         LEFT JOIN {phenotypeprop} AS rep  ON phenotype.phenotype_id = rep.phenotype_id AND rep.type_id = %d
         LEFT JOIN {phenotypeprop} AS loc  ON phenotype.phenotype_id = loc.phenotype_id AND loc.type_id = %d
@@ -295,16 +257,13 @@ class TripalWebServiceBrapiV1Phenotypes_Search extends TripalWebServiceDatabaseC
           SELECT
             collector.value AS collector,
             p.phenotype_id AS observationdbid,
-            timestamp.value AS observationtimestamp,
+            '%s' AS observationtimestamp,
             CONCAT(cv.name, ':', trait.name) AS observationvariabledbid,
             trait.name AS observationvariablename,
-            season.value AS season,
-            season.phenotypeprop_id AS seasondbid,
+            '%s' AS season,
             p.value AS value
           FROM {phenotype} AS p
             LEFT JOIN {phenotypeprop} AS collector ON p.phenotype_id = collector.phenotype_id AND collector.type_id = %d
-            LEFT JOIN {phenotypeprop} AS timestamp ON p.phenotype_id = timestamp.phenotype_id AND timestamp.type_id = %d
-            LEFT JOIN {phenotypeprop} AS season    ON p.phenotype_id = season.phenotype_id AND season.type_id = %d
             LEFT JOIN {cvterm} AS trait ON p.attr_id = trait.cvterm_id
             LEFT JOIN {cv} AS cv ON trait.cv_id = cv.cv_id
         ) AS obs ON phenotype.phenotype_id = obs.observationdbid
@@ -316,30 +275,47 @@ class TripalWebServiceBrapiV1Phenotypes_Search extends TripalWebServiceDatabaseC
         LEFT JOIN {projectprop} AS prop2 ON program.project_id = prop2.project_id AND prop2.type_id = %s AND prop2.value = '1'
       %s
       GROUP BY
-        blk.value, ent.value, ett.value, germplasm.stock_id, germplasm.name, germplasm.uniquename,
-        obv.value, obl.value, cv.cv_id, unit.name, unit.dbxref_id, pln.value, ptn.value, cox.value,
-        coy.value, program.name, rep.value, project.project_id, loc.value, year.value
+        germplasm.stock_id, germplasm.name, germplasm.uniquename,
+        cv.cv_id, unit.name, unit.dbxref_id, program.name, rep.value, loc.value, year.value, project.project_id
       LIMIT %d OFFSET %d
     ";
 
-    $query = sprintf($sql, $this->class_name::$chado_table, $arr_terms['NCIT']['Block'], $arr_terms['NCIT']['Entry'],
-                     $arr_terms['NCIT']['Entry Type'], $arr_terms['NCIT']['Performed Observation'],
-                     $arr_terms['NCIT']['Observation Levels'], $arr_terms['CO_324']['Plant Number'],
-                     $arr_terms['CO_324']['Plot Number'], $arr_terms['NCIT']['X-Coordinate'],
-                     $arr_terms['NCIT']['Y-Coordinate'], $arr_terms['tripal_pub']['Year'],
-                     $arr_terms['NCIT']['replicate'], $arr_terms['ncit']['location'], $arr_terms['NCIT']['Collected By'],
-                     $arr_terms['NCIT']['Computer Time Stamp'], $arr_terms['NCIT']['Season'], $arr_terms['SIO']['category'],
-                     $arr_terms['local']['research area'], $where, $page_size, $offset);
+    $query = sprintf(
+      $sql, 
+      $temp_values['observationlevel'],
+      $temp_values['observationlevels'],
+      $temp_values['plotnumber'],
+      $temp_values['plantnumber'],
+      $temp_values['blocknumber'],
+      $temp_values['x'],
+      $temp_values['y'],
+      $temp_values['entrytype'],
+      $temp_values['entrynumber'],
+      $temp_values['factor'],
+      $temp_values['modality'],
+      $this->class_name::$chado_table, 
+      $arr_terms['tripal_pub']['Year'],
+      $arr_terms['NCIT']['replicate'], 
+      $arr_terms['ncit']['location'],
+      $temp_values['observationtimestamp'],
+      $temp_values['season'],
+      $arr_terms['NCIT']['Collected By'],
+      $arr_terms['SIO']['category'],
+      $arr_terms['local']['research area'], 
+      $where, $page_size, $offset
+    );
 
     $result = chado_query($query, $args);
 
     $observations = [];
     if ($result->rowCount() > 0) {
       foreach($result as $observation) {
-        // Source information.
-        $observation->studydbid = (int) $observation->studydbid; 
+        $observation->germplasmdbid = (int) $observation->germplasmdbid; 
+        $observation->studydbid = (int) $observation->studydbid;         
+
+        // Source information.        
         $values = json_decode($observation->observationunitxref);
-        $observation->observationunitxref = ['set' => [[$values[0], 'EMBL-EBI Ontology Lookup Service']]];
+        $observation->observationunitxref = ['set' => [[(int) $values[0], 'EMBL-EBI Ontology Lookup Service']]];
 
         // Traits and values.
         $values = json_decode($observation->observations);
@@ -348,7 +324,11 @@ class TripalWebServiceBrapiV1Phenotypes_Search extends TripalWebServiceDatabaseC
         // Convert JSON result to PHP array.
         // Fetch observations - per rep, year and location.
         foreach($values as $value) {
-          $phenotype[] = [$value[0], $value[1], $value[2], $value[3], $value[4], $value[5], $value[6]];
+          // Observations combined using a separator #.
+          $vals = explode('#', $value);
+          // index 1 is observationdbid.
+          $vals[1] = (int) $vals[1];
+          $phenotype[] = $vals;
         }
 
         if (count($phenotype) > 0) {

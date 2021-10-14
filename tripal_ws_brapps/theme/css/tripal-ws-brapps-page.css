@@ -134,11 +134,10 @@
 
 #tripal-ws-brapps-checkbox-dropmenu > input {
   font-size: 0.7em;
-  padding: 2px;
+  padding: 2px 10px;
   top: 2px;
   position: absolute;
   right: 25px;
-  z-index: 1000;
   display: none;
 }
 
@@ -148,17 +147,36 @@
   position: absolute;
   left: 0px;
   top: 30px;
-  padding: 20px 5px 5px 5px;
+  padding: 15px 5px 5px 5px;
   font-size: 0.9em;
   width: 250px;
   z-index: 1000;
+  height: 250px;
+  overflow-y: scroll;
+  box-shadow: 0 8px 8px -4px #CCCCCC;
 }
 
 .tripal-ws-brapps-checkbox-dropmenu-wrapper div {
-  white-space: nowrap;
+  margin: 0;
+  padding: 5px;
+  cursor: pointer;
 }
 
+.tripal-ws-brapps-checkbox-dropmenu-wrapper div label {
+  display: block;
+  padding-left: 18px;
+  margin-top: -18px;
+  cursor: pointer;
+}
 
+.tripal-ws-brapps-checkbox-dropmenu-wrapper div:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+
+  -webkit-transition: background-color 0.9s ease-out;
+  -moz-transition: background-color 0.9s ease-out;
+  -o-transition: background-color 0.9s ease-out;
+  transition: background-color 0.9s ease-out;
+}
 
 .tripal-ws-brapps-arrow-up {
   background-image: url('../images/select-arrow-up.gif');
