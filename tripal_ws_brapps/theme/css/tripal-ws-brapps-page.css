@@ -24,6 +24,10 @@
   position: relative;
 }
 
+#tripal-ws-brapps-options a img {
+  border: none !important;
+}
+
 #tripal-ws-brapps-options select {
   margin: 0 10px 0 0;
   color: #000000 !important;
