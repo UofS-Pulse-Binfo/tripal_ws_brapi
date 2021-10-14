@@ -160,6 +160,10 @@ function tripal_ws_brapps_preprocess_page(&$variables) {
       $variables['page']['sidebar_first'] = null;
     }
 
+    if (isset($variables['page']['sidebar_second'])) {
+      $variables['page']['sidebar_second'] = null;
+    }
+
     $path = drupal_get_path('module', 'tripal_ws_brapps');
     drupal_add_css($path . '/theme/css/tripal-ws-brapps-page.css', ['group' => CSS_THEME, 'weight' => 100]);
     drupal_add_js($path . '/theme/js/tripal-ws-brapps-script.js', ['type' => 'file', 'scope' => 'footer']);
