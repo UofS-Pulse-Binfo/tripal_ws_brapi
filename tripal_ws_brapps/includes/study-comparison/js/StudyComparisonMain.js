@@ -83,6 +83,9 @@
          * @param {*} data 
          */    
         function createSComp(data) {
+          $("#tripal-ws-brapps-field-select-variable")
+              .addClass('tripal-ws-brapps-panel-effect');
+
           scomp = StudyComparison().links(function(dbId){
             // Change this to location of germplasm page.
             // return brapiPath.base + 'stock/' + dbId + '/view';
@@ -109,5 +112,8 @@
             .attr("value", function(d){ return d; })
             .text(function(d){ return d; })
             .raise();
+
+            $("#tripal-ws-brapps-field-select-variable")
+              .removeClass('tripal-ws-brapps-panel-effect');
         }
 }};}(jQuery));

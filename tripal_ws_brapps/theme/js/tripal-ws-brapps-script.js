@@ -166,9 +166,14 @@ function setSelectFieldText(text) {
  * Remove animation (wait) when BRAPPS has rendered.
  */
 function checkComplete() {
-  var divCount = $('#tripal-ws-brapps div').length;
+  // Any svg rendered in the DOM.
+  var svgCount = $('#tripal-ws-brapps svg').length;
+  // Any table element rendered in the DOM.
+  var tableCount = $('#tripal-ws-brapps table').length;
 
-  if (divCount > 1) {
+  // When either is detected, end wait animation.
+
+  if (svgCount >= 1 || tableCount >= 1) {
     removePanelEffect();
     clearInterval(complete);  
   }
