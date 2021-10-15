@@ -169,7 +169,7 @@ function checkComplete() {
   // Any svg rendered in the DOM.
   var svgCount = $('#tripal-ws-brapps svg').length;
   // Any table element rendered in the DOM.
-  var tableCount = $('#tripal-ws-brapps table').length;
+  var tableCount = $('#tripal-ws-brapps table th').length;
 
   // When either is detected, end wait animation.
 
@@ -190,15 +190,15 @@ function shortenText(text, len){
 /**
  * Shorten long string in x and y axis.
  */
-function shortenAxisText() {
+function shortenAxisText(len = 30) {
   d3.selectAll('.grapgr-topaxis text')
    .text(function(d) {
-     return d.slice(0, 30) + '...';
+     return d.slice(0, len) + '...';
    });
 
   d3.selectAll('.grapgr-leftaxis text')
    .text(function(d) {
-     return d.slice(0, 30) + '...';
+     return d.slice(0, len) + '...';
    });  
 
    if (inspect) {

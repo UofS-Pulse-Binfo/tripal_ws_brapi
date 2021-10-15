@@ -19,6 +19,10 @@
             $('#graph_div, #hist_div').html('');
             $('#tripal-ws-brapps-checkbox-dropmenu').click();
             
+            fldVariable
+              .find('option')
+              .text('Loading variables...');
+                        
             BrAPI(brapiPath.brapi)
               .phenotypes_search(myparams)
               .all(createSComp);
@@ -42,8 +46,11 @@
             if (myparams.studyDbIds.length > 2) {
               shortenAxisText();
             }
-            
-            complete = setInterval(checkComplete, 500); 
+            else {
+              shortenAxisText(80);
+            }
+                        
+            checkComplete(); 
 
             // Add listener to chart elements.
             // Shorten back the titles.
@@ -83,9 +90,7 @@
          * @param {*} data 
          */    
         function createSComp(data) {
-          $("#tripal-ws-brapps-field-select-variable")
-              .addClass('tripal-ws-brapps-panel-effect');
-
+          
           scomp = StudyComparison().links(function(dbId){
             // Change this to location of germplasm page.
             // return brapiPath.base + 'stock/' + dbId + '/view';
@@ -112,8 +117,5 @@
             .attr("value", function(d){ return d; })
             .text(function(d){ return d; })
             .raise();
-
-            $("#tripal-ws-brapps-field-select-variable")
-              .removeClass('tripal-ws-brapps-panel-effect');
         }
 }};}(jQuery));
