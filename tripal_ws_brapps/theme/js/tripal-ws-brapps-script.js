@@ -186,24 +186,3 @@ function shortenText(text, len){
   var shortText = (text.length > len) ? text.substr(0, len - 1) + '&hellip;' : text;
   return '<span title="'+ text +'">' + shortText + '</span>';
 };
-
-/**
- * Shorten long string in x and y axis.
- */
-function shortenAxisText(len = 30) {
-  d3.selectAll('.grapgr-topaxis text')
-   .text(function(d) {
-     return d.slice(0, len) + '...';
-   });
-
-  d3.selectAll('.grapgr-leftaxis text')
-   .text(function(d) {
-     return d.slice(0, len) + '...';
-   });  
-
-   if (inspect) {
-     // See if this var has been set - chart has
-     // been zoomed in and restored back.
-     clearInterval(inspect);
-   }
-}

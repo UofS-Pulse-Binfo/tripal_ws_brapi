@@ -89,8 +89,7 @@
          * Populate variables field based on selected studies.
          * @param {*} data 
          */    
-        function createSComp(data) {
-          
+        function createSComp(data) {        
           scomp = StudyComparison().links(function(dbId){
             // Change this to location of germplasm page.
             // return brapiPath.base + 'stock/' + dbId + '/view';
@@ -105,17 +104,48 @@
           var varOpts = d3.select("#tripal-ws-brapps-field-select-variable")
             .selectAll('option:not([disabled])')
             .data(sharedVars);
-        
-          varOpts
-            .exit()
-            .remove();
+          
+          if (sharedVars.length > 1) {
+            varOpts
+              .exit()
+              .remove();
+         
+            varOpts
+              .enter()
+              .append("option")
+              .merge(varOpts)
+              .attr("value", function(d){ return d; })
+              .text(function(d){ return d; })
+              .raise();
+          }
+          else {
+            fldVariable
+              .find('option')
+              .text('Select variables');
+          
+            alert('No common variable or trait found in the studies selected. Please select a different study.');
+            resetCheckboxDropmenu();
+          }  
+        }
 
-          varOpts
-            .enter()
-            .append("option")
-            .merge(varOpts)
-            .attr("value", function(d){ return d; })
-            .text(function(d){ return d; })
-            .raise();
+        /**
+         * Shorten long string in x and y axis.
+         */
+        function shortenAxisText(len = 30) {
+          d3.selectAll('.grapgr-topaxis text')
+          .text(function(d) {
+            return d.slice(0, len) + '...';
+          });
+
+          d3.selectAll('.grapgr-leftaxis text')
+          .text(function(d) {
+            return d.slice(0, len) + '...';
+          });  
+
+          if (inspect) {
+            // See if this var has been set - chart has
+            // been zoomed in and restored back.
+            clearInterval(inspect);
+          }
         }
 }};}(jQuery));
