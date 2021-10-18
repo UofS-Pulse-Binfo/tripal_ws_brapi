@@ -105,7 +105,7 @@
             .selectAll('option:not([disabled])')
             .data(sharedVars);
           
-          if (sharedVars.length > 1) {
+          if (sharedVars.length >= 1) {
             varOpts
               .exit()
               .remove();
