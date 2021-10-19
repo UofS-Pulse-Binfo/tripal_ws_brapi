@@ -87,7 +87,6 @@ class TripalWebServiceTestData {
             $cvterm_id = $id2;
           }
           else {
-            dpm($cv . '---' . $term);
             $id2 = tripal_insert_cvterm([
               'id' => $cv . ':' . $term,
               'name' => $term,
