@@ -243,8 +243,16 @@ class GenericHttpTestCase extends TripalTestCase {
 
     // There should be multiple pages.
     // Actually the same number as results before.
-    $this->assertEquals($numOfResults, $response->metadata->pagination->totalPages,
-      "There should be $numOfResults pages. $msg");
+    if ($numOfResults <= 100) {
+      // The default pageSize is set to 100 items. If the number of items 
+      // is less or equals to 100 - then assert number of items the call w/0 parameters
+      // and the total pages of the call w parameter.
+
+      // The count of the first page with more than a 100 items will not reflect actual 
+      // count since items beyond 100 will be in the next page.
+      $this->assertEquals($numOfResults, $response->metadata->pagination->totalPages,
+        "There should be $numOfResults pages. $msg");
+    }
   }
 
   /**
