@@ -94,8 +94,6 @@ class TripalWebServiceTestData {
               'definition' => $term . ' definition',
             ])
               ->cvterm_id;
-
-              dpm($id2);
           }
 
           
