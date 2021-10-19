@@ -307,9 +307,11 @@ class GenericHttpTestCase extends TripalTestCase {
 
     // There should be multiple pages.
     // Actually the same number as results before.
-    $this->assertEquals($numOfResults, $response->metadata->pagination->totalPages,
-      "There should be $numOfResults pages. $msg");
-
+    if ($numOfResults < 100) {
+      $this->assertEquals($numOfResults, $response->metadata->pagination->totalPages,
+        "There should be $numOfResults pages. $msg");
+    }
+    
     // Page 3 should not have the same results as page 1.
     $this->assertNotEquals($page1_results, $response->result->data,
       "The results should not be the same on different pages.");
