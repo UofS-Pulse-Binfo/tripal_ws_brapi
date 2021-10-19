@@ -243,7 +243,7 @@ class GenericHttpTestCase extends TripalTestCase {
 
     // There should be multiple pages.
     // Actually the same number as results before.
-    if ($numOfResults <= 100) {
+    if ($numOfResults < 100) {
       // The default pageSize is set to 100 items. If the number of items 
       // is less or equals to 100 - then assert number of items the call w/0 parameters
       // and the total pages of the call w parameter.
