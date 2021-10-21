@@ -159,7 +159,6 @@ function setSelectFieldText(text) {
   var active_text = (text == '') ? 'Select study' : text;
   document.getElementById('tripal-ws-brapps-checkbox-dropmenu')
     .firstChild.data = active_text;
-
 }
 
 /**
@@ -175,7 +174,7 @@ function checkComplete() {
 
   if (svgCount >= 1 || tableCount >= 1) {
     removePanelEffect();
-    clearInterval(complete);  
+    clearInterval(complete);
   }
 }
 

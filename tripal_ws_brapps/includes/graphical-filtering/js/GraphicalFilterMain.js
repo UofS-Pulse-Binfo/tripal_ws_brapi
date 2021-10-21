@@ -31,12 +31,12 @@
 
             var brapi = BrAPI(brapiPath, auth); 
             call = brapi.phenotypes_search(myparams);
-            
+
             var render = GraphicalFilter(call,
               function(d) {
                 var traits = {};
                 
-                d.observations.forEach(function(obs){
+                d.observations.forEach(function(obs) {   
                   // Restrict only to traits specific to a study.
                   traits[ obs.observationVariableName ] = obs.value;
                 });
@@ -77,4 +77,25 @@
 
           restorePanelEffect();
         });
+
+        /*
+        // Listen to changes to summary table
+        // and attempt to round all values.
+        $('#filtered_results_paginate').click(function() {
+          alert();
+          var tblHeaders = $('table th').each(function(i, d) {
+            if (i > 3) {
+              console.log(d);
+              // 4th column is the headers column.
+              var col = $('table tr td:nth-child(' + (i + 1) + ')')
+                .each(function() {
+                  
+                  $(this).text('x');
+                });
+            }
+          });
+        });
+        */   
+  
+
 }};}(jQuery));

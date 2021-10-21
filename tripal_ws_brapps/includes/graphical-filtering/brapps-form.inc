@@ -10,7 +10,7 @@ function tripal_ws_brapps_graphical_filtering($form, &$form_state) {
 
   $options = tripal_ws_brapps_get_studies();
   $form['options']['field_select_study'] = [
-    '#type' => 'checkboxes',
+    '#type' => 'radios',
     '#options' => $options,
     '#id' => 'tripal-ws-brapps-field-select-study',
     '#prefix' => '<div id="tripal-ws-brapps-checkbox-dropmenu" class="tripal-ws-brapps-arrow-down">Select study
