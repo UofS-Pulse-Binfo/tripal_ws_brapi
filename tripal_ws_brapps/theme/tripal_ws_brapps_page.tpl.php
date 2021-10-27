@@ -3,6 +3,8 @@
    * Main template used by each BRAPPS implemented.
    * BRAPPS generated elements will be appended in #tripal-ws-brapps container.
    */
+
+   drupal_set_message('Please note that in some studies, this application may take a while to process data and may appear it had stopped working.', 'warning');
 ?>
 
 <div id="tripal-ws-brapps-container">

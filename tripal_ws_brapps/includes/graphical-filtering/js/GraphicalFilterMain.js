@@ -38,7 +38,8 @@
                 
                 d.observations.forEach(function(obs) {   
                   // Restrict only to traits specific to a study.
-                  traits[ obs.observationVariableName ] = obs.value;
+                  var trait = obs.observationVariableName + ' (' + d.observationUnitName + ')';
+                  traits[ trait ] = obs.value;
                 });
                 
                 return traits;
@@ -47,11 +48,10 @@
                 var shortTitle = shortenText(d.studyName, 30);
                 return {
                   'Study': shortTitle,
-                  'Unit': d.observationUnitName,
                   'Accession': d.germplasmName,
                 }
               },
-              ['Study', 'Unit', 'Accession'],
+              ['Study', 'Accession'],
               function(d) { 
                 return d.germplasmDbId;
               }

@@ -76,22 +76,57 @@ function GraphicalFilter(brapi_node,trait_accessor,table_col_accessor,table_col_
         "count":arr.length
       };
       var trait_counts = {};
+
+      var quality = new Array;
+      var scale = new Array;
       arr.forEach(function(d){
         for (var key in d.traits) {
           if (d.traits.hasOwnProperty(key)) {
-            if(grouped.traits[key]){
-              grouped.traits[key]+= +d.traits[key];
-              trait_counts[key]+=1;
-            } else {
-              grouped.traits[key] = +d.traits[key];
-              trait_counts[key] = 1;
+            
+            //            
+            if (d.traits[key] && key.toLowerCase().indexOf('scale') !== -1) {
+              if (scale[key] && scale[key].indexOf(d.traits[key]) === -1) {
+                scale[key] += '/' + d.traits[key].toString();
+              }
+              else {
+                scale[key] = d.traits[key].toString();
+              }
             }
+            else {
+              if(grouped.traits[key]){
+                grouped.traits[key]+= +d.traits[key];
+                trait_counts[key]+=1;
+              } else {
+                grouped.traits[key] = +d.traits[key];
+                trait_counts[key] = 1;
+              }
+  
+              if (d.traits[key] && (grouped.traits[key] == 0 || Number.isNaN(grouped.traits[key]))) {
+                quality[key] = d.traits[key].toUpperCase();
+              }  
+            }
+            //
+
           }
         }
       });
       for (var key in grouped.traits) {
         if (grouped.traits.hasOwnProperty(key)) {
-          grouped.traits[key] = grouped.traits[key]/trait_counts[key];
+          
+          //
+          if (scale[key]) {
+            grouped.traits[key] = scale[key];
+          }
+          else {
+            grouped.traits[key] = Math.round((grouped.traits[key]/trait_counts[key]) * 100) / 100;    
+            grouped.traits[key] = (grouped.traits[key]) ? grouped.traits[key] : quality[key]; 
+
+            if (!grouped.traits[key]) {
+              grouped.traits[key] = '';
+            }
+          }
+          //
+
         }
       }
       return grouped;
