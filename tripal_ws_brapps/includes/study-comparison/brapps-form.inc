@@ -53,20 +53,18 @@ function tripal_ws_brapps_study_comparison($form, &$form_state) {
   drupal_add_js($lib['jquery_3_2'] . '/' . 'jquery.3.2.js', $scope);
   drupal_add_js($lib['d3_4'] . '/' . 'd3.4.js', $scope);
 
-  // BRAPPS JS.
+  // CORE BRAPPS.
+  drupal_add_js($lib['BrAPI-Study-Comparison'] . '/example/' . 'BrAPI.js', $scope);
+  drupal_add_js($lib['BrAPI-Study-Comparison'] . '/example/' . 'StudyComparison.js', $scope);
+
+  // BRAPPS INSTANCE.
   $path = drupal_get_path('module', 'tripal_ws_brapps') . '/includes/study-comparison/';
-  drupal_add_js($path . 'js/BrAPI.js', $scope);
-  drupal_add_js($path . 'js/StudyComparison.js', $scope);
   drupal_add_js($path . 'js/StudyComparisonMain.js', $scope);
-  
-  // BRAPPS CSS.
-  $form['#attached']['css'] = [
-    $path . 'css/StudyComparison.css',
-  ];
+  drupal_add_css($path . 'css/' . 'StudyComparisonOverride.css');
 
   // Location of BrAPI call.
   $brapi_path = [
-    'base' =>  $GLOBALS['base_url'] . '/',
+    'base' =>  $GLOBALS['base_url'] . '/', // Use this source to link germplasm to a page.
     'brapi' => $GLOBALS['base_url'] . '/web-services/brapi/v1'
   ];
   drupal_add_js(['tripal_ws_brapps' => ['brapi_path' => $brapi_path]], ['type' => 'setting']);

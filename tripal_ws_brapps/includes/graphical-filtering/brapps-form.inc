@@ -40,17 +40,16 @@ function tripal_ws_brapps_graphical_filtering($form, &$form_state) {
   drupal_add_js($lib['d3_4'] . '/' . 'd3.4.js', $scope);
   drupal_add_js($lib['datatables_1'] . '/' . 'jquery.dataTables.min.js', $scope);
   drupal_add_js($lib['bootstrap_3_3'] . '/' . 'bootstrap.min.js', $scope);
-
-  // BRAPPS JS.
+  
+  // CORE BRAPPS.
+  drupal_add_js($lib['BrAPI-Graphical-Filtering'] . '/example/' . 'BrAPI.js', $scope);
+  drupal_add_js($lib['BrAPI-Graphical-Filtering'] . '/example/' . 'GraphicalFilter.js', $scope);
+  drupal_add_css($lib['BrAPI-Graphical-Filtering'] . '/css/' . 'GraphicalFilter.css');
+  
+  // BRAPPS INSTANCE.
   $path = drupal_get_path('module', 'tripal_ws_brapps') . '/includes/graphical-filtering/';
-  drupal_add_js($path . 'js/BrAPI.js', $scope);
-  drupal_add_js($path . 'js/GraphicalFilter.js', $scope);
   drupal_add_js($path . 'js/GraphicalFilterMain.js', $scope);
-
-  // BRAPPS CSS.
-  $form['#attached']['css'] = [
-    $path . 'css/GraphicalFilter.css',
-  ];
+  drupal_add_css($path . 'css/' . 'GraphicalFilterOverride.css');
 
   // Location of BrAPI call.
   $brapi_path = $GLOBALS['base_url'] . '/web-services/brapi/v1';

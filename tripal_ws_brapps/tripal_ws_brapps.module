@@ -89,6 +89,36 @@ function tripal_ws_brapps_theme($existing, $type, $theme, $path) {
  * Implements hook_libraries_info().
  */
 function tripal_ws_brapps_libraries_info() {
+  // GRAPHICAL FILTERING.
+  $name = 'BrAPI-Graphical-Filtering';
+  $lib = $GLOBALS['base_url'] . '/' . libraries_get_path($name);
+  $libraries[ $name ] = [
+    'name' => 'BRAPI JS',
+    'vendor url' => 'https://github.com/solgenomics/BrAPI-Graphical-Filtering',
+    'download url' => 'https://github.com/solgenomics/BrAPI-Graphical-Filtering',
+    'library path' => $lib . '/BrAPI-Graphical-Filtering/',
+    'path' => $lib . '/BrAPI-Graphical-Filtering/',
+    'files' => [
+      'js' => 'example/GraphicalFilter.js',
+      'brapi' => 'example/BrAPI.js'
+    ],
+  ];
+  
+  // STUDY COMPARISON.
+  $name = 'BrAPI-Study-Comparison';
+  $lib = $GLOBALS['base_url'] . '/' . libraries_get_path($name);
+  $libraries[ $name ] = [
+    'name' => 'BRAPI JS',
+    'vendor url' => 'https://github.com/solgenomics/BrAPI-Study-Comparison',
+    'download url' => 'https://github.com/solgenomics/BrAPI-Study-Comparison',
+    'library path' => $lib . '/BrAPI-Study-Comparison/',
+    'path' => $lib . '/BrAPI-Study-Comparison/',
+    'files' => [
+      'js' => 'example/StudyComparison.js',
+      'brapi' => 'example/BrAPI.js'
+    ],
+  ];
+
   // BOOTSTRAP JS.
   $name = 'bootstrap_3_3';
   $lib = $GLOBALS['base_url'] . '/' . libraries_get_path($name);

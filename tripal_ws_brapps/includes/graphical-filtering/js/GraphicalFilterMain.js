@@ -77,25 +77,4 @@
 
           restorePanelEffect();
         });
-
-        /*
-        // Listen to changes to summary table
-        // and attempt to round all values.
-        $('#filtered_results_paginate').click(function() {
-          alert();
-          var tblHeaders = $('table th').each(function(i, d) {
-            if (i > 3) {
-              console.log(d);
-              // 4th column is the headers column.
-              var col = $('table tr td:nth-child(' + (i + 1) + ')')
-                .each(function() {
-                  
-                  $(this).text('x');
-                });
-            }
-          });
-        });
-        */   
-  
-
 }};}(jQuery));

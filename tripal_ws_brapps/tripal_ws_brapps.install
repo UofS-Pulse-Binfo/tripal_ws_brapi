@@ -10,6 +10,7 @@ function tripal_ws_brapps_requirements($phase) {
     // Libraries required by BRAPPS.
     // @see .module file.
     $libraries = [
+      'BrAPI-Graphical-Filtering',
       'd3_4',
       'jquery_3_2',
       'datatables_1',
