@@ -13,9 +13,32 @@ A Drupal module that implements the Breeding API (BrAPI) standardized specificat
 2. CHADO	http://gmod.org/wiki/Chado
 3. Drupal 7.x	https://www.drupal.org
 
+## Library Requirements - To use BrAPI Applications (BRAPPS)
+1. Bootstrap v3.3.7 https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js
+2. D3 v4.12.0 https://cdnjs.cloudflare.com/ajax/libs/d3/4.12.0/d3.js
+3. DataTables v1.10.16 'https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js
+4. jQuery JavaScript Library v3.2.1 https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.js
+5. BRAPPS: https://github.com/UofS-Pulse-Binfo/BrAPI-Graphical-Filtering
+6. BRAPPS: Solgenomics/BrAPI-Study-Comparison https://github.com/solgenomics/BrAPI-Study-Comparison
+
+NOTE: Please use the Graphical Filter BRAPPS version found in UofS-Pulse-Binfo repository while
+our pull request is being reviewed by Solgenomics Team. We will update this link to direct to
+https://github.com/solgenomics/BrAPI-Graphical-Filtering as soon as our request has been merged.
+
 ## Installation
 
 This module is installed by cloning it [your drupal site]/sites/all/modules and enabling it through the Drupal Administrative UI.
+
+## Installation - To use BrAPI Applications
+
+Dowload all libraries listed in Library Requirements - To use BrAPI Applications (BRAPPS) and save each item into your Drupal Libraries directory following folder names below.
+
+1. Bootstrap           - sites/all/libraries/bootstrap_3_3/
+2. D3                  - sites/all/libraries/d3_4/
+3. DataTables          - sites/all/libraries/datatables_1/
+4. jQUery              - sites/all/libraries/jquery_3_2/
+5. Graphical Filtering - sites/all/libraries/BrAPI-Graphical-Filtering/
+5. Study Comparison    - sites/all/libraries/BrAPI-Study-Comparison/
 
 ## Usage
 

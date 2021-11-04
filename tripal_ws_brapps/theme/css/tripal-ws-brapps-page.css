@@ -203,7 +203,7 @@
 }
 
 #filtered_results thead th {
-  width: 20%;
+  width: 200px !important;
 }
 
 #filtered_results tbody tr:hover {
