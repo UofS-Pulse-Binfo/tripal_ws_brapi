@@ -50,8 +50,8 @@ function tripal_ws_brapps_study_comparison($form, &$form_state) {
   $lib = libraries_get_libraries('tripal_ws_brapps');
   $scope = ['type' => 'file', 'scope' => 'footer'];
 
-  drupal_add_js($lib['jquery_3_2'] . '/' . 'jquery.3.2.js', $scope);
-  drupal_add_js($lib['d3_4'] . '/' . 'd3.4.js', $scope);
+  drupal_add_js($lib['jquery_3_2'] . '/' . 'jquery.js', $scope);
+  drupal_add_js($lib['d3_4'] . '/' . 'd3.js', $scope);
 
   // CORE BRAPPS.
   drupal_add_js($lib['BrAPI-Study-Comparison'] . '/example/' . 'BrAPI.js', $scope);

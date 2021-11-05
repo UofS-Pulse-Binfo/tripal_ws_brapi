@@ -36,8 +36,8 @@ function tripal_ws_brapps_graphical_filtering($form, &$form_state) {
   $lib = libraries_get_libraries('tripal_ws_brapps');
   $scope = ['type' => 'file', 'scope' => 'footer'];
 
-  drupal_add_js($lib['jquery_3_2'] . '/' . 'jquery.3.2.js', $scope);
-  drupal_add_js($lib['d3_4'] . '/' . 'd3.4.js', $scope);
+  drupal_add_js($lib['jquery_3_2'] . '/' . 'jquery.js', $scope);
+  drupal_add_js($lib['d3_4'] . '/' . 'd3.js', $scope);
   drupal_add_js($lib['datatables_1'] . '/' . 'jquery.dataTables.min.js', $scope);
   drupal_add_js($lib['bootstrap_3_3'] . '/' . 'bootstrap.min.js', $scope);
   
