@@ -178,7 +178,7 @@ class TripalWebServiceBrapiV1Variables extends TripalWebServiceDatabaseCall {
 
     // Restrict variables per project, trait, method and unit.
     $trait_sql = "
-      SELECT DISTINCT ON (project_id, attr_id, assay_id, unit_id) phenotype_id AS ids FROM {%s}
+      SELECT DISTINCT ON (attr_id) phenotype_id AS ids FROM {%s}
     ";
 
     $trait_result = chado_query(sprintf($trait_sql, $this->class_name::$chado_table));

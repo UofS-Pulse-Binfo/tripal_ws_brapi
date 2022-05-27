@@ -89,7 +89,7 @@ class TripalWebServiceCall {
         if (array_key_exists($key, $call_parameter)) {
           // Key in the request matches predefined parameter of the call.
           $is_valid = $this->matchDataType($value, $call_parameter[ $key ]);
-
+         
           // Value should only match the enumerated value.
           if (is_array($call_parameter[ $key ])) {
             $call_parameter[ $key ] = 'one: ' . implode(',', $call_parameter[ $key ]) . ' - list';
@@ -369,7 +369,9 @@ class TripalWebServiceCall {
                      if (is_array($l1_value)) {
                        // Items and response field in this item.
                        $l2_response_field = $value_response_field[ $l1_index[ $z ] ];
-                       $l2_index = array_keys($l2_response_field);
+                       if (is_array($l2_response_field)) {
+                         $l2_index = array_keys($l2_response_field);
+                       }
 
                        if ($l1_key === 'set') {
                          if (is_array($response_field[ $fld_index[ $fld_ctr ] ])) {

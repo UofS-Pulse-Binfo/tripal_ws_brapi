@@ -96,6 +96,8 @@ class TripalWebServiceTestData {
               ->cvterm_id;
           }
 
+          
+
           $ids[ $cv ]['term'][ $term ] = $id2;
         }
       }
@@ -425,6 +427,7 @@ class TripalWebServiceTestData {
       }
     }
     catch (Exception $e) {
+      echo $e->getMessage();
       $TRANSACTION->rollback();
       exit();
     }

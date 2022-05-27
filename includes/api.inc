@@ -165,6 +165,11 @@ if (!function_exists('tripal_ws_get_call_classname')) {
     // External modules has a prefix External in class name and class file.
     $module = tripal_ws_get_module_info();
     $external = ($host == $module['module']) ? '' : 'External';
+    
+    // Calls that are formed with dash characters as common in v1.2
+    // phenotypes-search for example. Convert the name to Phenotypes_search
+    // and match the same name with the class name.
+    $call = str_replace('-', '_', $call);
 
     $classes = [
       'call' => sprintf($base_class, $external, $version, '', ucfirst($call)),
@@ -240,7 +245,7 @@ if (!function_exists('tripal_ws_get_call')) {
     }
     else {
       // Single call found in one area, use it.
-      $key = (isset($calls[ $keys['external'] ])) ? 'external' : 'local';
+      $key = (isset($keys['external']) && isset($calls[ $keys['external'] ])) ? 'external' : 'local';
     }
 
     return $calls[ $keys[ $key ] ];

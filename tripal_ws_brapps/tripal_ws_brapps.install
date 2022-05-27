@@ -1,0 +1,35 @@
+<?php
+
+/**
+ * Implements hook_requirements().
+ */
+function tripal_ws_brapps_requirements($phase) {
+  $requirements = [];
+  
+  if ($phase == 'install' && function_exists('libraries_get_path')) {
+    // Libraries required by BRAPPS.
+    // @see .module file.
+    $libraries = [
+      'BrAPI-Graphical-Filtering',
+      'BrAPI-Study-Comparison',
+      'd3_4',
+      'jquery_3_2',
+      'datatables_1',
+      'bootstrap_3_3',
+    ];
+
+    foreach($libraries as $lib) {
+      $is_in = libraries_get_path($lib);
+
+      if (!$is_in) {
+        // Fire a waning message when a library is missing.
+        $requirements[ $lib ] = [
+          'severity' => REQUIREMENT_ERROR,
+          'description' => t('The required library @lib is missing. Please see documentation.', ['@lib' => strtoupper($lib)])
+        ];
+      }
+    }
+  }
+
+  return $requirements;
+}

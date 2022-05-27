@@ -1,4 +1,124 @@
 uniquename, translate_term:attr_id, value, translate_term:assay_id, translate_value:project_id, translate_value:stock_id, translate_term:unit_id, translate_term:observable_id, translate_term:cvalue_id
+uniquename1-1_2019-03-26T17:11:26-06:00_1, "Days Till Flowering (days)", 17, "Method 1", "Tracing Domestication Traits", "lola", "Unit A", Adaptation, cvalue
+uniquename1-2_2019-03-26T17:11:26-06:00_1, "Days Till Flowering (days)", 16, "Method 1", "Tracing Domestication Traits", "stella", "Unit A", Adaptation, cvalue
+uniquename1-3_2019-03-26T17:11:26-06:00_1, "Days Till Flowering (days)", 15, "Method 1", "Tracing Domestication Traits", "luna", "Unit A", Adaptation, cvalue
+uniquename1-4_2019-03-26T17:11:26-06:00_1, "Days Till Flowering (days)", 16, "Method 1", "Tracing Domestication Traits", "nala", "Unit A", Adaptation, cvalue
+uniquename1-5_2019-03-26T17:11:26-06:00_1, "Days Till Flowering (days)", 14, "Method 1", "Tracing Domestication Traits", "izzy", "Unit A", Adaptation, cvalue
+uniquename1-6_2019-03-26T17:11:26-06:00_1, "Days Till Flowering (days)", 15, "Method 1", "Tracing Domestication Traits", "layla", "Unit A", Adaptation, cvalue
+uniquename1-7_2019-03-26T17:11:26-06:00_1, "Days Till Flowering (days)", 13, "Method 1", "Tracing Domestication Traits", "lulu", "Unit A", Adaptation, cvalue
+uniquename1-8_2019-03-26T17:11:26-06:00_1, "Days Till Flowering (days)", 12, "Method 1", "Tracing Domestication Traits", "ellie", "Unit A", Adaptation, cvalue
+uniquename1-9_2019-03-26T17:11:26-06:00_1, "Days Till Flowering (days)", 16, "Method 1", "Tracing Domestication Traits", "dylan", "Unit A", Adaptation, cvalue
+uniquename1-10_2019-03-26T17:11:26-06:00_1, "Days Till Flowering (days)", 16, "Method 1", "Tracing Domestication Traits", "olivia", "Unit A", Adaptation, cvalue
+uniquename1-11_2019-03-26T17:11:26-06:00_1, "Days Till Flowering (days)", 17, "Method 1", "Tracing Domestication Traits", "king", "Unit A", Adaptation, cvalue
+uniquename1-12_2019-03-26T17:11:26-06:00_1, "Days Till Flowering (days)", 18, "Method 1", "Tracing Domestication Traits", "max", "Unit A", Adaptation, cvalue
+uniquename1-13_2019-03-26T17:11:26-06:00_1, "Days Till Flowering (days)", 19, "Method 1", "Tracing Domestication Traits", "owen", "Unit A", Adaptation, cvalue
+uniquename1-14_2019-03-26T17:11:26-06:00_1, "Days Till Flowering (days)", 21, "Method 1", "Tracing Domestication Traits", "ray", "Unit A", Adaptation, cvalue
+uniquename1-15_2019-03-26T17:11:26-06:00_1, "Days Till Flowering (days)", 14, "Method 1", "Tracing Domestication Traits", "ralph", "Unit A", Adaptation, cvalue
+uniquename1-16_2019-03-26T17:11:26-06:00_1, "Days Till Flowering (days)", 22, "Method 1", "Tracing Domestication Traits", "rex", "Unit A", Adaptation, cvalue
+uniquename1-17_2019-03-26T17:11:26-06:00_1, "Days Till Flowering (days)", 12, "Method 1", "Tracing Domestication Traits", "scout", "Unit A", Adaptation, cvalue
+uniquename1-18_2019-03-26T17:11:26-06:00_1, "Days Till Flowering (days)", 13, "Method 1", "Tracing Domestication Traits", "tesla", "Unit A", Adaptation, cvalue
+uniquename1-19_2019-03-26T17:11:26-06:00_1, "Days Till Flowering (days)", 14, "Method 1", "Tracing Domestication Traits", "wyatt", "Unit A", Adaptation, cvalue
+uniquename1-20_2019-03-26T17:11:26-06:00_1, "Days Till Flowering (days)", 12, "Method 1", "Tracing Domestication Traits", "ace", "Unit A", Adaptation, cvalue
+uniquename1-21_2019-03-26T17:11:26-06:00_1, "Days Till Flowering (days)", 15, "Method 1", "Tracing Domestication Traits", "bailey", "Unit A", Adaptation, cvalue
+uniquename1-22_2019-03-26T17:11:26-06:00_1, "Days Till Flowering (days)", 16, "Method 1", "Tracing Domestication Traits", "bennet", "Unit A", Adaptation, cvalue
+uniquename1-23_2019-03-26T17:11:26-06:00_1, "Days Till Flowering (days)", 17, "Method 1", "Tracing Domestication Traits", "chase", "Unit A", Adaptation, cvalue
+uniquename1-24_2019-03-26T17:11:26-06:00_1, "Days Till Flowering (days)", 13, "Method 1", "Tracing Domestication Traits", "dexter", "Unit A", Adaptation, cvalue
+uniquename1-25_2019-03-26T17:11:26-06:00_1, "Days Till Flowering (days)", 18, "Method 1", "Tracing Domestication Traits", "emmet", "Unit A", Adaptation, cvalue
+uniquename1-26_2019-03-26T17:11:26-06:00_1, "Days Till Flowering (days)", 12, "Method 1", "Tracing Domestication Traits", "felix", "Unit A", Adaptation, cvalue
+uniquename1-27_2019-03-26T17:11:26-06:00_1, "Days Till Flowering (days)", 11, "Method 1", "Tracing Domestication Traits", "forrest", "Unit A", Adaptation, cvalue
+uniquename1-28_2019-03-26T17:11:26-06:00_1, "Days Till Flowering (days)", 15, "Method 1", "Tracing Domestication Traits", "zoe", "Unit A", Adaptation, cvalue
+uniquename1-29_2019-03-26T17:11:26-06:00_1, "Days Till Flowering (days)", 16, "Method 1", "Tracing Domestication Traits", "eva", "Unit A", Adaptation, cvalue
+uniquename1-30_2019-03-26T17:11:26-06:00_1, "Days Till Flowering (days)", 17, "Method 1", "Tracing Domestication Traits", "naomi", "Unit A", Adaptation, cvalue
+uniquename11-1_2019-03-26T17:11:26-06:00_1, "Days Till Flowering (days)", 12, "Method 1", "Field Experiment to Assess 15 Rhizobium Strains", "lola", "Unit A", Adaptation, cvalue
+uniquename11-2_2019-03-26T17:11:26-06:00_1, "Days Till Flowering (days)", 11, "Method 1", "Field Experiment to Assess 15 Rhizobium Strains", "stella", "Unit A", Adaptation, cvalue
+uniquename11-3_2019-03-26T17:11:26-06:00_1, "Days Till Flowering (days)", 10, "Method 1", "Field Experiment to Assess 15 Rhizobium Strains", "luna", "Unit A", Adaptation, cvalue
+uniquename11-4_2019-03-26T17:11:26-06:00_1, "Days Till Flowering (days)", 16, "Method 1", "Field Experiment to Assess 15 Rhizobium Strains", "nala", "Unit A", Adaptation, cvalue
+uniquename11-5_2019-03-26T17:11:26-06:00_1, "Days Till Flowering (days)", 14, "Method 1", "Field Experiment to Assess 15 Rhizobium Strains", "izzy", "Unit A", Adaptation, cvalue
+uniquename11-6_2019-03-26T17:11:26-06:00_1, "Days Till Flowering (days)", 15, "Method 1", "Field Experiment to Assess 15 Rhizobium Strains", "layla", "Unit A", Adaptation, cvalue
+uniquename11-7_2019-03-26T17:11:26-06:00_1, "Days Till Flowering (days)", 13, "Method 1", "Field Experiment to Assess 15 Rhizobium Strains", "lulu", "Unit A", Adaptation, cvalue
+uniquename11-8_2019-03-26T17:11:26-06:00_1, "Days Till Flowering (days)", 12, "Method 1", "Field Experiment to Assess 15 Rhizobium Strains", "ellie", "Unit A", Adaptation, cvalue
+uniquename11-9_2019-03-26T17:11:26-06:00_1, "Days Till Flowering (days)", 16, "Method 1", "Field Experiment to Assess 15 Rhizobium Strains", "dylan", "Unit A", Adaptation, cvalue
+uniquename11-10_2019-03-26T17:11:26-06:00_1, "Days Till Flowering (days)", 16, "Method 1", "Field Experiment to Assess 15 Rhizobium Strains", "olivia", "Unit A", Adaptation, cvalue
+uniquename11-11_2019-03-26T17:11:26-06:00_1, "Days Till Flowering (days)", 9, "Method 1", "Field Experiment to Assess 15 Rhizobium Strains", "king", "Unit A", Adaptation, cvalue
+uniquename11-12_2019-03-26T17:11:26-06:00_1, "Days Till Flowering (days)", 11, "Method 1", "Field Experiment to Assess 15 Rhizobium Strains", "max", "Unit A", Adaptation, cvalue
+uniquename11-13_2019-03-26T17:11:26-06:00_1, "Days Till Flowering (days)", 12, "Method 1", "Field Experiment to Assess 15 Rhizobium Strains", "owen", "Unit A", Adaptation, cvalue
+uniquename11-14_2019-03-26T17:11:26-06:00_1, "Days Till Flowering (days)", 11, "Method 1", "Field Experiment to Assess 15 Rhizobium Strains", "ray", "Unit A", Adaptation, cvalue
+uniquename11-15_2019-03-26T17:11:26-06:00_1, "Days Till Flowering (days)", 16, "Method 1", "Field Experiment to Assess 15 Rhizobium Strains", "ralph", "Unit A", Adaptation, cvalue
+uniquename11-16_2019-03-26T17:11:26-06:00_1, "Days Till Flowering (days)", 19, "Method 1", "Field Experiment to Assess 15 Rhizobium Strains", "rex", "Unit A", Adaptation, cvalue
+uniquename11-17_2019-03-26T17:11:26-06:00_1, "Days Till Flowering (days)", 10, "Method 1", "Field Experiment to Assess 15 Rhizobium Strains", "scout", "Unit A", Adaptation, cvalue
+uniquename11-18_2019-03-26T17:11:26-06:00_1, "Days Till Flowering (days)", 19, "Method 1", "Field Experiment to Assess 15 Rhizobium Strains", "tesla", "Unit A", Adaptation, cvalue
+uniquename11-19_2019-03-26T17:11:26-06:00_1, "Days Till Flowering (days)", 22, "Method 1", "Field Experiment to Assess 15 Rhizobium Strains", "wyatt", "Unit A", Adaptation, cvalue
+uniquename11-20_2019-03-26T17:11:26-06:00_1, "Days Till Flowering (days)", 10, "Method 1", "Field Experiment to Assess 15 Rhizobium Strains", "ace", "Unit A", Adaptation, cvalue
+uniquename11-21_2019-03-26T17:11:26-06:00_1, "Days Till Flowering (days)", 20, "Method 1", "Field Experiment to Assess 15 Rhizobium Strains", "bailey", "Unit A", Adaptation, cvalue
+uniquename11-22_2019-03-26T17:11:26-06:00_1, "Days Till Flowering (days)", 15, "Method 1", "Field Experiment to Assess 15 Rhizobium Strains", "bennet", "Unit A", Adaptation, cvalue
+uniquename11-23_2019-03-26T17:11:26-06:00_1, "Days Till Flowering (days)", 19, "Method 1", "Field Experiment to Assess 15 Rhizobium Strains", "chase", "Unit A", Adaptation, cvalue
+uniquename11-24_2019-03-26T17:11:26-06:00_1, "Days Till Flowering (days)", 10, "Method 1", "Field Experiment to Assess 15 Rhizobium Strains", "dexter", "Unit A", Adaptation, cvalue
+uniquename11-25_2019-03-26T17:11:26-06:00_1, "Days Till Flowering (days)", 17, "Method 1", "Field Experiment to Assess 15 Rhizobium Strains", "emmet", "Unit A", Adaptation, cvalue
+uniquename11-26_2019-03-26T17:11:26-06:00_1, "Days Till Flowering (days)", 9, "Method 1", "Field Experiment to Assess 15 Rhizobium Strains", "felix", "Unit A", Adaptation, cvalue
+uniquename11-27_2019-03-26T17:11:26-06:00_1, "Days Till Flowering (days)", 18, "Method 1", "Field Experiment to Assess 15 Rhizobium Strains", "forrest", "Unit A", Adaptation, cvalue
+uniquename11-28_2019-03-26T17:11:26-06:00_1, "Days Till Flowering (days)", 17, "Method 1", "Field Experiment to Assess 15 Rhizobium Strains", "zoe", "Unit A", Adaptation, cvalue
+uniquename11-29_2019-03-26T17:11:26-06:00_1, "Days Till Flowering (days)", 12, "Method 1", "Field Experiment to Assess 15 Rhizobium Strains", "eva", "Unit A", Adaptation, cvalue
+uniquename11-30_2019-03-26T17:11:26-06:00_1, "Days Till Flowering (days)", 19, "Method 1", "Field Experiment to Assess 15 Rhizobium Strains", "naomi", "Unit A", Adaptation, cvalue
+uniquename111-1_2019-03-26T17:11:26-06:00_1, "Days Till Flowering (days)", 22, "Method 1", "Protein Characterization in Lentils", "lola", "Unit A", Adaptation, cvalue
+uniquename111-2_2019-03-26T17:11:26-06:00_1, "Days Till Flowering (days)", 21, "Method 1", "Protein Characterization in Lentils", "stella", "Unit A", Adaptation, cvalue
+uniquename111-3_2019-03-26T17:11:26-06:00_1, "Days Till Flowering (days)", 20, "Method 1", "Protein Characterization in Lentils", "luna", "Unit A", Adaptation, cvalue
+uniquename111-4_2019-03-26T17:11:26-06:00_1, "Days Till Flowering (days)", 19, "Method 1", "Protein Characterization in Lentils", "nala", "Unit A", Adaptation, cvalue
+uniquename111-5_2019-03-26T17:11:26-06:00_1, "Days Till Flowering (days)", 20, "Method 1", "Protein Characterization in Lentils", "izzy", "Unit A", Adaptation, cvalue
+uniquename111-6_2019-03-26T17:11:26-06:00_1, "Days Till Flowering (days)", 22, "Method 1", "Protein Characterization in Lentils", "layla", "Unit A", Adaptation, cvalue
+uniquename111-7_2019-03-26T17:11:26-06:00_1, "Days Till Flowering (days)", 21, "Method 1", "Protein Characterization in Lentils", "lulu", "Unit A", Adaptation, cvalue
+uniquename111-8_2019-03-26T17:11:26-06:00_1, "Days Till Flowering (days)", 19, "Method 1", "Protein Characterization in Lentils", "ellie", "Unit A", Adaptation, cvalue
+uniquename111-9_2019-03-26T17:11:26-06:00_1, "Days Till Flowering (days)", 18, "Method 1", "Protein Characterization in Lentils", "dylan", "Unit A", Adaptation, cvalue
+uniquename111-10_2019-03-26T17:11:26-06:00_1, "Days Till Flowering (days)", 18, "Method 1", "Protein Characterization in Lentils", "olivia", "Unit A", Adaptation, cvalue
+uniquename111-11_2019-03-26T17:11:26-06:00_1, "Days Till Flowering (days)", 20, "Method 1", "Protein Characterization in Lentils", "king", "Unit A", Adaptation, cvalue
+uniquename111-12_2019-03-26T17:11:26-06:00_1, "Days Till Flowering (days)", 22, "Method 1", "Protein Characterization in Lentils", "max", "Unit A", Adaptation, cvalue
+uniquename111-13_2019-03-26T17:11:26-06:00_1, "Days Till Flowering (days)", 22, "Method 1", "Protein Characterization in Lentils", "owen", "Unit A", Adaptation, cvalue
+uniquename111-14_2019-03-26T17:11:26-06:00_1, "Days Till Flowering (days)", 21, "Method 1", "Protein Characterization in Lentils", "ray", "Unit A", Adaptation, cvalue
+uniquename111-15_2019-03-26T17:11:26-06:00_1, "Days Till Flowering (days)", 19, "Method 1", "Protein Characterization in Lentils", "ralph", "Unit A", Adaptation, cvalue
+uniquename111-16_2019-03-26T17:11:26-06:00_1, "Days Till Flowering (days)", 18, "Method 1", "Protein Characterization in Lentils", "rex", "Unit A", Adaptation, cvalue
+uniquename111-17_2019-03-26T17:11:26-06:00_1, "Days Till Flowering (days)", 20, "Method 1", "Protein Characterization in Lentils", "scout", "Unit A", Adaptation, cvalue
+uniquename111-18_2019-03-26T17:11:26-06:00_1, "Days Till Flowering (days)", 22, "Method 1", "Protein Characterization in Lentils", "tesla", "Unit A", Adaptation, cvalue
+uniquename111-19_2019-03-26T17:11:26-06:00_1, "Days Till Flowering (days)", 21, "Method 1", "Protein Characterization in Lentils", "wyatt", "Unit A", Adaptation, cvalue
+uniquename111-20_2019-03-26T17:11:26-06:00_1, "Days Till Flowering (days)", 19, "Method 1", "Protein Characterization in Lentils", "ace", "Unit A", Adaptation, cvalue
+uniquename111-21_2019-03-26T17:11:26-06:00_1, "Days Till Flowering (days)", 17, "Method 1", "Protein Characterization in Lentils", "bailey", "Unit A", Adaptation, cvalue
+uniquename111-22_2019-03-26T17:11:26-06:00_1, "Days Till Flowering (days)", 20, "Method 1", "Protein Characterization in Lentils", "bennet", "Unit A", Adaptation, cvalue
+uniquename111-23_2019-03-26T17:11:26-06:00_1, "Days Till Flowering (days)", 22, "Method 1", "Protein Characterization in Lentils", "chase", "Unit A", Adaptation, cvalue
+uniquename111-24_2019-03-26T17:11:26-06:00_1, "Days Till Flowering (days)", 23, "Method 1", "Protein Characterization in Lentils", "dexter", "Unit A", Adaptation, cvalue
+uniquename111-25_2019-03-26T17:11:26-06:00_1, "Days Till Flowering (days)", 22, "Method 1", "Protein Characterization in Lentils", "emmet", "Unit A", Adaptation, cvalue
+uniquename111-26_2019-03-26T17:11:26-06:00_1, "Days Till Flowering (days)", 21, "Method 1", "Protein Characterization in Lentils", "felix", "Unit A", Adaptation, cvalue
+uniquename111-27_2019-03-26T17:11:26-06:00_1, "Days Till Flowering (days)", 20, "Method 1", "Protein Characterization in Lentils", "forrest", "Unit A", Adaptation, cvalue
+uniquename111-28_2019-03-26T17:11:26-06:00_1, "Days Till Flowering (days)", 20, "Method 1", "Protein Characterization in Lentils", "zoe", "Unit A", Adaptation, cvalue
+uniquename111-29_2019-03-26T17:11:26-06:00_1, "Days Till Flowering (days)", 19, "Method 1", "Protein Characterization in Lentils", "eva", "Unit A", Adaptation, cvalue
+uniquename111-30_2019-03-26T17:11:26-06:00_1, "Days Till Flowering (days)", 21, "Method 1", "Protein Characterization in Lentils", "naomi", "Unit A", Adaptation, cvalue
+uniquename1111-1_2019-03-26T17:11:26-06:00_1, "Days Till Flowering (days)", 10, "Method 1", "Evaluation of Drought and Disease Resistance", " lola", "Unit A", Adaptation, cvalue
+uniquename1111-2_2019-03-26T17:11:26-06:00_1, "Days Till Flowering (days)", 9, "Method 1", "Evaluation of Drought and Disease Resistance", " stella", "Unit A", Adaptation, cvalue
+uniquename1111-3_2019-03-26T17:11:26-06:00_1, "Days Till Flowering (days)", 8, "Method 1", "Evaluation of Drought and Disease Resistance", " luna", "Unit A", Adaptation, cvalue
+uniquename1111-4_2019-03-26T17:11:26-06:00_1, "Days Till Flowering (days)", 7, "Method 1", "Evaluation of Drought and Disease Resistance", " nala", "Unit A", Adaptation, cvalue
+uniquename1111-5_2019-03-26T17:11:26-06:00_1, "Days Till Flowering (days)", 10, "Method 1", "Evaluation of Drought and Disease Resistance", " izzy", "Unit A", Adaptation, cvalue
+uniquename1111-6_2019-03-26T17:11:26-06:00_1, "Days Till Flowering (days)", 9, "Method 1", "Evaluation of Drought and Disease Resistance", " layla", "Unit A", Adaptation, cvalue
+uniquename1111-7_2019-03-26T17:11:26-06:00_1, "Days Till Flowering (days)", 8, "Method 1", "Evaluation of Drought and Disease Resistance", " lulu", "Unit A", Adaptation, cvalue
+uniquename1111-8_2019-03-26T17:11:26-06:00_1, "Days Till Flowering (days)", 10, "Method 1", "Evaluation of Drought and Disease Resistance", " ellie", "Unit A", Adaptation, cvalue
+uniquename1111-9_2019-03-26T17:11:26-06:00_1, "Days Till Flowering (days)", 9, "Method 1", "Evaluation of Drought and Disease Resistance", " dylan", "Unit A", Adaptation, cvalue
+uniquename1111-10_2019-03-26T17:11:26-06:00_1, "Days Till Flowering (days)", 9, "Method 1", "Evaluation of Drought and Disease Resistance", " olivia", "Unit A", Adaptation, cvalue
+uniquename1111-11_2019-03-26T17:11:26-06:00_1, "Days Till Flowering (days)", 5, "Method 1", "Evaluation of Drought and Disease Resistance", " king", "Unit A", Adaptation, cvalue
+uniquename1111-12_2019-03-26T17:11:26-06:00_1, "Days Till Flowering (days)", 10, "Method 1", "Evaluation of Drought and Disease Resistance", " max", "Unit A", Adaptation, cvalue
+uniquename1111-13_2019-03-26T17:11:26-06:00_1, "Days Till Flowering (days)", 9, "Method 1", "Evaluation of Drought and Disease Resistance", " owen", "Unit A", Adaptation, cvalue
+uniquename1111-14_2019-03-26T17:11:26-06:00_1, "Days Till Flowering (days)", 5, "Method 1", "Evaluation of Drought and Disease Resistance", " ray", "Unit A", Adaptation, cvalue
+uniquename1111-15_2019-03-26T17:11:26-06:00_1, "Days Till Flowering (days)", 10, "Method 1", "Evaluation of Drought and Disease Resistance", " ralph", "Unit A", Adaptation, cvalue
+uniquename1111-16_2019-03-26T17:11:26-06:00_1, "Days Till Flowering (days)", 10, "Method 1", "Evaluation of Drought and Disease Resistance", " rex", "Unit A", Adaptation, cvalue
+uniquename1111-17_2019-03-26T17:11:26-06:00_1, "Days Till Flowering (days)", 10, "Method 1", "Evaluation of Drought and Disease Resistance", " scout", "Unit A", Adaptation, cvalue
+uniquename1111-18_2019-03-26T17:11:26-06:00_1, "Days Till Flowering (days)", 9, "Method 1", "Evaluation of Drought and Disease Resistance", " tesla", "Unit A", Adaptation, cvalue
+uniquename1111-19_2019-03-26T17:11:26-06:00_1, "Days Till Flowering (days)", 9, "Method 1", "Evaluation of Drought and Disease Resistance", " wyatt", "Unit A", Adaptation, cvalue
+uniquename1111-20_2019-03-26T17:11:26-06:00_1, "Days Till Flowering (days)", 9, "Method 1", "Evaluation of Drought and Disease Resistance", " ace", "Unit A", Adaptation, cvalue
+uniquename1111-21_2019-03-26T17:11:26-06:00_1, "Days Till Flowering (days)", 8, "Method 1", "Evaluation of Drought and Disease Resistance", " bailey", "Unit A", Adaptation, cvalue
+uniquename1111-22_2019-03-26T17:11:26-06:00_1, "Days Till Flowering (days)", 8, "Method 1", "Evaluation of Drought and Disease Resistance", " bennet", "Unit A", Adaptation, cvalue
+uniquename1111-23_2019-03-26T17:11:26-06:00_1, "Days Till Flowering (days)", 8, "Method 1", "Evaluation of Drought and Disease Resistance", " chase", "Unit A", Adaptation, cvalue
+uniquename1111-24_2019-03-26T17:11:26-06:00_1, "Days Till Flowering (days)", 9, "Method 1", "Evaluation of Drought and Disease Resistance", " dexter", "Unit A", Adaptation, cvalue
+uniquename1111-25_2019-03-26T17:11:26-06:00_1, "Days Till Flowering (days)", 10, "Method 1", "Evaluation of Drought and Disease Resistance", " emmet", "Unit A", Adaptation, cvalue
+uniquename1111-26_2019-03-26T17:11:26-06:00_1, "Days Till Flowering (days)", 10, "Method 1", "Evaluation of Drought and Disease Resistance", " felix", "Unit A", Adaptation, cvalue
+uniquename1111-27_2019-03-26T17:11:26-06:00_1, "Days Till Flowering (days)", 9, "Method 1", "Evaluation of Drought and Disease Resistance", "forrest", "Unit A", Adaptation, cvalue
+uniquename1111-28_2019-03-26T17:11:26-06:00_1, "Days Till Flowering (days)", 10, "Method 1", "Evaluation of Drought and Disease Resistance", " zoe", "Unit A", Adaptation, cvalue
+uniquename1111-29_2019-03-26T17:11:26-06:00_1, "Days Till Flowering (days)", 9, "Method 1", "Evaluation of Drought and Disease Resistance", " eva", "Unit A", Adaptation, cvalue
+uniquename1111-30_2019-03-26T17:11:26-06:00_1, "Days Till Flowering (days)", 8, "Method 1", "Evaluation of Drought and Disease Resistance", " naomi", "Unit A", Adaptation, cvalue
 uniquename1_2019-03-26T17:11:26-06:00_1, "Trait ABC", 1, "Method 1", "Project A", "lola", "Unit A", Adaptation, cvalue
 uniquename2_2019-03-26T17:11:26-06:00_2, "Trait ABC", 2, "Method 1", "Project A", "lola", "Unit A", Adaptation, cvalue
 uniquename3_2019-03-26T17:11:26-06:00_3, "Trait ABC", 3, "Method 1", "Project A", "lola", "Unit A", Adaptation, cvalue
@@ -47,9 +167,9 @@ uniquename45_2019-03-26T17:11:26-06:00_45, "Trait VWX", 6, "Method 3", "Project 
 uniquename46_2019-03-26T17:11:26-06:00_46, "Trait YZ1", 7, "Method 2", "Project E", "zoe", "Unit C", Adaptation, cvalue
 uniquename47_2019-03-26T17:11:26-06:00_47, "Trait YZ1", 6, "Method 2", "Project E", "zoe", "Unit C", Adaptation, cvalue
 uniquename48_2019-03-26T17:11:26-06:00_48, "Trait YZ1", 6, "Method 2", "Project E", "zoe", "Unit C", Adaptation, cvalue
-uniquename49_2019-03-26T17:11:26-06:00_49, "Trait ABC", 1, "Method 2", "Project F", "elena", "Unit B", Adaptation, cvalue
-uniquename50_2019-03-26T17:11:26-06:00_50, "Trait ABC", 2, "Method 2", "Project F", "elena", "Unit B", Adaptation, cvalue
-uniquename51_2019-03-26T17:11:26-06:00_51, "Trait DEF", 3, "Method 2", "Project F", "elena", "Unit B", Adaptation, cvalue
+uniquename49_2019-03-26T17:11:26-06:00_49, "Trait ABC", 1, "Method 2", "Project J", "elena", "Unit B", Adaptation, cvalue
+uniquename50_2019-03-26T17:11:26-06:00_50, "Trait ABC", 2, "Method 2", "Project J", "elena", "Unit B", Adaptation, cvalue
+uniquename51_2019-03-26T17:11:26-06:00_51, "Trait ABC", 3, "Method 2", "Project J", "elena", "Unit B", Adaptation, cvalue
 uniquename52_2019-03-26T17:11:26-06:00_52, "Trait ABC", 1, "Method 2", "Project O", "ariana", "Unit B", Adaptation, cvalue
 uniquename53_2019-03-26T17:11:26-06:00_53, "Trait ABC", 2, "Method 2", "Project O", "ariana", "Unit B", Adaptation, cvalue
 uniquename54_2019-03-26T17:11:26-06:00_54, "Trait DEF", 3, "Method 2", "Project O", "ariana", "Unit B", Adaptation, cvalue
