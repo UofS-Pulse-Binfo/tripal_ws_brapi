@@ -18,12 +18,8 @@ A Drupal module that implements the Breeding API (BrAPI) standardized specificat
 2. D3 v4.12.0 https://cdnjs.cloudflare.com/ajax/libs/d3/4.12.0/d3.js
 3. DataTables v1.10.16 https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js
 4. jQuery JavaScript Library v3.2.1 https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.js
-5. BRAPPS: https://github.com/UofS-Pulse-Binfo/BrAPI-Graphical-Filtering
+5. BRAPPS: Solgenomics/BrAPI-Graphical-Filtering https://github.com/solgenomics/BrAPI-Graphical-Filtering
 6. BRAPPS: Solgenomics/BrAPI-Study-Comparison https://github.com/solgenomics/BrAPI-Study-Comparison
-
-NOTE: Please use the Graphical Filter BRAPPS version found in UofS-Pulse-Binfo repository while
-our pull request is being reviewed by Solgenomics Team. We will update this link to direct to
-https://github.com/solgenomics/BrAPI-Graphical-Filtering as soon as our request has been merged.
 
 ## Installation
 
